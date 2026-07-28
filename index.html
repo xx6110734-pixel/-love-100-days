@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#160d18">
-<title>我们的恋爱纪念馆</title>
+<title>恋爱纪念馆 · 我们的故事</title>
 <style>
 :root{--rose:#f3a4bc;--gold:#e8ca91;--ink:#fff8fb;--muted:#dacbd2;--line:rgba(255,255,255,.15);--panel:#fff9fb}
 *{box-sizing:border-box}html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}button,input,textarea,select{font:inherit}button,[role=button]{touch-action:manipulation}
@@ -109,6 +109,22 @@ body:before{content:"";position:fixed;inset:0;z-index:-3;background:radial-gradi
 .publish-status{margin-top:11px;padding:9px 11px;border-radius:12px;background:rgba(0,0,0,.18);font-size:.78rem;color:var(--muted);line-height:1.5}
 .publish-status.ready{color:#f7dbe6;border:1px solid rgba(255,190,215,.2)}
 @media(max-width:520px){.publish-link-row,.publish-actions{grid-template-columns:1fr}.publish-actions .btn:first-child{grid-column:auto}}
+
+
+/* ===== V2 纪念馆入口：极简仪式感 ===== */
+.museum-opener{width:min(92vw,560px);padding:34px 22px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.museum-opener .opening-kicker{margin:0 0 15px!important;color:#e8ca91!important;font-size:.72rem!important;letter-spacing:.36em!important;font-weight:650!important}
+.museum-opener #openTitle{margin:0;color:#fff7fa;font:700 clamp(2rem,6vw,3.15rem)/1.15 Georgia,"Noto Serif SC",serif;letter-spacing:.08em;text-shadow:0 10px 36px rgba(255,196,221,.12)}
+.opening-welcome{margin:18px 0 0!important;color:rgba(245,228,235,.72)!important;font-size:.92rem!important;letter-spacing:.08em!important;line-height:1.7!important}
+.museum-opener .seal-wrap{margin:25px auto 22px!important;cursor:pointer}
+.opening-today{color:rgba(245,228,235,.7);font-size:.86rem;letter-spacing:.12em;margin-top:2px}
+.opening-love-line{margin-top:8px;color:#f7e9ee;font:500 1rem/1.6 Georgia,"Noto Serif SC",serif;letter-spacing:.05em}
+.opening-love-line strong{display:inline-block;color:#f2d29a;font-size:1.55rem;line-height:1;font-weight:700;margin:0 4px;text-shadow:0 0 24px rgba(242,210,154,.2)}
+.opening-since{margin-top:13px;color:rgba(232,202,145,.78);font-size:.76rem;letter-spacing:.13em}
+.museum-opener .opening-swipe{margin-top:24px;color:rgba(255,255,255,.32);font-size:.64rem;letter-spacing:.14em;animation:openingFloat 2.2s ease-in-out infinite}
+.start-overlay.entering .museum-opener{animation:museumEnter .82s cubic-bezier(.22,.8,.2,1) both}
+@keyframes museumEnter{0%{transform:scale(1);opacity:1}35%{transform:scale(1.025);opacity:1}100%{transform:scale(1.08);opacity:0}}
+@media(max-width:640px){.museum-opener{padding:26px 14px}.museum-opener .opening-kicker{font-size:.65rem!important;letter-spacing:.3em!important}.museum-opener #openTitle{font-size:2.25rem}.opening-welcome{margin-top:15px!important;font-size:.84rem!important}.museum-opener .seal-wrap{margin:22px auto 19px!important}.opening-love-line{font-size:.92rem}.opening-love-line strong{font-size:1.42rem}}
 
 </style>
 
@@ -398,20 +414,82 @@ body.edit-mode #directEditButton{display:flex!important}
 }
 </style>
 
+
+<style id="openingHallUpgrade">
+.start-overlay{
+  background:
+    radial-gradient(circle at 50% 36%,rgba(199,89,137,.28),transparent 25%),
+    radial-gradient(circle at 18% 12%,rgba(104,72,153,.22),transparent 34%),
+    radial-gradient(circle at 82% 82%,rgba(225,190,128,.09),transparent 28%),
+    linear-gradient(155deg,#0b070e 0%,#1c101e 52%,#0a060c 100%)!important;
+}
+.start-overlay::before{opacity:.8}
+.start-overlay::after{box-shadow:inset 0 0 80px rgba(255,188,214,.025)}
+.opening-stars{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.opening-stars span{position:absolute;width:3px;height:3px;border-radius:50%;background:#f3d8ad;box-shadow:0 0 10px rgba(243,216,173,.65);animation:openingTwinkle 3.6s ease-in-out infinite}
+.opening-stars span:nth-child(1){left:16%;top:22%;animation-delay:.2s}.opening-stars span:nth-child(2){left:82%;top:28%;animation-delay:1.4s}.opening-stars span:nth-child(3){left:24%;top:72%;animation-delay:2.1s}.opening-stars span:nth-child(4){left:76%;top:68%;animation-delay:.9s}.opening-stars span:nth-child(5){left:50%;top:15%;animation-delay:2.7s}.opening-stars span:nth-child(6){left:11%;top:52%;animation-delay:1.8s}
+.opener{width:min(560px,94vw)!important;padding:28px 20px 24px!important}
+.opening-kicker{margin-bottom:8px!important;font-size:.66rem!important;letter-spacing:.3em!important}
+.opening-est{margin:0 0 12px;color:rgba(239,215,174,.7);font:500 .66rem/1.4 Georgia,serif;letter-spacing:.22em;text-transform:uppercase}
+.opener h2{display:block!important;margin:0 0 15px!important;font-size:clamp(1.9rem,7.8vw,3.35rem)!important;line-height:1.08!important}
+.seal-wrap{width:116px!important;height:116px!important;margin-bottom:13px!important}
+.seal{width:82px!important;height:82px!important;font-size:2.45rem!important}
+.opener p#openHint{margin:2px 0 0!important;font-size:.84rem!important;color:rgba(250,235,241,.68)!important;letter-spacing:.1em!important}
+.opening-clock{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:13px;color:#f2dfe7}
+.opening-clock-date{font-size:.72rem;letter-spacing:.08em;color:rgba(242,223,231,.72)}
+.opening-clock-time{font:600 1.02rem/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;color:#f6dcae}
+.opening-meta{margin-top:10px!important;font-size:.74rem!important;color:rgba(231,211,220,.72)!important}
+.opening-enter{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-width:178px;margin-top:17px;padding:12px 22px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:linear-gradient(135deg,rgba(202,91,135,.92),rgba(130,62,104,.92));color:#fff;font-weight:700;font-size:.88rem;letter-spacing:.08em;box-shadow:0 12px 32px rgba(111,35,72,.35),inset 0 1px 0 rgba(255,255,255,.2);cursor:pointer}
+.opening-enter::after{content:'→';font-size:1rem;transition:transform .2s ease}.opening-enter:active::after{transform:translateX(4px)}
+.opening-foot{margin-top:14px!important;font-size:.75rem!important}
+.opening-swipe{margin-top:8px;color:rgba(255,255,255,.34);font-size:.62rem;letter-spacing:.13em;animation:openingFloat 2.2s ease-in-out infinite}
+@keyframes openingTwinkle{0%,100%{opacity:.18;transform:scale(.7)}50%{opacity:1;transform:scale(1.35)}}
+@keyframes openingFloat{50%{transform:translateY(4px);opacity:.58}}
+@media(max-width:640px){
+  .opener{padding:18px 8px 16px!important}
+  .opening-kicker{font-size:.61rem!important}
+  .opening-est{margin-bottom:9px;font-size:.58rem}
+  .opener h2{font-size:clamp(1.82rem,9vw,2.55rem)!important;margin-bottom:12px!important}
+  .seal-wrap{width:104px!important;height:104px!important}.seal{width:75px!important;height:75px!important;font-size:2.2rem!important}
+  .opening-enter{min-width:166px;margin-top:14px;padding:11px 19px}
+  .opening-foot{margin-top:11px!important}
+}
+</style>
+
 </head>
 <body>
 <div class="scroll-progress" id="scrollProgress"></div><div id="aurora"></div><div id="particles"></div>
 <div class="start-overlay" id="startOverlay">
   <div class="opening-orbit opening-orbit-one"></div><div class="opening-orbit opening-orbit-two"></div>
-  <div class="opener" id="openStory" role="button" tabindex="0" aria-label="开启我们的故事">
-    <div class="opening-kicker" id="openingKicker">我们的恋爱纪念馆</div>
-    <h2 id="openTitle"></h2>
-    <div class="seal-wrap"><div class="seal-glow"></div><div class="seal">❤</div><div class="seal-ripple"></div></div>
-    <p id="openHint"></p>
-    <div class="opening-meta"><span id="openingSince"></span><i></i><span id="openingDays"></span></div>
-    <div class="opening-foot" id="openingFoot">每一次打开，都是一次回忆。</div>
+  <div class="opening-stars" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="opener museum-opener" id="openStory" role="button" tabindex="0" aria-label="进入恋爱纪念馆" onclick="(function(){var o=document.getElementById('startOverlay');if(!o)return;o.classList.add('entering');setTimeout(function(){o.classList.add('hide')},160);setTimeout(function(){if(o&&o.parentNode)o.parentNode.removeChild(o)},850)})()">
+    <div class="opening-kicker" id="openingKicker">恋爱纪念馆</div>
+    <h2 id="openTitle">我们的故事</h2>
+    <p class="opening-welcome" id="openingWelcome">欢迎来到属于我们的回忆。</p>
+    <div class="seal-wrap" aria-label="轻触进入纪念馆"><div class="seal-glow"></div><div class="seal">❤</div><div class="seal-ripple"></div></div>
+    <div class="opening-today" id="openingToday">今天，</div>
+    <div class="opening-love-line">是我们相爱的第 <strong id="openingDays">1</strong> 天。</div>
+    <div class="opening-since" id="openingSince">始于 2026.05.10</div>
+    <div class="opening-swipe" id="openingSwipe">轻触爱心，开启参观</div>
   </div>
 </div>
+<script>
+(function(){
+  function enterMuseum(e){
+    if(e)e.preventDefault();
+    var overlay=document.getElementById('startOverlay');
+    if(!overlay)return;
+    overlay.classList.add('entering');
+    setTimeout(function(){overlay.classList.add('hide');},160);
+    setTimeout(function(){if(overlay&&overlay.parentNode)overlay.parentNode.removeChild(overlay);},850);
+  }
+  var opener=document.getElementById('openStory');
+  if(opener){
+    opener.addEventListener('touchend',enterMuseum,{passive:false});
+    opener.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' ')enterMuseum(e)});
+  }
+})();
+</script>
 <section class="slide active"><div class="content"><div class="glass"><h1 class="title" id="vMainTitle"></h1><p class="copy" id="vCover"></p><div class="date" id="vDate"></div></div></div></section>
 <section class="slide story-slideshow-slide">
   <div class="content story-museum-content">
@@ -624,7 +702,7 @@ function renderVideos(){const list=(data[currentLang].videos||[]).filter(x=>x&&x
 function prepareVideoPoster(card){const video=card.querySelector('video');if(!video)return;let done=false;const fail=()=>{if(done)return;done=true;card.classList.add('video-error')};video.addEventListener('error',fail,{once:true});video.addEventListener('loadeddata',()=>{if(done)return;try{const canvas=document.createElement('canvas'),w=video.videoWidth||360,h=video.videoHeight||640;canvas.width=Math.min(w,720);canvas.height=Math.round(canvas.width*h/w);const ctx=canvas.getContext('2d');ctx.drawImage(video,0,0,canvas.width,canvas.height);video.poster=canvas.toDataURL('image/jpeg',.78);card.classList.add('poster-ready');done=true}catch(e){card.classList.add('poster-ready');done=true}},{once:true});setTimeout(()=>{if(!done&&video.readyState<2)card.classList.add('poster-ready')},4500)}
 function openVideo(src){const p=$('videoModalPlayer');p.src=src;$('videoModal').classList.add('open');p.play().catch(()=>{})}
 function closeVideo(){const p=$('videoModalPlayer');p.pause();p.removeAttribute('src');p.load();$('videoModal').classList.remove('open')}
-function applyLanguage(){const c=data[currentLang],u=ui[currentLang];document.documentElement.lang=currentLang==='zh'?'zh-CN':'th';$('vMainTitle').textContent=c.mainTitle;$('vCover').textContent=c.cover;$('vDate').textContent=c.date;$('vPeriodTitle').textContent=c.periodTitle;$('vPeriod').textContent=c.period;$('vFootprintsTitle').textContent=c.footprintsTitle;$('vFootprintsDesc').textContent=c.footprintsDesc;$('footprintsList').innerHTML=c.footprints.map(x=>`<div class="footprint-item"><span class="footprint-dot"></span><div class="footprint-card"><div class="footprint-top"><span class="footprint-icon">${esc(x.icon||'❤')}</span><span class="footprint-event">${esc(x.event||'')}</span>${x.date?`<span class="footprint-date">${esc(x.date)}</span>`:''}</div><div class="footprint-text">${esc(x.text||'')}</div></div></div>`).join('');c.chapters.forEach((x,i)=>{$(`vTitle${i+1}`).textContent=x.title;$(`vText${i+1}`).textContent=x.text});$('vGalleryTitle').textContent=c.galleryTitle;$('vGalleryDesc').textContent=c.galleryDesc;$('vVideoTitle').textContent=c.videoTitle;$('vVideoDesc').textContent=c.videoDesc;renderVideos();$('vEndTitle').textContent=c.endTitle;$('vEndText').textContent=c.endText;$('vFinalTitle').textContent=c.finalTitle;$('vFinalText').textContent=c.finalText;$('vFinalSign').textContent=c.finalSign;$('playlistTitle').textContent=currentLang==='zh'?'我们的歌单':'เพลย์ลิสต์ของเรา';if($('daysLabel'))$('daysLabel').textContent=u.days;$('openTitle').textContent=c.mainTitle;$('openHint').textContent=u.open;$('musicTrackName').textContent=playing&&playlist[trackIndex]?playlist[trackIndex].name:u.music;$('musicKicker').textContent=currentLang==='zh'?'音乐播放器 · 点击查看歌单':'เครื่องเล่นเพลง · แตะเพื่อดูเพลย์ลิสต์';$('projectToolLabel').textContent=u.project;$('editActionTitle').textContent=u.edit;$('exitProject').textContent=u.exit;$('langToolLabel').textContent=currentLang==='zh'?'泰语':'中文';$('moreToolLabel').textContent=currentLang==='zh'?'更多':'เพิ่มเติม';$('actionTitle').textContent=currentLang==='zh'?'网站管理':'จัดการเว็บไซต์';$('editActionDesc').textContent=currentLang==='zh'?'文字、照片、视频和音乐':'ข้อความ รูปภาพ วิดีโอ และเพลง';$('playlistActionTitle').textContent=currentLang==='zh'?'查看歌单':'ดูเพลย์ลิสต์';$('playlistActionDesc').textContent=currentLang==='zh'?'选择和切换音乐':'เลือกและเปลี่ยนเพลง';$('actionClose').textContent=currentLang==='zh'?'取消':'ยกเลิก';$('openingKicker').textContent=currentLang==='zh'?'我们的恋爱纪念馆':'พิพิธภัณฑ์ความรักของเรา';document.querySelectorAll('.bilingual-kicker').forEach(el=>el.textContent=currentLang==='zh'?el.dataset.zh:el.dataset.th);$('openingFoot').textContent=currentLang==='zh'?'每一次打开，都是一次回忆。':'ทุกครั้งที่เปิด คือการกลับมาหาความทรงจำ';
+function applyLanguage(){const c=data[currentLang],u=ui[currentLang];document.documentElement.lang=currentLang==='zh'?'zh-CN':'th';$('vMainTitle').textContent=c.mainTitle;$('vCover').textContent=c.cover;$('vDate').textContent=c.date;$('vPeriodTitle').textContent=c.periodTitle;$('vPeriod').textContent=c.period;$('vFootprintsTitle').textContent=c.footprintsTitle;$('vFootprintsDesc').textContent=c.footprintsDesc;$('footprintsList').innerHTML=c.footprints.map(x=>`<div class="footprint-item"><span class="footprint-dot"></span><div class="footprint-card"><div class="footprint-top"><span class="footprint-icon">${esc(x.icon||'❤')}</span><span class="footprint-event">${esc(x.event||'')}</span>${x.date?`<span class="footprint-date">${esc(x.date)}</span>`:''}</div><div class="footprint-text">${esc(x.text||'')}</div></div></div>`).join('');c.chapters.forEach((x,i)=>{$(`vTitle${i+1}`).textContent=x.title;$(`vText${i+1}`).textContent=x.text});$('vGalleryTitle').textContent=c.galleryTitle;$('vGalleryDesc').textContent=c.galleryDesc;$('vVideoTitle').textContent=c.videoTitle;$('vVideoDesc').textContent=c.videoDesc;renderVideos();$('vEndTitle').textContent=c.endTitle;$('vEndText').textContent=c.endText;$('vFinalTitle').textContent=c.finalTitle;$('vFinalText').textContent=c.finalText;$('vFinalSign').textContent=c.finalSign;$('playlistTitle').textContent=currentLang==='zh'?'我们的歌单':'เพลย์ลิสต์ของเรา';if($('daysLabel'))$('daysLabel').textContent=u.days;$('openTitle').textContent=currentLang==='zh'?'我们的故事':'เรื่องราวของเรา';$('musicTrackName').textContent=playing&&playlist[trackIndex]?playlist[trackIndex].name:u.music;$('musicKicker').textContent=currentLang==='zh'?'音乐播放器 · 点击查看歌单':'เครื่องเล่นเพลง · แตะเพื่อดูเพลย์ลิสต์';$('projectToolLabel').textContent=u.project;$('editActionTitle').textContent=u.edit;$('exitProject').textContent=u.exit;$('langToolLabel').textContent=currentLang==='zh'?'泰语':'中文';$('moreToolLabel').textContent=currentLang==='zh'?'更多':'เพิ่มเติม';$('actionTitle').textContent=currentLang==='zh'?'网站管理':'จัดการเว็บไซต์';$('editActionDesc').textContent=currentLang==='zh'?'文字、照片、视频和音乐':'ข้อความ รูปภาพ วิดีโอ และเพลง';$('playlistActionTitle').textContent=currentLang==='zh'?'查看歌单':'ดูเพลย์ลิสต์';$('playlistActionDesc').textContent=currentLang==='zh'?'选择和切换音乐':'เลือกและเปลี่ยนเพลง';$('actionClose').textContent=currentLang==='zh'?'取消':'ยกเลิก';$('openingKicker').textContent=currentLang==='zh'?'恋爱纪念馆':'พิพิธภัณฑ์ความรัก';if($('openingWelcome'))$('openingWelcome').textContent=currentLang==='zh'?'欢迎来到属于我们的回忆。':'ยินดีต้อนรับสู่ความทรงจำของเรา';if($('openingToday'))$('openingToday').textContent=currentLang==='zh'?'今天，':'วันนี้';if($('openingSwipe'))$('openingSwipe').textContent=currentLang==='zh'?'轻触爱心，开启参观':'แตะหัวใจเพื่อเริ่มชม';document.querySelectorAll('.bilingual-kicker').forEach(el=>el.textContent=currentLang==='zh'?el.dataset.zh:el.dataset.th);
 if($('storySlideshowTitle'))$('storySlideshowTitle').textContent=currentLang==='zh'?'我们的爱情故事':'เรื่องราวความรักของเรา';updateMuseumClock();
 updateDays();$('photoCount').textContent=u.count(photoItems.length);const empty=$('coverFrame').querySelector('.cover-empty');if(empty)empty.textContent=u.coverEmpty;const ge=$('gallery').querySelector('.empty');if(ge)ge.textContent=u.empty;saveData()}
 function applyCoverStyle(){const c=data.coverStyle,f=$('coverFrame');f.style.setProperty('--cover-width',c.width+'%');f.style.setProperty('--cover-height-mobile',c.height+'px');f.style.setProperty('--cover-height',Math.max(420,c.height)+'px');f.style.setProperty('--cover-radius',c.radius+'px');f.style.setProperty('--cover-scale',c.scale/100);f.style.setProperty('--cover-x',c.x+'%');f.style.setProperty('--cover-y',c.y+'%');const map={coverWidth:['width','%'],coverHeight:['height','px'],coverRadius:['radius','px'],coverScale:['scale','%'],coverX:['x','%'],coverY:['y','%']};Object.entries(map).forEach(([id,[key,unit]])=>{if($(id))$(id).value=c[key];if($(id+'Value'))$(id+'Value').textContent=c[key]+unit})}
@@ -632,7 +710,7 @@ function bindCoverControls(){const keys={coverWidth:'width',coverHeight:'height'
 function saveTexts(){data.startDate=$('iStartDate').value||defaults.startDate;['mainTitle','cover','date','periodTitle','period','footprintsTitle','footprintsDesc','galleryTitle','galleryDesc','videoTitle','videoDesc','endTitle','endText','finalTitle','finalText','finalSign'].forEach(k=>['zh','th'].forEach(l=>data[l][k]=$(`${l}_${k}`).value.trim()));for(let i=0;i<10;i++){const d=$(`footDate${i}`).value;['zh','th'].forEach(l=>{data[l].footprints[i].date=d;data[l].footprints[i].event=$(`${l}_footEvent${i}`).value.trim();data[l].footprints[i].text=$(`${l}_footText${i}`).value.trim()})}for(let i=0;i<5;i++)['zh','th'].forEach(l=>{data[l].chapters[i].title=$(`${l}_chapterTitle${i}`).value.trim();data[l].chapters[i].text=$(`${l}_chapterText${i}`).value.trim()});saveData();applyLanguage();updateDays();notify('中泰双语文字已保存')}
 function getLocalLoveDays(){const parts=(data.startDate||defaults.startDate).split('-').map(Number),start=new Date(parts[0],parts[1]-1,parts[2]),now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());return Math.max(1,Math.round((today-start)/86400000)+1)}
 function formatStartDate(){const p=(data.startDate||defaults.startDate).split('-');return p.length===3?`${p[0]}.${p[1]}.${p[2]}`:(data.startDate||defaults.startDate)}
-function updateDays(){const days=getLocalLoveDays();if($('daysTogether'))$('daysTogether').textContent=days;if($('openingSince'))$('openingSince').textContent=currentLang==='zh'?`始于 ${formatStartDate()}`:`เริ่มต้นเมื่อ ${formatStartDate()}`;if($('openingDays'))$('openingDays').textContent=currentLang==='zh'?`相爱的第 ${days} 天`:`วันที่ ${days} ที่เรารักกัน`}
+function updateDays(){const days=getLocalLoveDays();if($('daysTogether'))$('daysTogether').textContent=days;if($('openingSince'))$('openingSince').textContent=currentLang==='zh'?`始于 ${formatStartDate()}`:`เริ่มต้นเมื่อ ${formatStartDate()}`;if($('openingDays'))$('openingDays').textContent=days}
 function scheduleLocalDateSync(){updateDays();const now=new Date(),next=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,0,0,2);setTimeout(scheduleLocalDateSync,Math.max(1000,next-now))}
 buildTextEditors();fillEditors();buildVideoEditors();fillVideoEditors();applyCoverStyle();bindCoverControls();scheduleLocalDateSync();
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab))});$('openEditor').onclick=()=>{closeActions();$('panel').classList.add('open')};$('closeEditor').onclick=()=>$('panel').classList.remove('open');$('saveText').onclick=saveTexts;$('saveVideos').onclick=saveVideos;$('videoModalClose').onclick=closeVideo;$('videoModal').onclick=e=>{if(e.target===$('videoModal'))closeVideo()};$('langToggle').onclick=()=>{currentLang=currentLang==='zh'?'th':'zh';applyLanguage()};
@@ -955,6 +1033,22 @@ applyLanguage();openDB().then(render).catch(()=>alert('浏览器未允许本地�
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);
   else bind();
+})();
+</script>
+
+
+<script id="openingHallClock">
+(function(){
+  function tick(){
+    var d=new Date(),date=document.getElementById('openingLiveDate'),time=document.getElementById('openingLiveTime');
+    if(date)date.textContent=new Intl.DateTimeFormat('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',weekday:'short'}).format(d);
+    if(time)time.textContent=new Intl.DateTimeFormat('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(d);
+  }
+  tick();setInterval(tick,1000);
+  var b=document.getElementById('openingEnterButton');
+  if(b)b.addEventListener('click',function(e){e.stopPropagation();document.getElementById('openStory')?.click()});
+  var y=0,o=document.getElementById('startOverlay');
+  if(o){o.addEventListener('touchstart',function(e){y=e.touches[0].clientY},{passive:true});o.addEventListener('touchend',function(e){if(y-e.changedTouches[0].clientY>45)document.getElementById('openStory')?.click()},{passive:true})}
 })();
 </script>
 
