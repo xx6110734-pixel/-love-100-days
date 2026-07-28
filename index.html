@@ -97,6 +97,19 @@ body:before{content:"";position:fixed;inset:0;z-index:-3;background:radial-gradi
 @media(max-width:720px){.pro-music-dock{left:8px;bottom:max(8px,env(safe-area-inset-bottom));width:calc(100vw - 184px);padding:5px;border-radius:19px}.pro-icon-btn{width:38px;height:38px;border-radius:12px}.pro-icon-btn.prev-mini,.pro-icon-btn.next-mini{display:none}.pro-tools{right:8px;bottom:max(8px,env(safe-area-inset-bottom));padding:5px;border-radius:19px}.pro-tool{width:46px;height:38px;border-radius:12px}.pro-track-kicker{display:none}.pro-track-name{font-size:.74rem}.action-modal{padding:9px}.playlist-sheet{border-radius:26px 26px 16px 16px}}
 @media(max-width:380px){.pro-music-dock{width:calc(100vw - 166px)}.pro-tool{width:40px}.pro-tool span{display:none}}
 
+
+/* ===== 发布纪念馆 ===== */
+.publish-card{margin:4px 0 14px;padding:16px;border:1px solid rgba(255,255,255,.14);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.035))}
+.publish-card h4{margin:0 0 7px;font-size:1rem}
+.publish-card .publish-desc{margin:0 0 13px;color:var(--muted);font-size:.82rem;line-height:1.65}
+.publish-link-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px}
+.publish-link-row input{min-width:0}
+.publish-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.publish-actions .btn:first-child{grid-column:1/-1}
+.publish-status{margin-top:11px;padding:9px 11px;border-radius:12px;background:rgba(0,0,0,.18);font-size:.78rem;color:var(--muted);line-height:1.5}
+.publish-status.ready{color:#f7dbe6;border:1px solid rgba(255,190,215,.2)}
+@media(max-width:520px){.publish-link-row,.publish-actions{grid-template-columns:1fr}.publish-actions .btn:first-child{grid-column:auto}}
+
 </style>
 
 <style id="viewerModeStyles">
@@ -310,6 +323,81 @@ html[lang="th"] .final-page .glass:after{content:"จดหมายรัก"}
 @media(max-width:720px){.story-slideshow-slide{padding:8px 8px 80px}.story-slideshow-shell{height:calc(100svh - 96px);min-height:520px;border-radius:22px}.story-slide-arrow{width:40px;height:50px}.story-slide-prev{left:7px}.story-slide-next{right:7px}.story-slideshow-copy{bottom:50px}.content{padding-left:10px;padding-right:10px}.video-grid{grid-template-columns:1fr!important}}
 @media(prefers-reduced-motion:reduce){.story-slideshow-item{transition:opacity .15s linear;transform:none}.slide.active .glass{animation:none}}
 </style>
+
+<style id="directEditButtonStyles">
+#directEditButton{
+  display:none;
+  position:fixed;
+  right:14px;
+  bottom:calc(72px + env(safe-area-inset-bottom));
+  z-index:100000;
+  align-items:center;
+  gap:8px;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:999px;
+  padding:11px 16px;
+  background:linear-gradient(145deg,rgba(151,72,110,.96),rgba(71,34,60,.96));
+  color:#fff;
+  box-shadow:0 16px 45px rgba(0,0,0,.38);
+  font:600 14px/1 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+html.edit-mode #directEditButton,
+body.edit-mode #directEditButton{display:flex!important}
+.direct-edit-icon{font-size:18px;line-height:1}
+@media(max-width:720px){
+  #directEditButton{
+    right:10px;
+    bottom:calc(62px + env(safe-area-inset-bottom));
+    padding:10px 14px;
+  }
+}
+</style>
+
+
+<style id="museumDetailPolish">
+/* 首页：更像纪念馆入口 */
+.start-overlay{background:radial-gradient(circle at 50% 38%,rgba(185,88,128,.22),transparent 28%),radial-gradient(circle at 18% 12%,rgba(104,72,153,.18),transparent 34%),linear-gradient(155deg,#0d080f 0%,#19101b 52%,#0b070d 100%)}
+.start-overlay::after{inset:clamp(10px,2.3vw,24px);border-color:rgba(255,255,255,.09)}
+.opener{width:min(520px,92vw);padding:34px 20px 28px}
+.opener h2{font-size:clamp(2rem,8vw,3.55rem);letter-spacing:.02em;margin-bottom:18px}
+.opening-kicker{font-size:.64rem;letter-spacing:.30em;margin-bottom:10px}
+.seal-wrap{width:112px;height:112px;margin-bottom:18px}.seal{width:78px;height:78px;font-size:2.35rem}
+.opening-meta{margin-top:13px}.opening-foot{margin-top:18px}
+/* 主展厅标题与实时钟 */
+.story-slideshow-slide{min-height:100svh;padding:clamp(26px,5vh,54px) 12px 86px}
+.story-museum-content{width:min(1100px,100%);margin:auto;display:flex;flex-direction:column;justify-content:center;gap:clamp(16px,2.8vh,28px)}
+.story-museum-heading{text-align:center;padding:0 14px}
+.story-museum-heading h2{margin:.12em 0 .18em;font-size:clamp(2.05rem,6vw,4.6rem);line-height:1.06}
+.museum-clock{display:flex;align-items:baseline;justify-content:center;gap:12px;flex-wrap:wrap;color:#eadce3;font-variant-numeric:tabular-nums}
+.museum-date{font-size:clamp(.78rem,1.8vw,.96rem);letter-spacing:.08em;opacity:.74}
+.museum-time{font:600 clamp(1rem,2.5vw,1.35rem)/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;color:#f1d7a4}
+.story-slideshow-shell{height:min(64svh,680px);min-height:390px;border-radius:26px}
+.story-slideshow-item:after{background:linear-gradient(180deg,rgba(5,2,5,.02),transparent 70%,rgba(5,2,5,.30))}
+/* 第一章：缩小为精致展柜 */
+.compact-first-chapter{min-height:auto;padding-top:clamp(34px,7vh,76px);padding-bottom:clamp(70px,10vh,110px)}
+.compact-first-chapter .content{width:min(900px,100%)}
+.compact-first-chapter .glass{padding:clamp(22px,4vw,38px);border-radius:24px}
+.compact-first-chapter .section-kicker{font-size:.68rem;margin-bottom:8px}
+.compact-first-chapter h2{font-size:clamp(1.65rem,4.6vw,2.7rem);margin:.12em 0 .3em}
+.compact-first-chapter .copy{font-size:clamp(.9rem,2.2vw,1.02rem);line-height:1.72;margin-bottom:18px}
+.compact-first-chapter .photo-main{max-width:760px;margin:18px auto 0;height:min(43svh,430px)!important;min-height:250px;border-radius:20px!important}
+/* 章节统一为展厅感 */
+.slide .glass{border-color:rgba(255,255,255,.12);box-shadow:0 24px 72px rgba(0,0,0,.25)}
+.section-kicker{letter-spacing:.16em}
+@media(max-width:720px){
+ .story-slideshow-slide{padding:24px 8px 78px}
+ .story-museum-content{gap:15px}
+ .story-museum-heading h2{font-size:clamp(2rem,10vw,3rem)}
+ .museum-clock{gap:7px 10px}.museum-date{width:100%;font-size:.74rem}.museum-time{font-size:1.05rem}
+ .story-slideshow-shell{height:54svh;min-height:350px;border-radius:20px}
+ .story-slide-arrow{width:36px;height:44px;font-size:1.65rem}
+ .compact-first-chapter .glass{padding:20px 16px}
+ .compact-first-chapter .photo-main{height:38svh!important;min-height:230px}
+}
+</style>
+
 </head>
 <body>
 <div class="scroll-progress" id="scrollProgress"></div><div id="aurora"></div><div id="particles"></div>
@@ -326,14 +414,17 @@ html[lang="th"] .final-page .glass:after{content:"จดหมายรัก"}
 </div>
 <section class="slide active"><div class="content"><div class="glass"><h1 class="title" id="vMainTitle"></h1><p class="copy" id="vCover"></p><div class="date" id="vDate"></div></div></div></section>
 <section class="slide story-slideshow-slide">
-  <div class="content">
+  <div class="content story-museum-content">
+    <header class="story-museum-heading">
+      <div class="section-kicker bilingual-kicker" data-zh="序章 · 主展厅" data-th="บทนำ · ห้องจัดแสดงหลัก">序章 · 主展厅</div>
+      <h2 id="storySlideshowTitle">我们的爱情故事</h2>
+      <div class="museum-clock" aria-live="polite">
+        <div class="museum-date" id="museumLiveDate"></div>
+        <div class="museum-time" id="museumLiveTime"></div>
+      </div>
+    </header>
     <div class="story-slideshow-shell" id="storySlideshow">
       <div class="story-slideshow-track" id="storySlideshowTrack"></div>
-      <div class="story-slideshow-copy">
-        <div class="section-kicker bilingual-kicker" data-zh="序章 · 我们的爱情故事" data-th="บทนำ · เรื่องราวความรักของเรา">序章 · 我们的爱情故事</div>
-        <h2 id="storySlideshowTitle">我们的爱情故事</h2>
-        <div class="story-slideshow-sub" id="storySlideshowSub">每一张照片，都是我们共同走过的一页。</div>
-      </div>
       <button class="story-slide-arrow story-slide-prev" id="storySlidePrev" type="button" aria-label="上一张">‹</button>
       <button class="story-slide-arrow story-slide-next" id="storySlideNext" type="button" aria-label="下一张">›</button>
       <div class="story-slide-dots" id="storySlideDots"></div>
@@ -341,16 +432,16 @@ html[lang="th"] .final-page .glass:after{content:"จดหมายรัก"}
   </div>
 </section>
 
-<section class="slide"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker" data-zh="第一章 · 我们的开始" data-th="บทที่ 1 · จุดเริ่มต้นของเรา">第一章 · 我们的开始</div><h2 id="vPeriodTitle"></h2><p class="copy" id="vPeriod"></p><div class="photo-main" id="coverFrame"></div></div></div></section>
+<section class="slide compact-first-chapter"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker" data-zh="第一章 · 我们的开始" data-th="บทที่ 1 · จุดเริ่มต้นของเรา">第一章 · 我们的开始</div><h2 id="vPeriodTitle"></h2><p class="copy" id="vPeriod"></p><div class="photo-main" id="coverFrame"></div></div></div></section>
 <section class="slide"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker" data-zh="第二章 · 我们的足迹" data-th="บทที่ 2 · เส้นทางของเรา">第二章 · 我们的足迹</div><h2 id="vFootprintsTitle"></h2><p class="copy" id="vFootprintsDesc"></p><div class="footprints" id="footprintsList"></div></div></div></section>
 <section class="slide"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker" data-zh="第三章 · 回忆" data-th="บทที่ 3 · ความทรงจำ">第三章 · 回忆</div><h2 id="vTitle1"></h2><p class="copy" id="vText1"></p></div></div></section>
-<section class="slide"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker" data-zh="第四章 · 心动" data-th="บทที่ 4 · หัวใจเต้นแรง">第四章 · 心动</div><h2 id="vTitle2"></h2><p class="copy" id="vText2"></p></div></div></section>
-<section class="slide"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker" data-zh="第五章 · 我们的故事" data-th="บทที่ 5 · เรื่องราวของเรา">第五章 · 我们的故事</div><h2 id="vTitle3"></h2><p class="copy" id="vText3"></p></div></div></section>
-<section class="slide"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker" data-zh="第六章 · 她的话" data-th="บทที่ 6 · คำพูดของเธอ">第六章 · 她的话</div><h2 id="vTitle4"></h2><p class="copy" id="vText4"></p></div></div></section>
-<section class="slide"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker" data-zh="第七章 · 明天" data-th="บทที่ 7 · วันพรุ่งนี้">第七章 · 明天</div><h2 id="vTitle5"></h2><p class="copy" id="vText5"></p></div></div></section>
+<section class="slide"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker" data-zh="第四章 · 不愉快" data-th="บทที่ 4 · ช่วงเวลาที่ไม่ดี">第四章 · 不愉快</div><h2 id="vTitle2"></h2><p class="copy" id="vText2"></p></div></div></section>
+<section class="slide"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker" data-zh="第五章 · 自责" data-th="บทที่ 5 · ความรู้สึกผิด">第五章 · 自责</div><h2 id="vTitle3"></h2><p class="copy" id="vText3"></p></div></div></section>
+<section class="slide"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker" data-zh="第六章 · 不愉快" data-th="บทที่ 6 · ช่วงเวลาที่ไม่ดี">第六章 · 不愉快</div><h2 id="vTitle4"></h2><p class="copy" id="vText4"></p></div></div></section>
+<section class="slide"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker" data-zh="第七章 · 她的故事" data-th="บทที่ 7 · เรื่องราวของเธอ">第七章 · 她的故事</div><h2 id="vTitle5"></h2><p class="copy" id="vText5"></p></div></div></section>
 <section class="slide"><div class="content"><div class="glass"><div class="gallery-head"><div><div class="section-kicker bilingual-kicker" data-zh="第八章 · 照片" data-th="บทที่ 8 · รูปภาพ">第八章 · 照片</div><h2 id="vGalleryTitle"></h2></div><span class="photo-count" id="photoCount"></span></div><p class="copy" id="vGalleryDesc"></p><div class="gallery" id="gallery"></div></div></div></section><section class="slide"><div class="content"><div class="glass"><div class="gallery-head"><div><div class="section-kicker bilingual-kicker" data-zh="第九章 · 视频" data-th="บทที่ 9 · วิดีโอ">第九章 · 视频</div><h2 id="vVideoTitle"></h2></div><span class="photo-count" id="videoCount"></span></div><p class="copy" id="vVideoDesc"></p><div class="video-gallery" id="videoGallery"></div></div></div></section>
 <section class="slide"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker" data-zh="第十章 · 承诺" data-th="บทที่ 10 · คำสัญญา">第十章 · 承诺</div><div style="font-size:5rem">❤</div><h2 id="vEndTitle"></h2><p class="copy" id="vEndText"></p></div></div></section>
-<section class="slide final-page"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker" data-zh="最终章 · 永远" data-th="บทสุดท้าย · ตลอดไป">最终章 · 永远</div><div class="final-mark">∞</div><h2 id="vFinalTitle"></h2><p class="copy" id="vFinalText"></p><div class="final-sign" id="vFinalSign"></div></div></div></section>
+<section class="slide final-page"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker" data-zh="最终章" data-th="บทสุดท้าย">最终章</div><div class="final-mark">∞</div><h2 id="vFinalTitle"></h2><p class="copy" id="vFinalText"></p><div class="final-sign" id="vFinalSign"></div></div></div></section>
 <div class="pro-music-dock" aria-label="音乐播放器">
 <button class="pro-icon-btn prev-mini" id="prevTrack" aria-label="上一首"><svg viewBox="0 0 24 24"><path d="M19 20 9 12l10-8v16Z"/><path d="M5 5v14"/></svg></button>
 <button class="pro-icon-btn pro-play" id="musicBtn" aria-label="播放或暂停">▶</button>
@@ -363,6 +454,12 @@ html[lang="th"] .final-page .glass:after{content:"จดหมายรัก"}
 <button class="pro-tool" id="projectStart" aria-label="投屏展示"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span id="projectToolLabel">投屏</span></button>
 <button class="pro-tool" id="moreTools" aria-label="更多工具"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg><span id="moreToolLabel">更多</span></button>
 </div>
+
+<button id="directEditButton" type="button" aria-label="打开编辑器">
+  <span class="direct-edit-icon">✎</span>
+  <span>编辑网页</span>
+</button>
+
 <div class="action-modal" id="actionModal"><div class="action-sheet"><div class="action-grabber"></div><div class="action-title" id="actionTitle">网站管理</div><div class="action-grid">
 <button class="action-item" id="openEditor"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg><span><strong id="editActionTitle">编辑网站</strong><small id="editActionDesc">文字、照片、视频和音乐</small></span></button>
 <button class="action-item" id="openPlaylistFromMenu"><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span><strong id="playlistActionTitle">查看歌单</strong><small id="playlistActionDesc">选择和切换音乐</small></span></button>
@@ -380,13 +477,52 @@ html[lang="th"] .final-page .glass:after{content:"จดหมายรัก"}
 <div id="videoEditors"></div><button class="btn" id="saveVideos">保存视频设置</button>
 </div>
 <div class="tab" id="musicTab"><div class="editor-card"><h4>内置音乐库</h4><div class="hint">网站已接入 8 首中文恋爱歌曲的 YouTube 官方播放器。音乐不会储存在你的网页中；访客第一次播放时需要轻触播放键。部分地区或版权设置可能导致个别歌曲无法嵌入。你仍可添加自己拥有使用权的音频。</div></div><label>添加多首歌曲</label><div class="upload"><input type="file" id="musicUpload" accept="audio/*" multiple></div><label>播放模式</label><select id="playMode"><option value="sequence">顺序循环</option><option value="shuffle">随机播放</option><option value="single">单曲循环</option></select><div class="asset-list" id="musicManager"></div></div>
-<div class="tab" id="dataTab"><button class="btn dark" id="projectFromEditor">进入投屏模式</button><button class="btn" id="exportBackup">导出完整备份</button><input type="file" id="importBackup" accept=".json" hidden><button class="btn light" id="importBackupBtn">导入备份</button><button class="btn danger" id="reset">恢复默认并清空资料</button></div>
+<div class="tab" id="dataTab">
+<div class="publish-card">
+  <h4>发布纪念馆</h4>
+  <p class="publish-desc">将当前编辑内容、照片和自定义音乐写入公开版 HTML。下载后用它覆盖 GitHub 仓库中的 index.html，原公开链接保持不变。</p>
+  <div class="publish-link-row">
+    <input id="publicLink" type="url" placeholder="公开参观链接">
+    <button class="btn light" id="copyPublicLink" type="button">复制链接</button>
+  </div>
+  <div class="publish-actions">
+    <button class="btn" id="generatePublicHtml" type="button">生成公开版 index.html</button>
+    <button class="btn light" id="previewPublic" type="button">预览访客页面</button>
+    <button class="btn light" id="refreshPublicLink" type="button">使用当前网址</button>
+  </div>
+  <div class="publish-status" id="publishStatus">尚未生成公开版本。发布前建议先导出完整备份。</div>
+</div>
+<button class="btn dark" id="projectFromEditor">进入投屏模式</button>
+<button class="btn" id="exportBackup">导出完整备份</button>
+<input type="file" id="importBackup" accept=".json" hidden>
+<button class="btn light" id="importBackupBtn">导入备份</button>
+<button class="btn danger" id="reset">恢复默认并清空资料</button>
+</div>
 </aside><div class="toast" id="toast"></div>
+<script id="publishedMuseumData" type="application/json">null</script>
 <script>
 'use strict';
 const $=id=>document.getElementById(id),clone=o=>JSON.parse(JSON.stringify(o)),slides=[...document.querySelectorAll('.slide')];
-const defaults={lang:'zh',startDate:'2026-05-10',coverStyle:{width:98,height:520,radius:28,scale:100,x:50,y:50},zh:{mainTitle:'我们的100天',cover:'老婆，\n不知不觉，我们已经在一起100天了。❤️',date:'2026.05.10 — 未来',periodTitle:'恋爱时期',period:'从我们确定关系的那一天开始，\n每一个普通的日子，都因为有你而变得特别。',footprintsTitle:'我们的足迹',footprintsDesc:'我们走过的每一步，都值得被认真记住。',footprints:[{icon:'🤝',event:'第一次见面',date:'',text:'终于见到彼此的那一天。'},{icon:'💍',event:'正式在一起',date:'',text:'从这一天开始，我们有了共同的名字。'},{icon:'📱',event:'第一次视频通话',date:'',text:'隔着屏幕，也能感受到彼此的温柔。'},{icon:'🌹',event:'第一次约会',date:'',text:'一场只属于我们两个人的浪漫回忆。'},{icon:'😢',event:'第一次吵架',date:'',text:'爱情不总是完美，但我们开始学会理解彼此。'},{icon:'🤍',event:'和好如初',date:'',text:'比争执更重要的，是我们都没有放开对方。'},{icon:'🎂',event:'一起过生日',date:'',text:'陪你度过特别的一天，也陪你走向新的一岁。'},{icon:'✈️',event:'第一次旅行',date:'',text:'和喜欢的人一起去看更大的世界。'},{icon:'🏡',event:'见家人',date:'',text:'我们的关系，开始走进彼此更真实的生活。'},{icon:'♾️',event:'未来继续更新',date:'',text:'故事没有结束，新的纪念日还会越来越多。'}],videoTitle:'我们的影像',videoDesc:'把你的笑声、声音和每一个真实的瞬间，都好好留在这里。',videos:[{src:'',title:'第一次见面'},{src:'',title:'第一次约会'},{src:'',title:'最喜欢的一段视频'},{src:'',title:'我们的日常'},{src:'',title:'特别纪念'},{src:'',title:'未来继续添加'}],chapters:[{title:'我们的足迹',text:'把我们一起走过的路，慢慢记录在这里。'},{title:'心动瞬间',text:'有些瞬间看似平凡，却让我一次又一次心动。'},{title:'爱的故事',text:'我们的故事不需要完美，只要每一页都有彼此。'},{title:'她说过的话',text:'把她用泰语说过的温柔原话，连同准确的中文意思一起珍藏。'},{title:'未来的我们',text:'愿以后的每一天，我们仍然愿意理解、陪伴和珍惜彼此。'}],galleryTitle:'我们的照片墙',galleryDesc:'把属于我们的回忆都收藏在这里。',endTitle:'100天不是终点',endText:'而是我们爱情新的开始。\n\n我爱你，不止100天。',finalTitle:'故事未完，爱仍继续',finalText:'谢谢你来到我的世界，也谢谢你一直陪着我。\n\n未来的日子，我们继续好好沟通、彼此理解，一起面对生活里的每一件事。\n\n我会继续爱你、珍惜你、陪伴你，直到很久很久以后。',finalSign:'致我最爱的人'},th:{mainTitle:'100 วันของเรา',cover:'ที่รัก\nเผลอแป๊บเดียว เราก็คบกันมา 100 วันแล้วนะ ❤️',date:'10.05.2026 — ตลอดไป',periodTitle:'ช่วงเวลาที่เรารักกัน',period:'ตั้งแต่วันที่เราตกลงคบกัน\nทุกวันธรรมดาก็กลายเป็นวันพิเศษ เพราะมีเธออยู่ข้าง ๆ',footprintsTitle:'รอยเท้าของเรา',footprintsDesc:'ทุกย่างก้าวที่เราเดินมาด้วยกัน ล้วนควรค่าแก่การจดจำ',footprints:[{icon:'🤝',event:'วันที่เราเจอกันครั้งแรก',date:'',text:'วันที่เราได้พบกันจริง ๆ ในที่สุด'},{icon:'💍',event:'วันที่เราเริ่มคบกัน',date:'',text:'ตั้งแต่วันนี้ เรามีเรื่องราวของเราสองคน'},{icon:'📱',event:'วิดีโอคอลครั้งแรก',date:'',text:'แม้อยู่คนละที่ แต่ก็สัมผัสได้ถึงความอบอุ่นของกันและกัน'},{icon:'🌹',event:'เดตแรกของเรา',date:'',text:'ความทรงจำแสนโรแมนติกที่เป็นของเราสองคน'},{icon:'😢',event:'ทะเลาะกันครั้งแรก',date:'',text:'ความรักอาจไม่สมบูรณ์แบบ แต่เราเริ่มเรียนรู้ที่จะเข้าใจกัน'},{icon:'🤍',event:'วันที่เราคืนดีกัน',date:'',text:'สิ่งสำคัญกว่าความขัดแย้ง คือเรายังไม่ปล่อยมือกัน'},{icon:'🎂',event:'ฉลองวันเกิดด้วยกัน',date:'',text:'อยู่ข้างเธอในวันพิเศษ และก้าวเข้าสู่อีกปีไปด้วยกัน'},{icon:'✈️',event:'ทริปแรกของเรา',date:'',text:'ออกไปดูโลกกว้างกับคนที่เรารัก'},{icon:'🏡',event:'พบครอบครัว',date:'',text:'ความสัมพันธ์ของเราเริ่มเข้ามาอยู่ในชีวิตจริงของกันและกัน'},{icon:'♾️',event:'เรื่องราวที่ยังเขียนต่อ',date:'',text:'เรื่องราวยังไม่จบ และจะมีวันสำคัญเพิ่มขึ้นอีกมากมาย'}],videoTitle:'วิดีโอของเรา',videoDesc:'เก็บเสียงหัวเราะ เสียงของเธอ และทุกช่วงเวลาที่เป็นจริงไว้ที่นี่',videos:[{src:'',title:'วันที่เราเจอกันครั้งแรก'},{src:'',title:'เดตแรกของเรา'},{src:'',title:'วิดีโอที่ฉันชอบที่สุด'},{src:'',title:'ชีวิตประจำวันของเรา'},{src:'',title:'ความทรงจำพิเศษ'},{src:'',title:'เพิ่มในอนาคต'}],chapters:[{title:'รอยเท้าของเรา',text:'ค่อย ๆ บันทึกทุกเส้นทางที่เราเคยเดินไปด้วยกันไว้ที่นี่'},{title:'ช่วงเวลาที่ทำให้ใจเต้น',text:'บางช่วงเวลาอาจดูธรรมดา แต่กลับทำให้ฉันตกหลุมรักเธอซ้ำแล้วซ้ำเล่า'},{title:'เรื่องราวความรักของเรา',text:'เรื่องราวของเราไม่จำเป็นต้องสมบูรณ์แบบ ขอเพียงทุกหน้ามีเราสองคน'},{title:'คำพูดของเธอ',text:'เก็บคำพูดภาษาไทยของเธอไว้ พร้อมความหมายภาษาจีนที่ถูกต้องและเป็นธรรมชาติ'},{title:'เราในอนาคต',text:'ขอให้ทุกวันต่อจากนี้ เรายังคงเข้าใจกัน อยู่เคียงข้างกัน และเห็นคุณค่าของกันและกันเสมอ'}],galleryTitle:'กำแพงรูปภาพของเรา',galleryDesc:'เก็บทุกความทรงจำของเราไว้ที่นี่',endTitle:'100 วันไม่ใช่จุดสิ้นสุด',endText:'แต่เป็นจุดเริ่มต้นบทใหม่ของความรักของเรา\n\nฉันรักเธอ ไม่ใช่แค่ 100 วัน',finalTitle:'เรื่องราวยังไม่จบ ความรักยังคงดำเนินต่อไป',finalText:'ขอบคุณที่เข้ามาในโลกของฉัน และขอบคุณที่อยู่เคียงข้างกันเสมอ\n\nจากนี้ไป เราจะคุยกันดี ๆ เข้าใจกัน และเผชิญทุกเรื่องในชีวิตไปด้วยกัน\n\nฉันจะยังคงรัก เห็นคุณค่า และอยู่ข้างเธอไปอีกนานแสนนาน',finalSign:'ถึงคนที่ฉันรักที่สุด'}};
-let stored=null;try{stored=JSON.parse(localStorage.getItem('love_museum_v6')||'null')}catch{}
+const PAGE_PARAMS=new URLSearchParams(location.search);
+const EDIT_MODE=PAGE_PARAMS.get('edit')==='1';
+const PREVIEW_MODE=PAGE_PARAMS.get('preview')==='1';
+let PUBLISHED_PAYLOAD=null;
+try{
+  const raw=$('publishedMuseumData')?.textContent?.trim();
+  if(raw&&raw!=='null')PUBLISHED_PAYLOAD=JSON.parse(raw);
+}catch(e){console.warn('公开数据读取失败',e)}
+const USE_PUBLISHED_DATA=!EDIT_MODE&&!PREVIEW_MODE&&PUBLISHED_PAYLOAD?.data;
+function updateMuseumClock(){
+  const now=new Date(),lang=(typeof currentLang!=='undefined'?currentLang:(data?.lang||'zh'));
+  const locale=lang==='th'?'th-TH':'zh-CN';
+  const dateEl=$('museumLiveDate'),timeEl=$('museumLiveTime');
+  if(dateEl) dateEl.textContent=new Intl.DateTimeFormat(locale,{year:'numeric',month:'long',day:'numeric',weekday:'long'}).format(now);
+  if(timeEl) timeEl.textContent=new Intl.DateTimeFormat(locale,{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);
+}
+updateMuseumClock();setInterval(updateMuseumClock,1000);
+
+const defaults={lang:'zh',startDate:'2026-05-10',coverStyle:{width:98,height:520,radius:28,scale:100,x:50,y:50},zh:{mainTitle:'我们的100天',cover:'老婆，\n不知不觉，我们已经在一起100天了。❤️',date:'2026.05.10 — 未来',periodTitle:'恋爱时期',period:'从我们确定关系的那一天开始，\n每一个普通的日子，都因为有你而变得特别。',footprintsTitle:'我们的足迹',footprintsDesc:'我们走过的每一步，都值得被认真记住。',footprints:[{icon:'🤝',event:'第一次见面',date:'',text:'终于见到彼此的那一天。'},{icon:'💍',event:'正式在一起',date:'',text:'从这一天开始，我们有了共同的名字。'},{icon:'📱',event:'第一次视频通话',date:'',text:'隔着屏幕，也能感受到彼此的温柔。'},{icon:'🌹',event:'第一次约会',date:'',text:'一场只属于我们两个人的浪漫回忆。'},{icon:'😢',event:'第一次吵架',date:'',text:'爱情不总是完美，但我们开始学会理解彼此。'},{icon:'🤍',event:'和好如初',date:'',text:'比争执更重要的，是我们都没有放开对方。'},{icon:'🎂',event:'一起过生日',date:'',text:'陪你度过特别的一天，也陪你走向新的一岁。'},{icon:'✈️',event:'第一次旅行',date:'',text:'和喜欢的人一起去看更大的世界。'},{icon:'🏡',event:'见家人',date:'',text:'我们的关系，开始走进彼此更真实的生活。'},{icon:'♾️',event:'未来继续更新',date:'',text:'故事没有结束，新的纪念日还会越来越多。'}],videoTitle:'我们的影像',videoDesc:'把你的笑声、声音和每一个真实的瞬间，都好好留在这里。',videos:[{src:'',title:'第一次见面'},{src:'',title:'第一次约会'},{src:'',title:'最喜欢的一段视频'},{src:'',title:'我们的日常'},{src:'',title:'特别纪念'},{src:'',title:'未来继续添加'}],chapters:[{title:'回忆',text:'把属于我们的回忆，认真收藏在这里。'},{title:'不愉快',text:'记录那些让我们难过，也让我们更加了解彼此的时刻。'},{title:'自责',text:'面对自己的不足，也记住想要变得更好的心。'},{title:'不愉快',text:'有些经历不够美好，但它们也是我们故事的一部分。'},{title:'她的故事',text:'这里记录属于她的经历、心情与没有说完的话。'}],galleryTitle:'我们的照片墙',galleryDesc:'把属于我们的回忆都收藏在这里。',endTitle:'100天不是终点',endText:'而是我们爱情新的开始。\n\n我爱你，不止100天。',finalTitle:'故事未完，爱仍继续',finalText:'谢谢你来到我的世界，也谢谢你一直陪着我。\n\n未来的日子，我们继续好好沟通、彼此理解，一起面对生活里的每一件事。\n\n我会继续爱你、珍惜你、陪伴你，直到很久很久以后。',finalSign:'致我最爱的人'},th:{mainTitle:'100 วันของเรา',cover:'ที่รัก\nเผลอแป๊บเดียว เราก็คบกันมา 100 วันแล้วนะ ❤️',date:'10.05.2026 — ตลอดไป',periodTitle:'ช่วงเวลาที่เรารักกัน',period:'ตั้งแต่วันที่เราตกลงคบกัน\nทุกวันธรรมดาก็กลายเป็นวันพิเศษ เพราะมีเธออยู่ข้าง ๆ',footprintsTitle:'รอยเท้าของเรา',footprintsDesc:'ทุกย่างก้าวที่เราเดินมาด้วยกัน ล้วนควรค่าแก่การจดจำ',footprints:[{icon:'🤝',event:'วันที่เราเจอกันครั้งแรก',date:'',text:'วันที่เราได้พบกันจริง ๆ ในที่สุด'},{icon:'💍',event:'วันที่เราเริ่มคบกัน',date:'',text:'ตั้งแต่วันนี้ เรามีเรื่องราวของเราสองคน'},{icon:'📱',event:'วิดีโอคอลครั้งแรก',date:'',text:'แม้อยู่คนละที่ แต่ก็สัมผัสได้ถึงความอบอุ่นของกันและกัน'},{icon:'🌹',event:'เดตแรกของเรา',date:'',text:'ความทรงจำแสนโรแมนติกที่เป็นของเราสองคน'},{icon:'😢',event:'ทะเลาะกันครั้งแรก',date:'',text:'ความรักอาจไม่สมบูรณ์แบบ แต่เราเริ่มเรียนรู้ที่จะเข้าใจกัน'},{icon:'🤍',event:'วันที่เราคืนดีกัน',date:'',text:'สิ่งสำคัญกว่าความขัดแย้ง คือเรายังไม่ปล่อยมือกัน'},{icon:'🎂',event:'ฉลองวันเกิดด้วยกัน',date:'',text:'อยู่ข้างเธอในวันพิเศษ และก้าวเข้าสู่อีกปีไปด้วยกัน'},{icon:'✈️',event:'ทริปแรกของเรา',date:'',text:'ออกไปดูโลกกว้างกับคนที่เรารัก'},{icon:'🏡',event:'พบครอบครัว',date:'',text:'ความสัมพันธ์ของเราเริ่มเข้ามาอยู่ในชีวิตจริงของกันและกัน'},{icon:'♾️',event:'เรื่องราวที่ยังเขียนต่อ',date:'',text:'เรื่องราวยังไม่จบ และจะมีวันสำคัญเพิ่มขึ้นอีกมากมาย'}],videoTitle:'วิดีโอของเรา',videoDesc:'เก็บเสียงหัวเราะ เสียงของเธอ และทุกช่วงเวลาที่เป็นจริงไว้ที่นี่',videos:[{src:'',title:'วันที่เราเจอกันครั้งแรก'},{src:'',title:'เดตแรกของเรา'},{src:'',title:'วิดีโอที่ฉันชอบที่สุด'},{src:'',title:'ชีวิตประจำวันของเรา'},{src:'',title:'ความทรงจำพิเศษ'},{src:'',title:'เพิ่มในอนาคต'}],chapters:[{title:'ความทรงจำ',text:'เก็บความทรงจำของเราไว้อย่างตั้งใจในที่แห่งนี้'},{title:'ช่วงเวลาที่ไม่ดี',text:'บันทึกช่วงเวลาที่ทำให้เราเสียใจ และทำให้เราเข้าใจกันมากขึ้น'},{title:'ความรู้สึกผิด',text:'ยอมรับข้อบกพร่องของตัวเอง และจดจำความตั้งใจที่จะเป็นคนที่ดีขึ้น'},{title:'ช่วงเวลาที่ไม่ดี',text:'บางเรื่องอาจไม่สวยงาม แต่ก็เป็นส่วนหนึ่งของเรื่องราวของเรา'},{title:'เรื่องราวของเธอ',text:'พื้นที่สำหรับเรื่องราว ความรู้สึก และคำพูดที่ยังไม่จบของเธอ'}],galleryTitle:'กำแพงรูปภาพของเรา',galleryDesc:'เก็บทุกความทรงจำของเราไว้ที่นี่',endTitle:'100 วันไม่ใช่จุดสิ้นสุด',endText:'แต่เป็นจุดเริ่มต้นบทใหม่ของความรักของเรา\n\nฉันรักเธอ ไม่ใช่แค่ 100 วัน',finalTitle:'เรื่องราวยังไม่จบ ความรักยังคงดำเนินต่อไป',finalText:'ขอบคุณที่เข้ามาในโลกของฉัน และขอบคุณที่อยู่เคียงข้างกันเสมอ\n\nจากนี้ไป เราจะคุยกันดี ๆ เข้าใจกัน และเผชิญทุกเรื่องในชีวิตไปด้วยกัน\n\nฉันจะยังคงรัก เห็นคุณค่า และอยู่ข้างเธอไปอีกนานแสนนาน',finalSign:'ถึงคนที่ฉันรักที่สุด'}};
+let stored=null;if(USE_PUBLISHED_DATA){stored=clone(PUBLISHED_PAYLOAD.data)}else{try{stored=JSON.parse(localStorage.getItem('love_museum_v6')||'null')}catch{}}
 function migrate(old){if(!old)return clone(defaults);const n=clone(defaults);n.startDate=old.startDate||n.startDate;n.coverStyle={...n.coverStyle,...(old.coverStyle||{})};n.zh.mainTitle=old.mainTitle||n.zh.mainTitle;n.zh.cover=old.cover||n.zh.cover;n.zh.date=old.date||n.zh.date;n.zh.period=old.period||n.zh.period;n.zh.periodTitle=old.periodTitle||n.zh.periodTitle;if(old.chapters)n.zh.chapters=n.zh.chapters.map((c,i)=>({...c,...(old.chapters[i]||{}),title:(old.chapters[i]||{}).title||c.title,text:(old.chapters[i]||{}).text||c.text}));if(old.gallery){n.zh.galleryTitle=old.gallery.title||n.zh.galleryTitle;n.zh.galleryDesc=old.gallery.desc||n.zh.galleryDesc}n.zh.endTitle=old.endTitle||n.zh.endTitle;n.zh.endText=old.endText||n.zh.endText;return n}
 if(!stored){let old=null;try{old=JSON.parse(localStorage.getItem('love_museum_v5')||'null')}catch{}stored=migrate(old)}let data={...clone(defaults),...stored};data.zh={...defaults.zh,...(data.zh||{})};data.th={...defaults.th,...(data.th||{})};
 data.zh.footprintsTitle=data.zh.footprintsTitle||defaults.zh.footprintsTitle;
@@ -399,7 +535,7 @@ data.th.footprints=defaults.th.footprints.map((x,i)=>({...x,...(data.th.footprin
 ['finalTitle','finalText','finalSign'].forEach(k=>{data.zh[k]=data.zh[k]||defaults.zh[k];data.th[k]=data.th[k]||defaults.th[k]});
 data.coverStyle={...defaults.coverStyle,...(data.coverStyle||{})};data.zh.chapters=defaults.zh.chapters.map((x,i)=>({...x,...(data.zh.chapters?.[i]||{})}));data.th.chapters=defaults.th.chapters.map((x,i)=>({...x,...(data.th.chapters?.[i]||{})}));let currentLang=data.lang==='th'?'th':'zh';
 const ui={zh:{days:'相爱的日子',empty:'照片墙还没有照片',count:n=>`共 ${n} 张照片`,music:'音乐未开始',project:'投屏',edit:'编辑',exit:'退出',open:'轻触开启我们的故事',coverEmpty:'上传一张最喜欢的合照'},th:{days:'วันที่เรารักกัน',empty:'ยังไม่มีรูปภาพในกำแพงรูปภาพ',count:n=>`รูปภาพทั้งหมด ${n} รูป`,music:'ยังไม่ได้เปิดเพลง',project:'นำเสนอ',edit:'แก้ไข',exit:'ออก',open:'แตะเพื่อเปิดเรื่องราวของเรา',coverEmpty:'อัปโหลดรูปคู่ที่ชอบที่สุด'}};
-function saveData(){data.lang=currentLang;localStorage.setItem('love_museum_v6',JSON.stringify(data))}function notify(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(notify.timer);notify.timer=setTimeout(()=>t.classList.remove('show'),1800)}
+function saveData(){data.lang=currentLang;if(!USE_PUBLISHED_DATA)localStorage.setItem('love_museum_v6',JSON.stringify(data))}function notify(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(notify.timer);notify.timer=setTimeout(()=>t.classList.remove('show'),1800)}
 function buildTextEditors(){const block=(key,label)=>`<div class="editor-card"><h4>${label}</h4><div class="bilingual-grid"><div><label>中文</label><textarea id="zh_${key}"></textarea></div><div><label>ไทย</label><textarea id="th_${key}"></textarea></div></div></div>`;let h=block('mainTitle','封面主标题')+block('cover','封面正文')+`<div class="editor-card"><h4>恋爱日期</h4><label>恋爱开始日期</label><input id="iStartDate" type="date"><div class="bilingual-grid"><div><label>中文日期显示</label><input id="zh_date" type="text"></div><div><label>วันที่ภาษาไทย</label><input id="th_date" type="text"></div></div></div>`+block('periodTitle','封面照片页标题')+block('period','封面照片页正文')+block('footprintsTitle','我们的足迹标题')+block('footprintsDesc','我们的足迹说明');for(let i=0;i<10;i++)h+=`<div class="editor-card"><h4>${defaults.zh.footprints[i].icon} 足迹 ${i+1}</h4><label>日期</label><input type="date" id="footDate${i}"><div class="bilingual-grid"><div><label>中文事件</label><input type="text" id="zh_footEvent${i}"><label>中文内容</label><textarea id="zh_footText${i}"></textarea></div><div><label>เหตุการณ์ภาษาไทย</label><input type="text" id="th_footEvent${i}"><label>เนื้อหาไทย</label><textarea id="th_footText${i}"></textarea></div></div></div>`;for(let i=0;i<5;i++)h+=block(`chapterTitle${i}`,`文字章节 ${i+1} 标题`)+block(`chapterText${i}`,`文字章节 ${i+1} 正文`);h+=block('galleryTitle','照片墙标题')+block('galleryDesc','照片墙说明')+block('videoTitle','视频页标题')+block('videoDesc','视频页说明')+block('endTitle','结尾标题')+block('endText','结尾正文')+block('finalTitle','正式结尾标题')+block('finalText','正式结尾正文')+block('finalSign','正式结尾署名');$('textEditors').innerHTML=h}
 function fillEditors(){['mainTitle','cover','date','periodTitle','period','footprintsTitle','footprintsDesc','galleryTitle','galleryDesc','videoTitle','videoDesc','endTitle','endText','finalTitle','finalText','finalSign'].forEach(k=>{const map={galleryTitle:'galleryTitle',galleryDesc:'galleryDesc'};['zh','th'].forEach(l=>{const el=$(`${l}_${k}`);if(el)el.value=data[l][map[k]||k]||''})});$('iStartDate').value=data.startDate;for(let i=0;i<10;i++){const d=data.zh.footprints[i].date||data.th.footprints[i].date||'';$(`footDate${i}`).value=d;['zh','th'].forEach(l=>{$(`${l}_footEvent${i}`).value=data[l].footprints[i].event;$(`${l}_footText${i}`).value=data[l].footprints[i].text})}for(let i=0;i<5;i++){['zh','th'].forEach(l=>{$(`${l}_chapterTitle${i}`).value=data[l].chapters[i].title;$(`${l}_chapterText${i}`).value=data[l].chapters[i].text})}}
 
@@ -489,8 +625,8 @@ function prepareVideoPoster(card){const video=card.querySelector('video');if(!vi
 function openVideo(src){const p=$('videoModalPlayer');p.src=src;$('videoModal').classList.add('open');p.play().catch(()=>{})}
 function closeVideo(){const p=$('videoModalPlayer');p.pause();p.removeAttribute('src');p.load();$('videoModal').classList.remove('open')}
 function applyLanguage(){const c=data[currentLang],u=ui[currentLang];document.documentElement.lang=currentLang==='zh'?'zh-CN':'th';$('vMainTitle').textContent=c.mainTitle;$('vCover').textContent=c.cover;$('vDate').textContent=c.date;$('vPeriodTitle').textContent=c.periodTitle;$('vPeriod').textContent=c.period;$('vFootprintsTitle').textContent=c.footprintsTitle;$('vFootprintsDesc').textContent=c.footprintsDesc;$('footprintsList').innerHTML=c.footprints.map(x=>`<div class="footprint-item"><span class="footprint-dot"></span><div class="footprint-card"><div class="footprint-top"><span class="footprint-icon">${esc(x.icon||'❤')}</span><span class="footprint-event">${esc(x.event||'')}</span>${x.date?`<span class="footprint-date">${esc(x.date)}</span>`:''}</div><div class="footprint-text">${esc(x.text||'')}</div></div></div>`).join('');c.chapters.forEach((x,i)=>{$(`vTitle${i+1}`).textContent=x.title;$(`vText${i+1}`).textContent=x.text});$('vGalleryTitle').textContent=c.galleryTitle;$('vGalleryDesc').textContent=c.galleryDesc;$('vVideoTitle').textContent=c.videoTitle;$('vVideoDesc').textContent=c.videoDesc;renderVideos();$('vEndTitle').textContent=c.endTitle;$('vEndText').textContent=c.endText;$('vFinalTitle').textContent=c.finalTitle;$('vFinalText').textContent=c.finalText;$('vFinalSign').textContent=c.finalSign;$('playlistTitle').textContent=currentLang==='zh'?'我们的歌单':'เพลย์ลิสต์ของเรา';if($('daysLabel'))$('daysLabel').textContent=u.days;$('openTitle').textContent=c.mainTitle;$('openHint').textContent=u.open;$('musicTrackName').textContent=playing&&playlist[trackIndex]?playlist[trackIndex].name:u.music;$('musicKicker').textContent=currentLang==='zh'?'音乐播放器 · 点击查看歌单':'เครื่องเล่นเพลง · แตะเพื่อดูเพลย์ลิสต์';$('projectToolLabel').textContent=u.project;$('editActionTitle').textContent=u.edit;$('exitProject').textContent=u.exit;$('langToolLabel').textContent=currentLang==='zh'?'泰语':'中文';$('moreToolLabel').textContent=currentLang==='zh'?'更多':'เพิ่มเติม';$('actionTitle').textContent=currentLang==='zh'?'网站管理':'จัดการเว็บไซต์';$('editActionDesc').textContent=currentLang==='zh'?'文字、照片、视频和音乐':'ข้อความ รูปภาพ วิดีโอ และเพลง';$('playlistActionTitle').textContent=currentLang==='zh'?'查看歌单':'ดูเพลย์ลิสต์';$('playlistActionDesc').textContent=currentLang==='zh'?'选择和切换音乐':'เลือกและเปลี่ยนเพลง';$('actionClose').textContent=currentLang==='zh'?'取消':'ยกเลิก';$('openingKicker').textContent=currentLang==='zh'?'我们的恋爱纪念馆':'พิพิธภัณฑ์ความรักของเรา';document.querySelectorAll('.bilingual-kicker').forEach(el=>el.textContent=currentLang==='zh'?el.dataset.zh:el.dataset.th);$('openingFoot').textContent=currentLang==='zh'?'每一次打开，都是一次回忆。':'ทุกครั้งที่เปิด คือการกลับมาหาความทรงจำ';
-if($('storySlideshowTitle'))$('storySlideshowTitle').textContent=currentLang==='zh'?'我们的爱情故事':'เรื่องราวความรักของเรา';
-if($('storySlideshowSub'))$('storySlideshowSub').textContent=currentLang==='zh'?'每一张照片，都是我们共同走过的一页。':'ทุกรูปคือหนึ่งหน้าของเรื่องราวที่เราเดินมาด้วยกัน';updateDays();$('photoCount').textContent=u.count(photoItems.length);const empty=$('coverFrame').querySelector('.cover-empty');if(empty)empty.textContent=u.coverEmpty;const ge=$('gallery').querySelector('.empty');if(ge)ge.textContent=u.empty;saveData()}
+if($('storySlideshowTitle'))$('storySlideshowTitle').textContent=currentLang==='zh'?'我们的爱情故事':'เรื่องราวความรักของเรา';updateMuseumClock();
+updateDays();$('photoCount').textContent=u.count(photoItems.length);const empty=$('coverFrame').querySelector('.cover-empty');if(empty)empty.textContent=u.coverEmpty;const ge=$('gallery').querySelector('.empty');if(ge)ge.textContent=u.empty;saveData()}
 function applyCoverStyle(){const c=data.coverStyle,f=$('coverFrame');f.style.setProperty('--cover-width',c.width+'%');f.style.setProperty('--cover-height-mobile',c.height+'px');f.style.setProperty('--cover-height',Math.max(420,c.height)+'px');f.style.setProperty('--cover-radius',c.radius+'px');f.style.setProperty('--cover-scale',c.scale/100);f.style.setProperty('--cover-x',c.x+'%');f.style.setProperty('--cover-y',c.y+'%');const map={coverWidth:['width','%'],coverHeight:['height','px'],coverRadius:['radius','px'],coverScale:['scale','%'],coverX:['x','%'],coverY:['y','%']};Object.entries(map).forEach(([id,[key,unit]])=>{if($(id))$(id).value=c[key];if($(id+'Value'))$(id+'Value').textContent=c[key]+unit})}
 function bindCoverControls(){const keys={coverWidth:'width',coverHeight:'height',coverRadius:'radius',coverScale:'scale',coverX:'x',coverY:'y'};Object.keys(keys).forEach(id=>{$(id).oninput=()=>{data.coverStyle[keys[id]]=+$(id).value;applyCoverStyle();saveData()}});$('resetCoverStyle').onclick=()=>{data.coverStyle=clone(defaults.coverStyle);applyCoverStyle();saveData();notify('封面尺寸已恢复默认')}}
 function saveTexts(){data.startDate=$('iStartDate').value||defaults.startDate;['mainTitle','cover','date','periodTitle','period','footprintsTitle','footprintsDesc','galleryTitle','galleryDesc','videoTitle','videoDesc','endTitle','endText','finalTitle','finalText','finalSign'].forEach(k=>['zh','th'].forEach(l=>data[l][k]=$(`${l}_${k}`).value.trim()));for(let i=0;i<10;i++){const d=$(`footDate${i}`).value;['zh','th'].forEach(l=>{data[l].footprints[i].date=d;data[l].footprints[i].event=$(`${l}_footEvent${i}`).value.trim();data[l].footprints[i].text=$(`${l}_footText${i}`).value.trim()})}for(let i=0;i<5;i++)['zh','th'].forEach(l=>{data[l].chapters[i].title=$(`${l}_chapterTitle${i}`).value.trim();data[l].chapters[i].text=$(`${l}_chapterText${i}`).value.trim()});saveData();applyLanguage();updateDays();notify('中泰双语文字已保存')}
@@ -500,7 +636,7 @@ function updateDays(){const days=getLocalLoveDays();if($('daysTogether'))$('days
 function scheduleLocalDateSync(){updateDays();const now=new Date(),next=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,0,0,2);setTimeout(scheduleLocalDateSync,Math.max(1000,next-now))}
 buildTextEditors();fillEditors();buildVideoEditors();fillVideoEditors();applyCoverStyle();bindCoverControls();scheduleLocalDateSync();
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab))});$('openEditor').onclick=()=>{closeActions();$('panel').classList.add('open')};$('closeEditor').onclick=()=>$('panel').classList.remove('open');$('saveText').onclick=saveTexts;$('saveVideos').onclick=saveVideos;$('videoModalClose').onclick=closeVideo;$('videoModal').onclick=e=>{if(e.target===$('videoModal'))closeVideo()};$('langToggle').onclick=()=>{currentLang=currentLang==='zh'?'th':'zh';applyLanguage()};
-let db;function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open('LoveMuseumV5',1);r.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains('assets'))d.createObjectStore('assets',{keyPath:'id'})};r.onsuccess=e=>{db=e.target.result;res()};r.onerror=()=>rej(r.error)})}function all(){return new Promise((res,rej)=>{const r=db.transaction('assets','readonly').objectStore('assets').getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}function put(x){return new Promise((res,rej)=>{const t=db.transaction('assets','readwrite');t.objectStore('assets').put(x);t.oncomplete=res;t.onerror=()=>rej(t.error)})}function del(id){return new Promise((res,rej)=>{const t=db.transaction('assets','readwrite');t.objectStore('assets').delete(id);t.oncomplete=res;t.onerror=()=>rej(t.error)})}function clearAll(){return new Promise((res,rej)=>{const t=db.transaction('assets','readwrite');t.objectStore('assets').clear();t.oncomplete=res;t.onerror=()=>rej(t.error)})}
+let db;function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open('LoveMuseumV5',1);r.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains('assets'))d.createObjectStore('assets',{keyPath:'id'})};r.onsuccess=e=>{db=e.target.result;res()};r.onerror=()=>rej(r.error)})}function all(){if(USE_PUBLISHED_DATA)return Promise.resolve(clone(PUBLISHED_PAYLOAD.assets||[]));return new Promise((res,rej)=>{const r=db.transaction('assets','readonly').objectStore('assets').getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}function put(x){return new Promise((res,rej)=>{const t=db.transaction('assets','readwrite');t.objectStore('assets').put(x);t.oncomplete=res;t.onerror=()=>rej(t.error)})}function del(id){return new Promise((res,rej)=>{const t=db.transaction('assets','readwrite');t.objectStore('assets').delete(id);t.oncomplete=res;t.onerror=()=>rej(t.error)})}function clearAll(){return new Promise((res,rej)=>{const t=db.transaction('assets','readwrite');t.objectStore('assets').clear();t.oncomplete=res;t.onerror=()=>rej(t.error)})}
 function resize(file,max=1600,q=.82){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{let w=im.width,h=im.height;if(Math.max(w,h)>max){const s=max/Math.max(w,h);w=Math.round(w*s);h=Math.round(h*s)}const c=document.createElement('canvas');c.width=w;c.height=h;const ctx=c.getContext('2d',{alpha:false});ctx.drawImage(im,0,0,w,h);res(c.toDataURL('image/jpeg',q))};im.onerror=rej;im.src=fr.result};fr.onerror=rej;fr.readAsDataURL(file)})}async function fileData(f){return await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}
 let photoItems=[],trackItems=[];const builtinTracks=[
 {id:'yt-simple',type:'youtube',name:'简单爱 · 周杰伦',videoId:'Y4xCVlyCvX4'},
@@ -612,7 +748,80 @@ function openActions(){$('actionModal').classList.add('open')}function closeActi
 loadYouTubeAPI();
 function openStory(e){e?.preventDefault();const overlay=$('startOverlay');if(!overlay||overlay.classList.contains('entering'))return;overlay.classList.add('entering');setTimeout(()=>overlay.classList.add('hide'),520);setTimeout(()=>{if(overlay.isConnected)overlay.remove()},1350);playTrack(trackIndex)}$('openStory').addEventListener('click',openStory);$('openStory').addEventListener('touchend',openStory,{passive:false});$('openStory').onkeydown=e=>{if(e.key==='Enter'||e.key===' ')openStory(e)};
 let slideIndex=0,slideTimer=null;function showSlide(i){slideIndex=(i+slides.length)%slides.length;slides.forEach((s,n)=>s.classList.toggle('active',n===slideIndex));$('slideCounter').textContent=`${slideIndex+1} / ${slides.length}`}async function enterProject(){document.body.classList.add('project-mode');$('panel').classList.remove('open');showSlide(0);try{await document.documentElement.requestFullscreen?.()}catch{}}function exitProject(){document.body.classList.remove('project-mode');clearInterval(slideTimer);slideTimer=null;document.exitFullscreen?.().catch(()=>{})}$('projectStart').onclick=enterProject;$('projectFromEditor').onclick=enterProject;$('exitProject').onclick=exitProject;$('prevSlide').onclick=()=>showSlide(slideIndex-1);$('nextSlide').onclick=()=>showSlide(slideIndex+1);$('autoSlide').onclick=()=>{if(slideTimer){clearInterval(slideTimer);slideTimer=null;$('autoSlide').textContent='▶'}else{slideTimer=setInterval(()=>showSlide(slideIndex+1),8500);$('autoSlide').textContent='Ⅱ'}};
-function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}$('exportBackup').onclick=async()=>downloadBlob(new Blob([JSON.stringify({version:6,data,assets:await all()},null,2)],{type:'application/json'}),'恋爱纪念馆_完整备份.json');$('importBackupBtn').onclick=()=>$('importBackup').click();$('importBackup').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());data=d.data||clone(defaults);saveData();await clearAll();for(const x of d.assets||[])await put(x);location.reload()}catch{alert('备份文件无效')}};$('reset').onclick=async()=>{if(!confirm('确定清空所有文字、照片和音乐吗？'))return;localStorage.removeItem('love_museum_v6');localStorage.removeItem('love_museum_v5');await clearAll();location.reload()};
+
+function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
+function cleanPublicUrl(){
+  if(location.protocol==='http:'||location.protocol==='https:')return location.origin+location.pathname;
+  return 'https://xx6110734-pixel.github.io/-love-100-days/';
+}
+function setPublicLink(){
+  const field=$('publicLink');
+  if(field&&!field.value.trim())field.value=cleanPublicUrl();
+}
+function safeScriptJson(value){
+  return JSON.stringify(value).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
+}
+async function getCleanSourceHtml(){
+  if(location.protocol==='http:'||location.protocol==='https:'){
+    try{
+      const r=await fetch(location.origin+location.pathname,{cache:'no-store'});
+      if(r.ok)return await r.text();
+    }catch(e){}
+  }
+  const root=document.documentElement.cloneNode(true);
+  root.classList.remove('edit-mode','viewer-mode');
+  root.querySelectorAll('.open,.active').forEach(el=>{
+    if(el.id==='textTab'||el.matches('.tabs button:first-child'))return;
+    el.classList.remove('open');
+  });
+  const panel=root.querySelector('#panel');if(panel)panel.classList.remove('open');
+  const action=root.querySelector('#actionModal');if(action)action.classList.remove('open');
+  const playlistModal=root.querySelector('#playlistModal');if(playlistModal)playlistModal.classList.remove('open');
+  return '<!doctype html>\n'+root.outerHTML;
+}
+async function buildPublishedHtml(){
+  const assets=await all();
+  const payload={version:6,publishedAt:new Date().toISOString(),data:clone(data),assets};
+  let source=await getCleanSourceHtml();
+  const encoded=safeScriptJson(payload);
+  const pattern=/<script id=["']publishedMuseumData["'] type=["']application\/json["']>[\s\S]*?<\/script>/i;
+  const block='<script id="publishedMuseumData" type="application/json">'+encoded+'</'+'script>';
+  if(!pattern.test(source))throw new Error('公开数据写入位置不存在');
+  source=source.replace(pattern,block);
+  return {source,payload};
+}
+setPublicLink();
+$('refreshPublicLink').onclick=()=>{$('publicLink').value=cleanPublicUrl();notify('已填写当前公开网址')};
+$('copyPublicLink').onclick=async()=>{
+  const link=$('publicLink').value.trim()||cleanPublicUrl();
+  try{await navigator.clipboard.writeText(link);notify('公开链接已复制')}
+  catch{const f=$('publicLink');f.focus();f.select();document.execCommand('copy');notify('公开链接已复制')}
+};
+$('previewPublic').onclick=()=>{
+  const u=new URL(location.href);
+  u.search='?preview=1';
+  window.open(u.toString(),'_blank','noopener');
+};
+$('generatePublicHtml').onclick=async()=>{
+  const btn=$('generatePublicHtml'),status=$('publishStatus');
+  btn.disabled=true;btn.textContent='正在生成…';
+  status.classList.remove('ready');status.textContent='正在打包文字、照片和自定义音乐，请不要关闭页面。';
+  try{
+    const {source,payload}=await buildPublishedHtml();
+    downloadBlob(new Blob([source],{type:'text/html;charset=utf-8'}),'index.html');
+    const when=new Intl.DateTimeFormat('zh-CN',{dateStyle:'medium',timeStyle:'medium'}).format(new Date(payload.publishedAt));
+    status.classList.add('ready');
+    status.textContent=`公开版已生成：${when}。请用下载的 index.html 覆盖 GitHub 旧文件。`;
+    notify('公开版 index.html 已生成');
+  }catch(e){
+    console.error(e);
+    status.textContent='生成失败：'+(e?.message||'未知错误');
+    alert('公开版生成失败，请先导出完整备份后重试。');
+  }finally{
+    btn.disabled=false;btn.textContent='生成公开版 index.html';
+  }
+};
+$('exportBackup').onclick=async()=>downloadBlob(new Blob([JSON.stringify({version:6,data,assets:await all()},null,2)],{type:'application/json'}),'恋爱纪念馆_完整备份.json');$('importBackupBtn').onclick=()=>$('importBackup').click();$('importBackup').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());data=d.data||clone(defaults);saveData();await clearAll();for(const x of d.assets||[])await put(x);location.reload()}catch{alert('备份文件无效')}};$('reset').onclick=async()=>{if(!confirm('确定清空所有文字、照片和音乐吗？'))return;localStorage.removeItem('love_museum_v6');localStorage.removeItem('love_museum_v5');await clearAll();location.reload()};
 const particleCount=matchMedia('(max-width:720px)').matches?8:14;for(let i=0;i<particleCount;i++){const s=document.createElement('span');s.className='particle';s.textContent=i%4?'·':'♡';s.style.left=Math.random()*100+'vw';s.style.animationDuration=14+Math.random()*18+'s';s.style.animationDelay=-Math.random()*22+'s';s.style.fontSize=10+Math.random()*22+'px';$('particles').appendChild(s)}
 applyLanguage();openDB().then(render).catch(()=>alert('浏览器未允许本地储存，请使用 Safari、Chrome 或 Edge。'));
 </script>
@@ -622,7 +831,8 @@ applyLanguage();openDB().then(render).catch(()=>alert('浏览器未允许本地�
 (function(){
   const params = new URLSearchParams(location.search);
   const editMode = params.get('edit') === '1';
-  if (!editMode) {
+  const previewMode = params.get('preview') === '1';
+  if (!editMode || previewMode) {
     document.documentElement.classList.add('viewer-mode');
     document.addEventListener('DOMContentLoaded', function(){
       document.body.classList.add('viewer-mode');
@@ -646,10 +856,29 @@ applyLanguage();openDB().then(render).catch(()=>alert('浏览器未允许本地�
       }, true);
     });
   } else {
+    document.documentElement.classList.remove('viewer-mode');
     document.documentElement.classList.add('edit-mode');
-    document.addEventListener('DOMContentLoaded', function(){
+    const enableEditMode = function(){
+      document.body.classList.remove('viewer-mode');
       document.body.classList.add('edit-mode');
-    });
+      const directButton=document.getElementById('directEditButton');
+      const panel=document.getElementById('panel');
+      const actionModal=document.getElementById('actionModal');
+      if(directButton){
+        directButton.style.setProperty('display','flex','important');
+        directButton.onclick=function(){
+          if(actionModal)actionModal.classList.remove('open');
+          if(panel)panel.classList.add('open');
+        };
+      }
+      const openEditor=document.getElementById('openEditor');
+      if(openEditor)openEditor.style.removeProperty('display');
+    };
+    if(document.readyState==='loading'){
+      document.addEventListener('DOMContentLoaded',enableEditMode);
+    }else{
+      enableEditMode();
+    }
   }
 })();
 </script>
@@ -708,7 +937,28 @@ applyLanguage();openDB().then(render).catch(()=>alert('浏览器未允许本地�
   if(edit) document.title='编辑模式 · 我们的恋爱纪念馆';
 })();
 </script>
-<!-- 视频管理升级补丁：请粘贴到 index.html 的 </body> 前面 -->
+<!-- 视频管理升级补丁：请粘贴到 index.html 的 
+<script id="directEditorFallback">
+(function(){
+  function bind(){
+    if(new URLSearchParams(location.search).get('edit')!=='1')return;
+    document.documentElement.classList.remove('viewer-mode');
+    document.documentElement.classList.add('edit-mode');
+    document.body.classList.remove('viewer-mode');
+    document.body.classList.add('edit-mode');
+    const btn=document.getElementById('directEditButton');
+    const panel=document.getElementById('panel');
+    if(btn){
+      btn.style.setProperty('display','flex','important');
+      btn.onclick=function(){ if(panel) panel.classList.add('open'); };
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);
+  else bind();
+})();
+</script>
+
+</body> 前面 -->
 <style id="videoManagerUpgradeStyle">
 #videoTab .video-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
 #videoTab .video-toolbar .btn{flex:1;min-width:145px}
