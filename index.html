@@ -247,7 +247,7 @@ body:after{
 </head>
 <body>
 <div class="scroll-progress" id="scrollProgress"></div><div id="aurora"></div><div id="particles"></div>
-<div class="start-overlay" id="startOverlay" onclick="this.classList.add('hide')"><div class="opener" id="openStory" role="button" tabindex="0" onclick="event.stopPropagation();document.getElementById('startOverlay').classList.add('hide');try{playTrack(trackIndex)}catch(e){}"><div class="seal">❤</div><h2 id="openTitle"></h2><p id="openHint"></p></div></div>
+<div class="start-overlay" id="startOverlay"><div class="opener" id="openStory" role="button" tabindex="0"><div class="seal">❤</div><h2 id="openTitle"></h2><p id="openHint"></p></div></div>
 <section class="slide active"><div class="content"><div class="glass"><h1 class="title" id="vMainTitle"></h1><p class="copy" id="vCover"></p><div class="day-badge"><strong id="daysTogether">100</strong><span id="daysLabel"></span></div><div class="date" id="vDate"></div></div></div></section>
 <section class="slide"><div class="content"><div class="glass"><div class="section-kicker">Chapter 01 · Our Beginning</div><h2 id="vPeriodTitle"></h2><p class="copy" id="vPeriod"></p><div class="photo-main" id="coverFrame"></div></div></div></section>
 <section class="slide"><div class="content"><div class="glass"><div class="section-kicker">Chapter 02 · Our Timeline</div><h2 id="vFootprintsTitle"></h2><p class="copy" id="vFootprintsDesc"></p><div class="footprints" id="footprintsList"></div></div></div></section>
@@ -290,7 +290,7 @@ data.th.footprintsTitle=data.th.footprintsTitle||defaults.th.footprintsTitle;
 data.th.footprintsDesc=data.th.footprintsDesc||defaults.th.footprintsDesc;
 data.zh.footprints=defaults.zh.footprints.map((x,i)=>({...x,...(data.zh.footprints?.[i]||{})}));
 data.th.footprints=defaults.th.footprints.map((x,i)=>({...x,...(data.th.footprints?.[i]||{})}));
-['zh','th'].forEach(l=>{data[l].videoTitle=data[l].videoTitle||defaults[l].videoTitle;data[l].videoDesc=data[l].videoDesc||defaults[l].videoDesc;const savedVideos=Array.isArray(data[l].videos)?data[l].videos:[];const sourceVideos=savedVideos.length?savedVideos:defaults[l].videos;data[l].videos=sourceVideos.map((x,i)=>({...(defaults[l].videos[i]||{src:'',title:''}),...x}))});
+['zh','th'].forEach(l=>{data[l].videoTitle=data[l].videoTitle||defaults[l].videoTitle;data[l].videoDesc=data[l].videoDesc||defaults[l].videoDesc;const savedVideos=Array.isArray(data[l].videos)?data[l].videos:[];const total=Math.max(6,savedVideos.length,defaults[l].videos.length);data[l].videos=Array.from({length:total},(_,i)=>({...(defaults[l].videos[i]||{src:'',title:''}),...((savedVideos[i]&&typeof savedVideos[i]==='object')?savedVideos[i]:{})}))});
 ['finalTitle','finalText','finalSign'].forEach(k=>{data.zh[k]=data.zh[k]||defaults.zh[k];data.th[k]=data.th[k]||defaults.th[k]});
 data.coverStyle={...defaults.coverStyle,...(data.coverStyle||{})};data.zh.chapters=defaults.zh.chapters.map((x,i)=>({...x,...(data.zh.chapters?.[i]||{})}));data.th.chapters=defaults.th.chapters.map((x,i)=>({...x,...(data.th.chapters?.[i]||{})}));let currentLang=data.lang==='th'?'th':'zh';
 const ui={zh:{days:'相爱的日子',empty:'照片墙还没有照片',count:n=>`共 ${n} 张照片`,music:'音乐未开始',project:'投屏',edit:'编辑',exit:'退出',open:'轻触开启我们的故事',coverEmpty:'上传一张最喜欢的合照'},th:{days:'วันที่เรารักกัน',empty:'ยังไม่มีรูปภาพในกำแพงรูปภาพ',count:n=>`รูปภาพทั้งหมด ${n} รูป`,music:'ยังไม่ได้เปิดเพลง',project:'นำเสนอ',edit:'แก้ไข',exit:'ออก',open:'แตะเพื่อเปิดเรื่องราวของเรา',coverEmpty:'อัปโหลดรูปคู่ที่ชอบที่สุด'}};
@@ -377,7 +377,7 @@ function buildVideoEditors(){
     $(`videoFile${i}`).onchange=e=>handleVideoFile(i,e.target.files&&e.target.files[0]);
   }
 }
-function fillVideoEditors(){for(let i=0;i<6;i++){$(`videoSrc${i}`).value=data.zh.videos[i].src||data.th.videos[i].src||'';['zh','th'].forEach(l=>$(`${l}_videoTitle${i}`).value=data[l].videos[i].title||'')}}
+function fillVideoEditors(){for(let i=0;i<6;i++){const zh=data.zh.videos[i]||(data.zh.videos[i]={src:'',title:''}),th=data.th.videos[i]||(data.th.videos[i]={src:'',title:''});$(`videoSrc${i}`).value=zh.src||th.src||'';['zh','th'].forEach(l=>$(`${l}_videoTitle${i}`).value=(data[l].videos[i]||{}).title||'')}}
 function saveVideos(){for(let i=0;i<6;i++){const src=$(`videoSrc${i}`).value.trim();['zh','th'].forEach(l=>{data[l].videos[i].src=src;data[l].videos[i].title=$(`${l}_videoTitle${i}`).value.trim()})}saveData();renderVideos();notify('视频设置已保存')}
 function renderVideos(){const list=(data[currentLang].videos||[]).filter(x=>x.src);$('videoCount').textContent=currentLang==='zh'?`${list.length} 个视频`:`${list.length} วิดีโอ`;$('videoGallery').innerHTML=list.length?list.map((x,i)=>`<div class="video-card" data-video="${i}"><video src="${esc(x.src)}" preload="metadata" muted playsinline></video><span class="video-play">▶</span><div class="video-overlay"><div class="video-title">${esc(x.title||'')}</div></div></div>`).join(''):`<div class="video-empty">${currentLang==='zh'?'珍贵的视频将在这里播放。':'วิดีโอแห่งความทรงจำจะปรากฏที่นี่'}</div>`;document.querySelectorAll('[data-video]').forEach((el,i)=>el.onclick=()=>openVideo(list[i].src))}
 function openVideo(src){const p=$('videoModalPlayer');p.src=src;$('videoModal').classList.add('open');p.play().catch(()=>{})}
@@ -896,29 +896,6 @@ applyLanguage();openDB().then(render).catch(()=>alert('浏览器未允许本地�
 
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
   else init();
-})();
-</script>
-
-<script id="startButtonFallback">
-(function(){
-  function closeStart(e){
-    if(e){ e.preventDefault(); e.stopPropagation(); }
-    var overlay=document.getElementById('startOverlay');
-    if(overlay){ overlay.classList.add('hide'); overlay.style.pointerEvents='none'; }
-    try{ if(typeof playTrack==='function') playTrack(typeof trackIndex==='number'?trackIndex:0); }catch(err){}
-  }
-  function bind(){
-    var btn=document.getElementById('openStory');
-    var overlay=document.getElementById('startOverlay');
-    if(btn){
-      btn.addEventListener('pointerup',closeStart,true);
-      btn.addEventListener('click',closeStart,true);
-      btn.addEventListener('touchend',closeStart,{capture:true,passive:false});
-    }
-    if(overlay) overlay.addEventListener('click',closeStart,true);
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind,{once:true});
-  else bind();
 })();
 </script>
 </body></html>
