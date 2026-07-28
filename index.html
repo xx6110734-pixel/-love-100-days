@@ -3,347 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f8efea">
-<title>我们的100天｜可编辑纪念网页</title>
+<meta name="theme-color" content="#160d18">
+<title>我们的100天｜2.0豪华投屏版</title>
 <style>
-:root{
-  --bg:#fbf7f3;--paper:rgba(255,255,255,.78);--text:#4f4547;--muted:#8f7f82;
-  --accent:#cf8fa1;--accent2:#efd5dc;--line:rgba(100,73,80,.13);
-  --shadow:0 24px 70px rgba(88,60,68,.14)
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;color:var(--text);font-family:"PingFang SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;
-  background:
-    radial-gradient(circle at 14% 8%,rgba(250,214,223,.58),transparent 30%),
-    radial-gradient(circle at 88% 23%,rgba(244,226,205,.72),transparent 31%),
-    linear-gradient(180deg,#fffaf7 0%,#f7ece8 52%,#fff9f5 100%);
-  overflow-x:hidden
-}
-body:before{
-  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.28;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E")
-}
-section{min-height:100svh;display:flex;align-items:center;justify-content:center;padding:34px 18px;position:relative}
-.card{
-  width:min(900px,100%);padding:clamp(30px,6vw,78px);border-radius:34px;text-align:center;
-  background:var(--paper);border:1px solid rgba(255,255,255,.84);box-shadow:var(--shadow);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);position:relative;overflow:hidden
-}
-.card:after{
-  content:"";position:absolute;width:210px;height:210px;border-radius:50%;
-  background:radial-gradient(circle,rgba(236,179,196,.27),transparent 70%);right:-70px;top:-65px
-}
-.kicker{font-size:.8rem;letter-spacing:.32em;color:var(--accent);margin-bottom:18px}
-h1,h2{font-family:Georgia,"Songti SC","STSong",serif;font-weight:500;margin:.18em 0;color:#55484b}
-h1{font-size:clamp(2.9rem,10vw,7.2rem)}
-h2{font-size:clamp(2rem,5vw,4rem)}
-p{max-width:740px;margin:0 auto;font-size:clamp(1.04rem,2.7vw,1.45rem);line-height:2;white-space:pre-line}
-.date{margin-top:20px;color:var(--muted);letter-spacing:.1em}
-.scroll{position:absolute;bottom:25px;color:var(--muted);font-size:.76rem;letter-spacing:.2em}
-.scroll:after{content:"↓";display:block;font-size:1.2rem;margin-top:8px}
-.photo-frame{
-  width:min(620px,100%);aspect-ratio:4/3;margin:30px auto 0;border-radius:25px;overflow:hidden;
-  border:9px solid rgba(255,255,255,.78);box-shadow:0 18px 45px rgba(85,59,66,.16);
-  background:linear-gradient(135deg,#f4e6e3,#fff);display:grid;place-items:center;color:var(--muted)
-}
-.photo-frame img,.gallery-item img{width:100%;height:100%;object-fit:cover;display:block}
-.gallery-wrap{width:min(1120px,100%)}
-.gallery-head{text-align:center;margin-bottom:32px}
-.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
-.gallery-item{
-  aspect-ratio:4/5;border-radius:24px;overflow:hidden;background:#fff;box-shadow:var(--shadow);position:relative
-}
-.gallery-item:nth-child(3n+2){transform:translateY(14px)}
-.empty{
-  grid-column:1/-1;min-height:260px;display:grid;place-items:center;border:1px dashed rgba(105,75,82,.28);
-  border-radius:28px;background:rgba(255,255,255,.42);color:var(--muted);text-align:center;padding:30px
-}
-.final-heart{font-size:4rem;animation:pulse 1.8s ease-in-out infinite}
-@keyframes pulse{50%{transform:scale(1.12)}}
-.float{position:fixed;bottom:-40px;z-index:0;opacity:.25;pointer-events:none;color:var(--accent);animation:rise linear infinite}
-@keyframes rise{to{transform:translateY(-115vh) rotate(360deg)}}
-
-.fab{
-  position:fixed;right:16px;bottom:16px;z-index:30;border:0;border-radius:999px;padding:13px 18px;
-  background:#5b4a4e;color:white;font-weight:700;box-shadow:0 12px 32px rgba(45,31,35,.27);cursor:pointer
-}
-.panel{
-  position:fixed;right:0;top:0;width:min(440px,100%);height:100vh;z-index:50;background:#fffaf7;
-  transform:translateX(105%);transition:.28s ease;box-shadow:-20px 0 55px rgba(70,47,53,.18);padding:18px;overflow:auto
-}
-.panel.open{transform:translateX(0)}
-.panel-head{position:sticky;top:-18px;z-index:2;background:#fffaf7;padding:12px 0;display:flex;justify-content:space-between;align-items:center}
-.panel h3{margin:0}.close{border:0;background:transparent;font-size:1.9rem;color:#6f5d61;cursor:pointer}
-label{display:block;margin:16px 0 7px;font-weight:700;font-size:.9rem}
-input[type=text],textarea{
-  width:100%;border:1px solid #e7d9d6;border-radius:13px;background:#fff;padding:11px 12px;color:var(--text);font:inherit
-}
-textarea{min-height:94px;resize:vertical;line-height:1.6}
-.upload{padding:16px;border:1px dashed #d8bec5;border-radius:15px;background:#fff}
-.upload input{width:100%}
-.btn{
-  width:100%;border:0;border-radius:14px;padding:12px 14px;margin-top:10px;font:inherit;font-weight:700;cursor:pointer;
-  background:var(--accent);color:#fff
-}
-.btn.dark{background:#67565a}.btn.light{background:#efe2df;color:#5d4e52}
-.hint{font-size:.8rem;line-height:1.55;color:#8c7a7e;margin-top:8px}
-.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
-.thumb{aspect-ratio:1;border-radius:10px;overflow:hidden;position:relative;background:#eee}
-.thumb img{width:100%;height:100%;object-fit:cover}
-.thumb button{position:absolute;right:4px;top:4px;width:24px;height:24px;border:0;border-radius:50%;background:rgba(0,0,0,.62);color:#fff;cursor:pointer}
-.toast{
-  position:fixed;left:50%;bottom:28px;z-index:80;transform:translate(-50%,20px);opacity:0;pointer-events:none;
-  background:#4d4144;color:#fff;padding:10px 16px;border-radius:999px;transition:.25s
-}
-.toast.show{opacity:1;transform:translate(-50%,0)}
-.share-mode .fab,.share-mode .panel{display:none!important}
-@media(max-width:620px){
-  .card{border-radius:25px;padding:34px 22px}
-  .gallery{grid-template-columns:repeat(2,1fr);gap:10px}
-  .gallery-item:nth-child(3n+2){transform:none}
-  .fab{right:11px;bottom:11px}
-}
+:root{--rose:#f2a8bd;--rose2:#ffdce7;--gold:#e7c98f;--ink:#fff8fb;--muted:#d8c8d0;--glass:rgba(33,18,32,.54);--line:rgba(255,255,255,.16)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#100910;color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-4;background:radial-gradient(circle at 12% 15%,#552b46 0,transparent 34%),radial-gradient(circle at 88% 20%,#38234d 0,transparent 35%),radial-gradient(circle at 50% 90%,#5e2e3d 0,transparent 34%),linear-gradient(135deg,#100910,#1b101f 55%,#0d0912)}
+body:after{content:"";position:fixed;inset:0;z-index:-3;opacity:.22;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.11'/%3E%3C/svg%3E")}
+#aurora{position:fixed;inset:-20%;z-index:-2;filter:blur(80px);opacity:.35;pointer-events:none;background:conic-gradient(from 90deg,#8f486b,#423066,#c5778c,#8f486b);animation:aurora 24s linear infinite}@keyframes aurora{to{transform:rotate(360deg)}}
+#particles{position:fixed;inset:0;z-index:5;pointer-events:none;overflow:hidden}.particle{position:absolute;bottom:-40px;opacity:.35;animation:rise linear infinite}@keyframes rise{to{transform:translateY(-115vh) rotate(360deg);opacity:0}}
+section.slide{min-height:100svh;display:flex;align-items:center;justify-content:center;padding:clamp(28px,5vw,70px) 20px;position:relative;scroll-snap-align:start}
+.content{width:min(1120px,100%);text-align:center;position:relative;z-index:2}.glass{padding:clamp(30px,6vw,82px);border:1px solid var(--line);border-radius:38px;background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,255,255,.035));box-shadow:0 30px 100px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.16);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.eyebrow{font-size:.78rem;letter-spacing:.42em;color:var(--gold);text-transform:uppercase;margin-bottom:18px}.title{font-family:Georgia,"Songti SC",serif;font-weight:500;font-size:clamp(3.4rem,10vw,8.7rem);line-height:1;margin:.08em 0;background:linear-gradient(180deg,#fff,#ffdce7 58%,#e8bdc9);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 12px 50px rgba(242,168,189,.15)}
+h2{font-family:Georgia,"Songti SC",serif;font-weight:500;font-size:clamp(2.15rem,5.2vw,4.9rem);margin:.2em 0 .35em}p.copy{max-width:820px;margin:auto;white-space:pre-line;font-size:clamp(1.05rem,2.15vw,1.55rem);line-height:2;color:#f9edf2}.date{margin-top:24px;letter-spacing:.18em;color:var(--muted)}
+.day-badge{display:inline-flex;gap:12px;align-items:baseline;margin:28px auto 0;padding:13px 22px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.07)}.day-badge strong{font:600 clamp(2rem,5vw,4.5rem)/1 Georgia;color:#ffd6e1}.day-badge span{color:var(--muted);letter-spacing:.08em}
+.scroll-tip{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);font-size:.72rem;letter-spacing:.25em;color:#cdbbc4;animation:bob 1.8s infinite}@keyframes bob{50%{transform:translate(-50%,7px)}}
+.photo-main{width:min(760px,100%);aspect-ratio:16/9;margin:30px auto 0;border-radius:28px;overflow:hidden;border:1px solid rgba(255,255,255,.25);background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));box-shadow:0 26px 70px rgba(0,0,0,.38);display:grid;place-items:center;color:var(--muted)}.photo-main img{width:100%;height:100%;object-fit:cover}
+.timeline{max-width:900px;margin:34px auto 0;text-align:left}.time-item{display:grid;grid-template-columns:130px 24px 1fr;gap:18px;min-height:110px}.time-date{color:var(--gold);font-size:.9rem;letter-spacing:.08em;padding-top:4px;text-align:right}.time-axis{position:relative}.time-axis:before{content:"";position:absolute;left:11px;top:18px;bottom:-18px;width:1px;background:linear-gradient(var(--rose),transparent)}.time-axis:after{content:"";position:absolute;left:6px;top:6px;width:11px;height:11px;border-radius:50%;background:var(--rose);box-shadow:0 0 0 6px rgba(242,168,189,.13),0 0 25px var(--rose)}.time-item:last-child .time-axis:before{display:none}.time-text strong{display:block;font-size:1.15rem;margin-bottom:8px}.time-text span{color:var(--muted);line-height:1.7}
+.gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:30px}.gallery-card{aspect-ratio:4/5;border-radius:22px;overflow:hidden;box-shadow:0 20px 45px rgba(0,0,0,.32);transform:rotate(var(--r,0deg));border:5px solid rgba(255,255,255,.88);background:#e5dce0}.gallery-card img{width:100%;height:100%;object-fit:cover}.empty{grid-column:1/-1;border:1px dashed rgba(255,255,255,.25);border-radius:28px;padding:70px 20px;color:var(--muted)}
+.heart{font-size:clamp(4rem,9vw,8rem);filter:drop-shadow(0 0 26px rgba(242,168,189,.55));animation:pulse 1.7s ease-in-out infinite}@keyframes pulse{50%{transform:scale(1.12)}}
+.fabbar{position:fixed;right:15px;bottom:15px;z-index:40;display:flex;gap:9px}.fab{border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:12px 17px;background:rgba(27,15,27,.78);color:#fff;backdrop-filter:blur(15px);font-weight:700;box-shadow:0 12px 35px rgba(0,0,0,.35)}
+.panel{position:fixed;right:0;top:0;width:min(470px,100%);height:100dvh;z-index:60;padding:18px;background:#fff9fb;color:#4f3c46;transform:translateX(105%);transition:.3s ease;overflow:auto;box-shadow:-25px 0 70px rgba(0,0,0,.35)}.panel.open{transform:none}.panel-head{position:sticky;top:-18px;background:#fff9fb;z-index:2;padding:12px 0;display:flex;align-items:center;justify-content:space-between}.panel h3{margin:0}.close{border:0;background:none;font-size:2rem;color:#6b5360}.panel label{display:block;margin:16px 0 7px;font-weight:700;font-size:.9rem}.panel input[type=text],.panel input[type=date],.panel textarea{width:100%;border:1px solid #e7d8de;border-radius:13px;padding:11px 12px;background:white;color:#4f3c46;font:inherit}.panel textarea{min-height:88px;resize:vertical;line-height:1.55}.upload{border:1px dashed #d7b7c4;border-radius:15px;padding:14px;background:white}.btn{width:100%;border:0;border-radius:14px;padding:12px;margin-top:10px;font:inherit;font-weight:700;background:#c97891;color:white}.btn.dark{background:#59424f}.btn.light{background:#eee1e6;color:#5d4652}.hint{font-size:.79rem;line-height:1.55;color:#8a7480;margin-top:7px}.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px}.thumb{aspect-ratio:1;border-radius:9px;overflow:hidden;position:relative}.thumb img{width:100%;height:100%;object-fit:cover}.thumb button{position:absolute;right:3px;top:3px;width:23px;height:23px;border:0;border-radius:50%;background:#000b;color:white}
+.toast{position:fixed;left:50%;bottom:26px;z-index:100;transform:translate(-50%,20px);opacity:0;background:#fff;color:#3f3038;padding:11px 17px;border-radius:999px;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}
+.music-btn{position:fixed;left:15px;bottom:15px;z-index:40;width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:rgba(27,15,27,.78);color:white;font-size:1.1rem}.music-btn.playing{animation:spin 4s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.project-mode{overflow:hidden}.project-mode section.slide{display:none;position:fixed;inset:0;min-height:100dvh;padding:3.3vh 3.3vw}.project-mode section.slide.active{display:flex;animation:cinema .75s ease both}.project-mode .content{width:min(1500px,96vw)}.project-mode .glass{padding:clamp(36px,5vw,88px)}.project-mode .title{font-size:clamp(5rem,11vw,10rem)}.project-mode h2{font-size:clamp(3.1rem,6.5vw,6.7rem)}.project-mode p.copy{font-size:clamp(1.55rem,2.5vw,2.45rem);line-height:1.85}.project-mode .fabbar,.project-mode .music-btn,.project-mode .scroll-tip{display:none!important}@keyframes cinema{from{opacity:0;transform:scale(1.035);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.project-controls{display:none;position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:90;align-items:center;gap:8px;padding:8px;border:1px solid var(--line);border-radius:999px;background:rgba(14,8,15,.76);backdrop-filter:blur(14px)}.project-mode .project-controls{display:flex}.project-controls button{border:0;border-radius:999px;padding:10px 15px;background:rgba(255,255,255,.1);color:white}.project-controls .play{background:#d9859e}.counter{min-width:64px;text-align:center;color:#dfcfd6;font-size:.85rem}
+.progress{display:none;position:fixed;left:0;right:0;top:0;height:4px;background:rgba(255,255,255,.12);z-index:100}.project-mode .progress{display:block}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--rose),var(--gold));transition:width .25s}
+.start-overlay{position:fixed;inset:0;z-index:120;display:grid;place-items:center;background:radial-gradient(circle at center,#4a263d,#120a13 70%);transition:.8s}.start-overlay.hide{opacity:0;visibility:hidden;pointer-events:none}.envelope{text-align:center;cursor:pointer}.seal{width:118px;height:118px;margin:auto;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#ffcad9,#b94e70);box-shadow:0 0 0 12px rgba(255,255,255,.05),0 25px 80px rgba(0,0,0,.4);font-size:3rem;animation:pulse 1.8s infinite}.envelope h3{font:500 clamp(2rem,5vw,4.2rem) Georgia,"Songti SC",serif;margin:28px 0 8px}.envelope p{color:#dbc8d1;letter-spacing:.16em}
+.share-mode .fabbar,.share-mode .panel,.share-mode .project-controls,.share-mode .music-btn,.share-mode .start-overlay,.share-mode .progress{display:none!important}
+@media(max-width:720px){.glass{border-radius:27px;padding:34px 22px}.gallery{grid-template-columns:repeat(2,1fr);gap:10px}.timeline{margin-top:24px}.time-item{grid-template-columns:78px 20px 1fr;gap:10px}.time-date{font-size:.72rem}.fabbar{right:10px;bottom:10px}.fab{padding:11px 14px}.music-btn{left:10px;bottom:10px}.project-mode .gallery{grid-template-columns:repeat(4,1fr)}.project-controls{bottom:10px}}
 </style>
 </head>
 <body>
-<div id="hearts"></div>
+<div id="aurora"></div><div id="particles"></div>
+<div class="start-overlay" id="startOverlay"><div class="envelope" id="openStory"><div class="seal">❤</div><h3>给最爱的你</h3><p>轻触开启我们的故事</p></div></div>
+<div class="progress"><i id="progressBar"></i></div>
 
-<section>
-  <div class="card">
-    <div class="kicker">OUR LOVE STORY</div>
-    <h1 id="vTitle">我们的100天</h1>
-    <p id="vCover">老婆，
-不知不觉，我们已经在一起100天了。❤️</p>
-    <div class="date" id="vDate">2026.05.10 — 2026.08.18</div>
-  </div>
-  <div class="scroll">向下滑动</div>
-</section>
+<section class="slide active" data-name="封面"><div class="content"><div class="glass"><div class="eyebrow">OUR LOVE STORY</div><h1 class="title" id="vTitle">我们的100天</h1><p class="copy" id="vCover"></p><div class="day-badge"><strong id="daysTogether">100</strong><span>相爱的日子</span></div><div class="date" id="vDate"></div></div></div><div class="scroll-tip">向下滑动 · 开启回忆</div></section>
+<section class="slide" data-name="开始"><div class="content"><div class="glass"><div class="eyebrow">CHAPTER 01</div><h2>故事开始的那一天</h2><p class="copy" id="vBegin"></p><div class="photo-main" id="coverFrame">点击右下角编辑器上传你们的合照</div></div></div></section>
+<section class="slide" data-name="回忆"><div class="content"><div class="glass"><div class="eyebrow">CHAPTER 02</div><h2>这一路，有你真好</h2><p class="copy" id="vMemory"></p></div></div></section>
+<section class="slide" data-name="时间轴"><div class="content"><div class="glass"><div class="eyebrow">OUR TIMELINE</div><h2>我们的重要时刻</h2><div class="timeline"><div class="time-item"><div class="time-date" id="t1d">2026.05.10</div><div class="time-axis"></div><div class="time-text"><strong id="t1t">我们在一起了</strong><span>从这一天开始，“我”和“你”变成了“我们”。</span></div></div><div class="time-item"><div class="time-date" id="t2d">第 30 天</div><div class="time-axis"></div><div class="time-text"><strong id="t2t">越来越懂彼此</strong><span>快乐、想念和小小的争吵，都成为爱的一部分。</span></div></div><div class="time-item"><div class="time-date" id="t3d">第 100 天</div><div class="time-axis"></div><div class="time-text"><strong id="t3t">新的开始</strong><span>100天不是终点，是我们共同奔向未来的起点。</span></div></div></div></div></div></section>
+<section class="slide" data-name="承诺"><div class="content"><div class="glass"><div class="eyebrow">CHAPTER 03</div><h2>我想认真地对你说</h2><p class="copy" id="vPromise"></p></div></div></section>
+<section class="slide" data-name="相册"><div class="content"><div class="glass"><div class="eyebrow">OUR MEMORIES</div><h2>属于我们的回忆</h2><div class="gallery" id="gallery"><div class="empty">还没有照片，打开编辑器即可批量上传。</div></div></div></div></section>
+<section class="slide" data-name="结尾"><div class="content"><div class="glass"><div class="heart">❤</div><h2 id="vEndTitle"></h2><p class="copy" id="vEnd"></p><div class="date">FOREVER WITH YOU</div></div></div></section>
 
-<section>
-  <div class="card">
-    <div class="kicker">CHAPTER 01</div>
-    <h2>故事开始的那一天</h2>
-    <p id="vBegin">我们的故事开始于2026年5月10日。
-从那一天起，爱有了名字，也有了方向。</p>
-    <div class="photo-frame" id="coverFrame">点击右下角“网页编辑器”，上传你们最喜欢的合照。</div>
-  </div>
-</section>
+<button class="music-btn" id="musicBtn" aria-label="音乐">♫</button><audio id="bgm" loop></audio>
+<div class="fabbar"><button class="fab" id="projectStart">▶ 投屏播放</button><button class="fab" id="openEditor">✦ 编辑网页</button></div>
+<div class="project-controls"><button id="prev">←</button><button class="play" id="play">▶</button><span class="counter" id="counter">1 / 7</span><button id="next">→</button><button id="exit">退出</button></div>
 
-<section>
-  <div class="card">
-    <div class="kicker">CHAPTER 02</div>
-    <h2>这100天里</h2>
-    <p id="vMemory">有欢笑，有感动，有幸福。
-
-也有争吵、有委屈，甚至有过眼泪。
-
-但不管发生什么，我爱你的心，从来没有变过。</p>
-  </div>
-</section>
-
-<section>
-  <div class="card">
-    <div class="kicker">CHAPTER 03</div>
-    <h2>我想认真地对你说</h2>
-    <p id="vPromise">如果我有做得不好的地方，让你难过、让你生气，
-我想对你说一声：对不起。
-
-我会努力变得更好，更懂你，也更珍惜你。
-
-以后无论遇到什么事情，我们都好好沟通，一起面对，
-不冷战，不轻易放开彼此。</p>
-  </div>
-</section>
-
-<section style="align-items:flex-start;padding-top:80px">
-  <div class="gallery-wrap">
-    <div class="gallery-head">
-      <div class="kicker">OUR MEMORIES</div>
-      <h2>属于我们的回忆</h2>
-      <p style="font-size:1rem;color:var(--muted)">每一张照片，都是我们故事的一部分。</p>
-    </div>
-    <div class="gallery" id="gallery"><div class="empty">还没有照片。<br>点击右下角“网页编辑器”即可批量上传。</div></div>
-  </div>
-</section>
-
-<section>
-  <div class="card">
-    <div class="final-heart">❤️</div>
-    <h2 id="vEndTitle">100天不是终点</h2>
-    <p id="vEnd">而是我们爱情新的开始。
-
-我希望未来还有很多个100天、很多个纪念日，
-都能牵着你的手一起走过。
-
-我爱你，不止100天。
-今天、明天，以及未来的每一天。</p>
-    <div class="date">FOREVER WITH YOU</div>
-  </div>
-</section>
-
-<button class="fab" id="open">✦ 点击这里编辑</button>
-
-<aside class="panel" id="panel">
-  <div class="panel-head"><h3>网页编辑器</h3><button class="close" id="close">×</button></div>
-
-  <label>封面标题</label><input id="iTitle" type="text">
-  <label>封面文字</label><textarea id="iCover"></textarea>
-  <label>纪念日期</label><input id="iDate" type="text">
-  <label>开始文字</label><textarea id="iBegin"></textarea>
-  <label>回忆文字</label><textarea id="iMemory"></textarea>
-  <label>承诺文字</label><textarea id="iPromise"></textarea>
-  <label>结尾标题</label><input id="iEndTitle" type="text">
-  <label>结尾文字</label><textarea id="iEnd"></textarea>
-  <button class="btn" id="saveText">保存文字</button>
-
-  <label>封面主照片</label>
-  <div class="upload">
-    <input type="file" id="coverUpload" accept="image/*">
-    <div class="hint">建议上传横向合照。图片会自动压缩。</div>
-  </div>
-
-  <label>照片墙</label>
-  <div class="upload">
-    <input type="file" id="galleryUpload" accept="image/*" multiple>
-    <div class="hint">可一次选择多张照片，建议总数不超过30张。</div>
-  </div>
-  <div class="thumbs" id="thumbs"></div>
-
-  <button class="btn dark" id="makeShare">导出最终分享版</button>
-  <button class="btn light" id="exportBackup">导出编辑备份</button>
-  <button class="btn light" id="importBackupBtn">导入编辑备份</button>
-  <input type="file" id="importBackup" accept=".json,application/json" hidden>
-  <button class="btn light" id="reset">恢复默认并清空照片</button>
-
-  <p class="hint">
-    “导出最终分享版”会把当前文字和照片打包进一个新网页。把生成的HTML发给对方，对方直接用浏览器打开即可观看。
-  </p>
-</aside>
-
-<div class="toast" id="toast"></div>
-
+<aside class="panel" id="panel"><div class="panel-head"><h3>2.0 豪华版编辑器</h3><button class="close" id="closeEditor">×</button></div>
+<label>封面标题</label><input id="iTitle" type="text"><label>封面文字</label><textarea id="iCover"></textarea><label>恋爱开始日期</label><input id="iStartDate" type="date"><label>日期展示文字</label><input id="iDate" type="text"><label>开始文字</label><textarea id="iBegin"></textarea><label>回忆文字</label><textarea id="iMemory"></textarea><label>承诺文字</label><textarea id="iPromise"></textarea><label>结尾标题</label><input id="iEndTitle" type="text"><label>结尾文字</label><textarea id="iEnd"></textarea><button class="btn" id="saveText">保存文字</button>
+<label>封面主照片</label><div class="upload"><input type="file" id="coverUpload" accept="image/*"><div class="hint">推荐横向 16:9 合照，适合电视投屏。</div></div>
+<label>照片墙</label><div class="upload"><input type="file" id="galleryUpload" accept="image/*" multiple><div class="hint">可一次上传多张，建议 4–12 张，投屏效果最佳。</div></div><div class="thumbs" id="thumbs"></div>
+<label>背景音乐</label><div class="upload"><input type="file" id="musicUpload" accept="audio/*"><div class="hint">上传 MP3/M4A。浏览器通常需要先点击页面，音乐才能播放。</div></div>
+<button class="btn dark" id="projectFromEditor">进入投屏播放模式</button><button class="btn dark" id="makeShare">导出最终分享版</button><button class="btn light" id="exportBackup">导出编辑备份</button><button class="btn light" id="importBackupBtn">导入编辑备份</button><input type="file" id="importBackup" accept=".json,application/json" hidden><button class="btn light" id="reset">恢复默认并清空资料</button>
+</aside><div class="toast" id="toast"></div>
 <script>
-const el=id=>document.getElementById(id);
-const openBtn=el("open"), panelEl=el("panel"), closeBtn=el("close"), saveTextBtn=el("saveText");
-const coverFrameEl=el("coverFrame"), galleryEl=el("gallery"), thumbsEl=el("thumbs");
-const coverUploadEl=el("coverUpload"), galleryUploadEl=el("galleryUpload");
-const exportBackupBtnEl=el("exportBackup"), importBackupBtnEl=el("importBackupBtn"), importBackupEl=el("importBackup");
-const resetBtn=el("reset"), makeShareBtn=el("makeShare"), heartsEl=el("hearts");
-
-const defaults={
- title:"我们的100天",
- cover:"老婆，\n不知不觉，我们已经在一起100天了。❤️",
- date:"2026.05.10 — 2026.08.18",
- begin:"我们的故事开始于2026年5月10日。\n从那一天起，爱有了名字，也有了方向。",
- memory:"有欢笑，有感动，有幸福。\n\n也有争吵、有委屈，甚至有过眼泪。\n\n但不管发生什么，我爱你的心，从来没有变过。",
- promise:"如果我有做得不好的地方，让你难过、让你生气，\n我想对你说一声：对不起。\n\n我会努力变得更好，更懂你，也更珍惜你。\n\n以后无论遇到什么事情，我们都好好沟通，一起面对，\n不冷战，不轻易放开彼此。",
- endTitle:"100天不是终点",
- end:"而是我们爱情新的开始。\n\n我希望未来还有很多个100天、很多个纪念日，\n都能牵着你的手一起走过。\n\n我爱你，不止100天。\n今天、明天，以及未来的每一天。"
-};
-let text=JSON.parse(localStorage.getItem("love100_text_v2")||"null")||{...defaults};
-let db;
-
-const map=[
- ["title","vTitle","iTitle"],["cover","vCover","iCover"],["date","vDate","iDate"],
- ["begin","vBegin","iBegin"],["memory","vMemory","iMemory"],["promise","vPromise","iPromise"],
- ["endTitle","vEndTitle","iEndTitle"],["end","vEnd","iEnd"]
-];
-function apply(){
- map.forEach(([k,v,i])=>{document.getElementById(v).textContent=text[k];document.getElementById(i).value=text[k]})
-}
-apply();
-
-function notify(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800)}
-openBtn.onclick=()=>panelEl.classList.add("open");closeBtn.onclick=()=>panelEl.classList.remove("open");
-saveTextBtn.onclick=()=>{
- map.forEach(([k,v,i])=>text[k]=document.getElementById(i).value.trim());
- localStorage.setItem("love100_text_v2",JSON.stringify(text));apply();notify("文字已保存")
-};
-
-function openDB(){
- return new Promise((res,rej)=>{
-  const r=indexedDB.open("Love100AlbumV2",1);
-  r.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains("images"))d.createObjectStore("images",{keyPath:"id"})};
-  r.onsuccess=e=>{db=e.target.result;res()};r.onerror=()=>rej(r.error)
- })
-}
-function tx(mode,fn){return new Promise((res,rej)=>{const t=db.transaction("images",mode),s=t.objectStore("images");fn(s);t.oncomplete=res;t.onerror=()=>rej(t.error)})}
-function all(){return new Promise((res,rej)=>{const r=db.transaction("images","readonly").objectStore("images").getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}
-function put(x){return tx("readwrite",s=>s.put(x))}
-function del(id){return tx("readwrite",s=>s.delete(id))}
-function clearAll(){return tx("readwrite",s=>s.clear())}
-
-function resize(file,max=1800,q=.84){
- return new Promise((res,rej)=>{
-  const fr=new FileReader();fr.onerror=rej;fr.onload=()=>{
-   const im=new Image();im.onerror=rej;im.onload=()=>{
-    let w=im.width,h=im.height;if(Math.max(w,h)>max){const s=max/Math.max(w,h);w=Math.round(w*s);h=Math.round(h*s)}
-    const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(im,0,0,w,h);
-    res(c.toDataURL("image/jpeg",q))
-   };im.src=fr.result
-  };fr.readAsDataURL(file)
- })
-}
-async function render(){
- const items=(await all()).sort((a,b)=>a.created-b.created),cover=items.find(x=>x.type==="cover"),pics=items.filter(x=>x.type==="gallery");
- coverFrameEl.innerHTML=cover?`<img src="${cover.data}" alt="封面合照">`:"点击右下角“网页编辑器”，上传你们最喜欢的合照。";
- galleryEl.innerHTML=pics.length?pics.map(x=>`<div class="gallery-item"><img src="${x.data}" alt="回忆照片"></div>`).join(""):`<div class="empty">还没有照片。<br>点击右下角“网页编辑器”即可批量上传。</div>`;
- thumbsEl.innerHTML=pics.map(x=>`<div class="thumb"><img src="${x.data}"><button data-id="${x.id}">×</button></div>`).join("");
- thumbsEl.querySelectorAll("button").forEach(b=>b.onclick=async()=>{await del(b.dataset.id);render()})
-}
-coverUploadEl.onchange=async e=>{
- const f=e.target.files[0];if(!f)return;await put({id:"cover",type:"cover",data:await resize(f),created:0});render();notify("封面照片已保存");e.target.value=""
-};
-galleryUploadEl.onchange=async e=>{
- const fs=[...e.target.files];
- for(const f of fs)await put({id:"g_"+Date.now()+"_"+Math.random().toString(16).slice(2),type:"gallery",data:await resize(f),created:Date.now()+Math.random()});
- render();notify(`已添加 ${fs.length} 张照片`);e.target.value=""
-};
-
-exportBackupBtnEl.onclick=async()=>{
- const blob=new Blob([JSON.stringify({version:2,text,images:await all()},null,2)],{type:"application/json"});
- downloadBlob(blob,"我们的100天_编辑备份.json")
-};
-importBackupBtnEl.onclick=()=>importBackupEl.click();
-importBackupEl.onchange=async e=>{
- try{
-  const d=JSON.parse(await e.target.files[0].text());if(!d.text||!Array.isArray(d.images))throw 0;
-  text=d.text;localStorage.setItem("love100_text_v2",JSON.stringify(text));apply();await clearAll();for(const x of d.images)await put(x);render();notify("备份已导入")
- }catch{alert("备份文件无效或已损坏。")}e.target.value=""
-};
-resetBtn.onclick=async()=>{
- if(!confirm("确定恢复默认文字并清空全部照片吗？"))return;
- text={...defaults};localStorage.setItem("love100_text_v2",JSON.stringify(text));apply();await clearAll();render();notify("已恢复默认")
-};
-function downloadBlob(blob,name){
- const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)
-}
-makeShareBtn.onclick=async()=>{
- map.forEach(([k,v,i])=>text[k]=document.getElementById(i).value.trim());
- localStorage.setItem("love100_text_v2",JSON.stringify(text));apply();
- const items=await all();
- const clone=document.documentElement.cloneNode(true);
- clone.querySelector("body").classList.add("share-mode");
- clone.querySelector("#panel")?.remove();clone.querySelector("#open")?.remove();clone.querySelector("#toast")?.remove();
- const cf=clone.querySelector("#coverFrame"),g=clone.querySelector("#gallery");
- const cover=items.find(x=>x.type==="cover"),pics=items.filter(x=>x.type==="gallery").sort((a,b)=>a.created-b.created);
- cf.innerHTML=cover?`<img src="${cover.data}" alt="封面合照">`:"";
- g.innerHTML=pics.map(x=>`<div class="gallery-item"><img src="${x.data}" alt="回忆照片"></div>`).join("");
- if(!pics.length)g.closest("section").remove();
- clone.querySelectorAll("script").forEach(s=>s.remove());
- const out="<!DOCTYPE html>\n"+clone.outerHTML;
- downloadBlob(new Blob([out],{type:"text/html;charset=utf-8"}),"我们的100天_分享版.html");
- notify("分享版已生成")
-};
-
-for(let i=0;i<15;i++){
- const s=document.createElement("span");s.className="float";s.textContent=i%3?"·":"♡";
- s.style.left=Math.random()*100+"vw";s.style.animationDuration=10+Math.random()*14+"s";
- s.style.animationDelay=-Math.random()*20+"s";s.style.fontSize=12+Math.random()*25+"px";heartsEl.appendChild(s)
-}
-openDB().then(render).catch(()=>alert("浏览器未允许本地储存，请尝试使用 Chrome、Edge 或 Safari。"));
+const $=id=>document.getElementById(id); const slides=[...document.querySelectorAll('.slide')];
+const defaults={title:'我们的100天',cover:'老婆，\n不知不觉，我们已经在一起100天了。❤️',startDate:'2026-05-10',date:'2026.05.10 — 2026.08.18',begin:'我们的故事开始于2026年5月10日。\n从那一天起，爱有了名字，也有了方向。',memory:'有欢笑，有感动，有幸福。\n\n也有争吵、有委屈，甚至有过眼泪。\n\n但不管发生什么，我爱你的心，从来没有变过。',promise:'如果我有做得不好的地方，让你难过、让你生气，\n我想对你说一声：对不起。\n\n我会努力变得更好，更懂你，也更珍惜你。\n\n以后无论遇到什么事情，我们都好好沟通，一起面对，\n不冷战，不轻易放开彼此。',endTitle:'100天不是终点',end:'而是我们爱情新的开始。\n\n我希望未来还有很多个100天、很多个纪念日，\n都能牵着你的手一起走过。\n\n我爱你，不止100天。\n今天、明天，以及未来的每一天。'};
+let text=JSON.parse(localStorage.getItem('love100_text_v3')||localStorage.getItem('love100_text_v2')||'null')||{...defaults}; text={...defaults,...text};
+const map=[['title','vTitle','iTitle'],['cover','vCover','iCover'],['date','vDate','iDate'],['begin','vBegin','iBegin'],['memory','vMemory','iMemory'],['promise','vPromise','iPromise'],['endTitle','vEndTitle','iEndTitle'],['end','vEnd','iEnd']];
+function apply(){map.forEach(([k,v,i])=>{$(v).textContent=text[k];$(i).value=text[k]});$('iStartDate').value=text.startDate||defaults.startDate;calcDays()}
+function calcDays(){const d=new Date((text.startDate||defaults.startDate)+'T00:00:00');const n=Math.max(1,Math.floor((Date.now()-d.getTime())/86400000)+1);$('daysTogether').textContent=n}
+function notify(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1900)}
+$('openStory').onclick=()=>{$('startOverlay').classList.add('hide');playMusic()}; $('openEditor').onclick=()=>{$('panel').classList.add('open')}; $('closeEditor').onclick=()=>$('panel').classList.remove('open');
+$('saveText').onclick=()=>{map.forEach(([k,v,i])=>text[k]=$(i).value.trim());text.startDate=$('iStartDate').value;localStorage.setItem('love100_text_v3',JSON.stringify(text));apply();notify('文字已保存')}; apply();
+let db; function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open('Love100LuxuryV3',1);r.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains('assets'))d.createObjectStore('assets',{keyPath:'id'})};r.onsuccess=e=>{db=e.target.result;res()};r.onerror=()=>rej(r.error)})}
+function tx(mode,fn){return new Promise((res,rej)=>{const t=db.transaction('assets',mode),s=t.objectStore('assets');fn(s);t.oncomplete=res;t.onerror=()=>rej(t.error)})} function all(){return new Promise((res,rej)=>{const r=db.transaction('assets','readonly').objectStore('assets').getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})} function put(x){return tx('readwrite',s=>s.put(x))} function del(id){return tx('readwrite',s=>s.delete(id))} function clearAll(){return tx('readwrite',s=>s.clear())}
+function resize(file,max=1920,q=.86){return new Promise((res,rej)=>{const fr=new FileReader();fr.onerror=rej;fr.onload=()=>{const im=new Image();im.onerror=rej;im.onload=()=>{let w=im.width,h=im.height;if(Math.max(w,h)>max){const s=max/Math.max(w,h);w=Math.round(w*s);h=Math.round(h*s)}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);res(c.toDataURL('image/jpeg',q))};im.src=fr.result};fr.readAsDataURL(file)})}
+async function render(){const items=(await all()).sort((a,b)=>(a.created||0)-(b.created||0)),cover=items.find(x=>x.type==='cover'),pics=items.filter(x=>x.type==='gallery'),music=items.find(x=>x.type==='music');$('coverFrame').innerHTML=cover?`<img src="${cover.data}" alt="封面合照">`:'点击右下角编辑器上传你们的合照';$('gallery').innerHTML=pics.length?pics.slice(0,12).map((x,i)=>`<div class="gallery-card" style="--r:${[-2,1,-1,2][i%4]}deg"><img src="${x.data}" alt="回忆照片"></div>`).join(''):'<div class="empty">还没有照片，打开编辑器即可批量上传。</div>';$('thumbs').innerHTML=pics.map(x=>`<div class="thumb"><img src="${x.data}"><button data-id="${x.id}">×</button></div>`).join('');$('thumbs').querySelectorAll('button').forEach(b=>b.onclick=async()=>{await del(b.dataset.id);render()});if(music)$('bgm').src=music.data}
+$('coverUpload').onchange=async e=>{const f=e.target.files[0];if(!f)return;await put({id:'cover',type:'cover',data:await resize(f),created:0});render();notify('封面照片已保存');e.target.value=''};
+$('galleryUpload').onchange=async e=>{const fs=[...e.target.files];for(const f of fs)await put({id:'g_'+Date.now()+Math.random(),type:'gallery',data:await resize(f),created:Date.now()+Math.random()});render();notify(`已添加 ${fs.length} 张照片`);e.target.value=''};
+$('musicUpload').onchange=async e=>{const f=e.target.files[0];if(!f)return;const fr=new FileReader();fr.onload=async()=>{await put({id:'music',type:'music',data:fr.result,created:0});render();notify('背景音乐已保存')};fr.readAsDataURL(f);e.target.value=''};
+let playingMusic=false;async function playMusic(){if(!$('bgm').src)return;try{await $('bgm').play();playingMusic=true;$('musicBtn').classList.add('playing');$('musicBtn').textContent='♪'}catch{}} $('musicBtn').onclick=async()=>{if(playingMusic){$('bgm').pause();playingMusic=false;$('musicBtn').classList.remove('playing');$('musicBtn').textContent='♫'}else playMusic()};
+let idx=0,timer=null,auto=false;function show(i){idx=(i+slides.length)%slides.length;slides.forEach((s,n)=>s.classList.toggle('active',n===idx));$('counter').textContent=`${idx+1} / ${slides.length}`;$('progressBar').style.width=((idx+1)/slides.length*100)+'%'}
+async function enterProject(){document.body.classList.add('project-mode');$('panel').classList.remove('open');show(0);try{await document.documentElement.requestFullscreen?.()}catch{};try{screen.orientation?.lock?.('landscape')}catch{};playMusic()}
+function exitProject(){document.body.classList.remove('project-mode');stopAuto();document.exitFullscreen?.().catch(()=>{})}function startAuto(){auto=true;$('play').textContent='Ⅱ';timer=setInterval(()=>show(idx+1),8500)}function stopAuto(){auto=false;$('play').textContent='▶';clearInterval(timer);timer=null}
+$('projectStart').onclick=enterProject;$('projectFromEditor').onclick=enterProject;$('exit').onclick=exitProject;$('prev').onclick=()=>show(idx-1);$('next').onclick=()=>show(idx+1);$('play').onclick=()=>auto?stopAuto():startAuto();document.addEventListener('keydown',e=>{if(!document.body.classList.contains('project-mode'))return;if(e.key==='ArrowRight'||e.key===' ')show(idx+1);if(e.key==='ArrowLeft')show(idx-1);if(e.key==='Escape')exitProject()});
+function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
+$('exportBackup').onclick=async()=>downloadBlob(new Blob([JSON.stringify({version:3,text,assets:await all()},null,2)],{type:'application/json'}),'我们的100天_豪华版备份.json');$('importBackupBtn').onclick=()=>$('importBackup').click();$('importBackup').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());text=d.text||defaults;localStorage.setItem('love100_text_v3',JSON.stringify(text));apply();await clearAll();for(const x of (d.assets||d.images||[]))await put(x);render();notify('备份已导入')}catch{alert('备份文件无效')}e.target.value=''};
+$('reset').onclick=async()=>{if(!confirm('确定恢复默认并清空照片和音乐吗？'))return;text={...defaults};localStorage.setItem('love100_text_v3',JSON.stringify(text));apply();await clearAll();render();notify('已恢复默认')};
+$('makeShare').onclick=async()=>{map.forEach(([k,v,i])=>text[k]=$(i).value.trim());text.startDate=$('iStartDate').value;apply();const items=await all(),clone=document.documentElement.cloneNode(true),cover=items.find(x=>x.type==='cover'),pics=items.filter(x=>x.type==='gallery'),music=items.find(x=>x.type==='music');clone.querySelector('body').classList.add('share-mode');clone.querySelector('#coverFrame').innerHTML=cover?`<img src="${cover.data}">`:'';clone.querySelector('#gallery').innerHTML=pics.map((x,i)=>`<div class="gallery-card" style="--r:${[-2,1,-1,2][i%4]}deg"><img src="${x.data}"></div>`).join('');if(music)clone.querySelector('#bgm').setAttribute('src',music.data);clone.querySelectorAll('script').forEach(s=>s.remove());downloadBlob(new Blob(['<!DOCTYPE html>\n'+clone.outerHTML],{type:'text/html;charset=utf-8'}),'我们的100天_2.0豪华分享版.html');notify('分享版已生成')};
+for(let i=0;i<24;i++){const s=document.createElement('span');s.className='particle';s.textContent=i%4?'·':'♡';s.style.left=Math.random()*100+'vw';s.style.animationDuration=10+Math.random()*18+'s';s.style.animationDelay=-Math.random()*22+'s';s.style.fontSize=10+Math.random()*28+'px';$('particles').appendChild(s)}
+openDB().then(render).catch(()=>alert('浏览器未允许本地储存，请使用 Safari、Chrome 或 Edge。'));
 </script>
-</body>
-</html>
+</body></html>
