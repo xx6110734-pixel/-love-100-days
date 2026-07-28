@@ -284,6 +284,13 @@ html[lang="th"] .final-page .glass:after{content:"จดหมายรัก"}
 @media(max-width:640px){.start-overlay::after{inset:10px;border-radius:26px}.opener{padding:24px 10px}.opening-kicker{letter-spacing:.24em}.seal-wrap{width:116px;height:116px}.seal{width:82px;height:82px;font-size:2.55rem}.opening-foot{max-width:300px;margin-left:auto;margin-right:auto}.video-gallery.single,.video-gallery.double{grid-template-columns:minmax(0,1fr)}}
 @media(prefers-reduced-motion:reduce){.start-overlay::before,.opening-orbit,.seal,.seal-glow,.seal-ripple{animation:none!important}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<style id="cloudBackendStyles">
+.cloud-status{position:fixed;left:50%;top:max(52px,calc(env(safe-area-inset-top) + 52px));transform:translateX(-50%);z-index:210;padding:7px 12px;border-radius:999px;background:rgba(24,13,24,.9);border:1px solid rgba(255,255,255,.15);color:#f7eaf0;font-size:12px;backdrop-filter:blur(10px);max-width:88vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cloud-status.ok{color:#c8f5d2}.cloud-status.warn{color:#ffe0a3}.cloud-login{position:fixed;inset:0;z-index:1000000;display:none;place-items:center;padding:20px;background:radial-gradient(circle at 50% 35%,rgba(136,57,95,.35),transparent 38%),rgba(12,7,12,.96)}.cloud-login.show{display:grid}.cloud-login-card{width:min(430px,100%);padding:26px;border-radius:26px;background:#fff8fb;color:#4f3c46;box-shadow:0 28px 90px rgba(0,0,0,.5)}.cloud-login-card h3{margin:0 0 8px}.cloud-login-card p{margin:0 0 18px;color:#806b76;line-height:1.6}.cloud-login-card input{width:100%;margin:7px 0;padding:12px;border:1px solid #e2d2d9;border-radius:12px}.cloud-login-card button{width:100%;margin-top:9px;padding:12px;border:0;border-radius:13px;background:#c97891;color:white;font-weight:700}.cloud-login-card button.secondary{background:#eee1e6;color:#5d4652}.cloud-login-error{min-height:20px;margin-top:8px;color:#a63d4d;font-size:13px}.cloud-admin-card{border:1px solid #e5d4dc;border-radius:15px;padding:13px;background:#fff;margin-top:10px}.cloud-admin-card h4{margin:0 0 8px}.cloud-progress{margin-top:8px;font-size:12px;line-height:1.55;color:#735363;word-break:break-word}
+body.viewer-mode .cloud-admin-card{display:none!important}
+</style>
+
 </head>
 <body>
 <div class="scroll-progress" id="scrollProgress"></div><div id="aurora"></div><div id="particles"></div>
@@ -623,7 +630,143 @@ applyLanguage();openDB().then(render).catch(()=>alert('浏览器未允许本地�
   if(edit) document.title='编辑模式 · 我们的恋爱纪念馆';
 })();
 </script>
-<!-- 视频管理升级补丁：请粘贴到 index.html 的 </body> 前面 -->
+<!-- Supabase 云端后台 -->
+<script id="supabaseCloudBackendV2">
+(function(){
+'use strict';
+const SUPABASE_URL='https://pnvgxywulaoeqnxqvcmv.supabase.co';
+const SUPABASE_KEY='sb_publishable_uqnlrG7kNhhIcA5cM880pA__VgGZc2v';
+const SITE_ID='main';
+const BUCKET='love-assets';
+const editMode=new URLSearchParams(location.search).get('edit')==='1';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+window.loveCloud={client:sb};
+
+function status(message,kind=''){
+ let el=document.getElementById('cloudStatus');
+ if(!el){el=document.createElement('div');el.id='cloudStatus';el.className='cloud-status';document.body.appendChild(el)}
+ el.className='cloud-status '+kind;el.textContent=message;
+}
+function normalizeCloudError(error){return error?.message||String(error||'未知错误')}
+function dataUrlToBlob(dataUrl){
+ const parts=String(dataUrl).split(','),meta=parts[0]||'',raw=atob(parts[1]||'');
+ const mime=(meta.match(/data:([^;]+)/)||[])[1]||'application/octet-stream';
+ const bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
+ return new Blob([bytes],{type:mime});
+}
+function extensionFor(value,fallback='bin'){
+ const mime=String(value||'').match(/^data:([^;]+)/)?.[1]||'';
+ return ({'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif','audio/mpeg':'mp3','audio/mp4':'m4a','audio/wav':'wav','audio/ogg':'ogg'}[mime]||fallback);
+}
+function safePart(v){return String(v||'asset').replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,80)}
+async function requireSession(){const {data:{session}}=await sb.auth.getSession();return session}
+async function uploadDataUrl(assetId,role,dataUrl){
+ const ext=extensionFor(dataUrl,role==='thumb'?'jpg':'bin');
+ const path=`${SITE_ID}/${safePart(assetId)}_${role}.${ext}`;
+ const blob=dataUrlToBlob(dataUrl);
+ const {error}=await sb.storage.from(BUCKET).upload(path,blob,{upsert:true,contentType:blob.type,cacheControl:'3600'});
+ if(error)throw error;
+ return {path,url:sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl};
+}
+async function cloudAll(){
+ const {data:rows,error}=await sb.from('love_assets').select('*').eq('site_id',SITE_ID).order('sort_order',{ascending:true});
+ if(error)throw error;
+ return (rows||[]).map(r=>({id:r.asset_id,type:r.type,name:r.name||'',data:r.data_url||'',thumb:r.thumb_url||'',caption:r.caption||'',order:r.sort_order||0,_dataPath:r.data_path||'',_thumbPath:r.thumb_path||''}));
+}
+async function cloudPut(x){
+ const session=await requireSession();if(!session)throw new Error('请先登录编辑模式');
+ const old=(await sb.from('love_assets').select('*').eq('site_id',SITE_ID).eq('asset_id',x.id).maybeSingle()).data;
+ let dataUrl=x.data||old?.data_url||'',thumbUrl=x.thumb||old?.thumb_url||'',dataPath=old?.data_path||'',thumbPath=old?.thumb_path||'';
+ if(String(x.data||'').startsWith('data:')){const up=await uploadDataUrl(x.id,'data',x.data);dataUrl=up.url;dataPath=up.path}
+ if(String(x.thumb||'').startsWith('data:')){const up=await uploadDataUrl(x.id,'thumb',x.thumb);thumbUrl=up.url;thumbPath=up.path}
+ const row={site_id:SITE_ID,asset_id:x.id,type:x.type,name:x.name||'',data_url:dataUrl,thumb_url:thumbUrl,caption:x.caption||'',sort_order:Number(x.order||0),data_path:dataPath,thumb_path:thumbPath,updated_at:new Date().toISOString()};
+ const {error}=await sb.from('love_assets').upsert(row,{onConflict:'site_id,asset_id'});if(error)throw error;
+ return x;
+}
+async function cloudDel(id){
+ const session=await requireSession();if(!session)throw new Error('请先登录编辑模式');
+ const {data:row}=await sb.from('love_assets').select('data_path,thumb_path').eq('site_id',SITE_ID).eq('asset_id',id).maybeSingle();
+ const paths=[row?.data_path,row?.thumb_path].filter(Boolean);if(paths.length)await sb.storage.from(BUCKET).remove(paths);
+ const {error}=await sb.from('love_assets').delete().eq('site_id',SITE_ID).eq('asset_id',id);if(error)throw error;
+}
+async function cloudClearAll(){
+ const session=await requireSession();if(!session)throw new Error('请先登录编辑模式');
+ const assets=await cloudAll();const paths=assets.flatMap(x=>[x._dataPath,x._thumbPath]).filter(Boolean);if(paths.length)await sb.storage.from(BUCKET).remove(paths);
+ const {error}=await sb.from('love_assets').delete().eq('site_id',SITE_ID);if(error)throw error;
+}
+async function cloudSaveData(){
+ if(!editMode)return;
+ const session=await requireSession();if(!session)return;
+ data.lang=currentLang;
+ localStorage.setItem('love_museum_v6',JSON.stringify(data));
+ const {error}=await sb.from('love_site').upsert({id:SITE_ID,data,updated_at:new Date().toISOString()},{onConflict:'id'});
+ if(error){status('云端保存失败：'+normalizeCloudError(error),'warn');throw error}
+ status('已同步到云端','ok');
+}
+async function loadCloudData(){
+ status('正在连接云端…');
+ const {data:row,error}=await sb.from('love_site').select('data,updated_at').eq('id',SITE_ID).maybeSingle();
+ if(error){status('云端读取失败：'+normalizeCloudError(error),'warn');return false}
+ if(!row?.data){status(editMode?'云端尚无内容，请登录后导入完整备份':'网站正在初始化','warn');return false}
+ const cloudJson=JSON.stringify(row.data),localJson=localStorage.getItem('love_museum_v6')||'';
+ if(cloudJson!==localJson){localStorage.setItem('love_museum_v6',cloudJson);const key='love_cloud_reload_v2';if(sessionStorage.getItem(key)!==cloudJson.slice(0,160)){sessionStorage.setItem(key,cloudJson.slice(0,160));location.reload();return true}}
+ status('云端内容已加载','ok');return false;
+}
+function installFunctionOverrides(){
+ try{all=cloudAll;put=cloudPut;del=cloudDel;clearAll=cloudClearAll;openDB=async()=>{};}catch(e){console.error(e)}
+ const originalSave=saveData;
+ saveData=function(){data.lang=currentLang;localStorage.setItem('love_museum_v6',JSON.stringify(data));if(editMode){clearTimeout(saveData._timer);saveData._timer=setTimeout(()=>cloudSaveData().catch(()=>{}),350)}};
+ window.addEventListener('beforeunload',()=>{if(editMode)cloudSaveData().catch(()=>{})});
+}
+function addLoginOverlay(){
+ const wrap=document.createElement('div');wrap.id='cloudLogin';wrap.className='cloud-login';wrap.innerHTML=`<div class="cloud-login-card"><h3>编辑模式登录</h3><p>使用你在 Supabase Authentication 中创建的邮箱账号登录。公开浏览者不需要登录。</p><input id="cloudEmail" type="email" placeholder="邮箱"><input id="cloudPassword" type="password" placeholder="密码"><button id="cloudLoginBtn">登录编辑后台</button><button id="cloudLogoutBtn" class="secondary" style="display:none">退出登录</button><div id="cloudLoginError" class="cloud-login-error"></div></div>`;document.body.appendChild(wrap);
+ const email=document.getElementById('cloudEmail'),password=document.getElementById('cloudPassword'),err=document.getElementById('cloudLoginError'),login=document.getElementById('cloudLoginBtn'),logout=document.getElementById('cloudLogoutBtn');
+ login.onclick=async()=>{err.textContent='正在登录…';const {error}=await sb.auth.signInWithPassword({email:email.value.trim(),password:password.value});if(error){err.textContent=normalizeCloudError(error);return}err.textContent='';wrap.classList.remove('show');status('已登录编辑后台','ok');location.reload()};
+ logout.onclick=async()=>{await sb.auth.signOut();location.reload()};
+ return wrap;
+}
+async function enforceEditLogin(){
+ if(!editMode)return true;const overlay=addLoginOverlay();const session=await requireSession();if(!session){overlay.classList.add('show');status('请登录后编辑','warn');return false}document.getElementById('cloudLogoutBtn').style.display='block';return true;
+}
+function installCloudAdmin(){
+ const dataTab=document.getElementById('dataTab');if(!dataTab||document.getElementById('cloudAdminCard'))return;
+ const card=document.createElement('div');card.id='cloudAdminCard';card.className='cloud-admin-card';card.innerHTML=`<h4>云端同步与迁移</h4><div class="hint">首次使用时选择你导出的“恋爱纪念馆_完整备份.json”或 ZIP。系统会把文字和照片上传到 Supabase。以后保存内容会自动同步，不再覆盖 GitHub。</div><input id="cloudBackupFile" type="file" accept=".json,.zip,application/json,application/zip" hidden><button class="btn" id="cloudImportBackup">导入旧版完整备份到云端</button><button class="btn light" id="cloudSyncNow">立即同步当前内容</button><button class="btn dark" id="cloudLogout">退出云端账号</button><div id="cloudProgress" class="cloud-progress"></div>`;
+ dataTab.prepend(card);
+ document.getElementById('cloudImportBackup').onclick=()=>document.getElementById('cloudBackupFile').click();
+ document.getElementById('cloudBackupFile').onchange=e=>migrateBackup(e.target.files?.[0]);
+ document.getElementById('cloudSyncNow').onclick=async()=>{try{await cloudSaveData();await render();notify('云端同步完成')}catch(e){alert(normalizeCloudError(e))}};
+ document.getElementById('cloudLogout').onclick=async()=>{await sb.auth.signOut();location.reload()};
+}
+async function readBackupFile(file){
+ if(!file)throw new Error('请选择备份文件');
+ if(file.name.toLowerCase().endsWith('.zip')){const zip=await JSZip.loadAsync(file);const entry=Object.values(zip.files).find(x=>!x.dir&&x.name.toLowerCase().endsWith('.json')&&!x.name.includes('__MACOSX'));if(!entry)throw new Error('ZIP 中没有找到 JSON 备份');return JSON.parse(await entry.async('string'))}
+ return JSON.parse(await file.text());
+}
+async function migrateBackup(file){
+ const progress=document.getElementById('cloudProgress');
+ try{
+  const backup=await readBackupFile(file);if(!backup?.data||!Array.isArray(backup.assets))throw new Error('备份结构无效');
+  if(!confirm(`即将把 ${backup.assets.length} 个资源和全部文字上传到云端，是否继续？`))return;
+  progress.textContent='正在保存文字数据…';data=backup.data;currentLang=data.lang==='th'?'th':'zh';localStorage.setItem('love_museum_v6',JSON.stringify(data));
+  const {error}=await sb.from('love_site').upsert({id:SITE_ID,data,updated_at:new Date().toISOString()},{onConflict:'id'});if(error)throw error;
+  await cloudClearAll();
+  for(let i=0;i<backup.assets.length;i++){const a=backup.assets[i];progress.textContent=`正在上传资源 ${i+1}/${backup.assets.length}：${a.type||''}`;await cloudPut(a)}
+  progress.textContent=`迁移完成：${backup.assets.length} 个资源已上传。正在刷新…`;status('完整备份已迁移到云端','ok');setTimeout(()=>location.reload(),900);
+ }catch(e){progress.textContent='迁移失败：'+normalizeCloudError(e);alert('迁移失败：'+normalizeCloudError(e))}
+}
+async function init(){
+ installFunctionOverrides();
+ const canEdit=await enforceEditLogin();
+ if(editMode&&canEdit)installCloudAdmin();
+ await loadCloudData();
+ try{await render()}catch(e){status('资源读取失败：'+normalizeCloudError(e),'warn')}
+ sb.channel('love-site-live').on('postgres_changes',{event:'*',schema:'public',table:'love_site',filter:`id=eq.${SITE_ID}`},()=>loadCloudData()).on('postgres_changes',{event:'*',schema:'public',table:'love_assets',filter:`site_id=eq.${SITE_ID}`},()=>render().catch(()=>{})).subscribe();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+<!-- 视频管理升级补丁 -->
 <style id="videoManagerUpgradeStyle">
 #videoTab .video-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
 #videoTab .video-toolbar .btn{flex:1;min-width:145px}
