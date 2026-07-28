@@ -22,7 +22,7 @@ h2{font-family:Georgia,"Songti SC",serif;font-weight:500;font-size:clamp(2.15rem
 .date{margin-top:24px;letter-spacing:.18em;color:var(--muted)}
 .day-badge{display:inline-flex;gap:12px;align-items:baseline;margin:28px auto 0;padding:13px 22px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.07)}
 .day-badge strong{font:600 clamp(2rem,5vw,4.5rem)/1 Georgia;color:#ffd6e1}.day-badge span{color:var(--muted)}
-.photo-main{width:min(760px,100%);aspect-ratio:16/9;margin:30px auto 0;border-radius:28px;overflow:hidden;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);display:grid;place-items:center;color:var(--muted)}.photo-main img{width:100%;height:100%;object-fit:cover}
+.photo-main{width:min(980px,100%);aspect-ratio:3/2;margin:34px auto 0;border-radius:28px;overflow:hidden;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);display:grid;place-items:center;color:var(--muted)}.photo-main img{width:100%;height:100%;object-fit:cover}
 .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:30px;max-height:70vh;overflow:auto;padding:4px}
 .gallery-card{aspect-ratio:4/5;border-radius:22px;overflow:hidden;box-shadow:0 20px 45px rgba(0,0,0,.32);transform:rotate(var(--r,0deg));border:5px solid rgba(255,255,255,.88);background:#e5dce0;position:relative}
 .gallery-card img{width:100%;height:100%;object-fit:cover}.gallery-card figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 10px 9px;background:linear-gradient(transparent,rgba(0,0,0,.78));font-size:.78rem}
@@ -107,6 +107,7 @@ h2{font-family:Georgia,"Songti SC",serif;font-weight:500;font-size:clamp(2.15rem
 
 <script>
 const $=id=>document.getElementById(id);
+const clone=o=>JSON.parse(JSON.stringify(o));
 const slides=[...document.querySelectorAll('.slide')];
 const defaults={
 cover:'老婆，\n不知不觉，我们已经在一起100天了。❤️',
@@ -127,8 +128,10 @@ albums:[
 ],
 endTitle:'100天不是终点',endText:'而是我们爱情新的开始。\n\n我爱你，不止100天。'
 };
-let data=JSON.parse(localStorage.getItem('love_museum_v5')||'null')||structuredClone(defaults);
-data={...structuredClone(defaults),...data};
+let savedData=null;
+try{savedData=JSON.parse(localStorage.getItem('love_museum_v5')||'null')}catch(e){savedData=null}
+let data=savedData||clone(defaults);
+data={...clone(defaults),...data};
 data.chapters=(data.chapters||defaults.chapters).map((x,i)=>({...defaults.chapters[i],...x}));
 data.albums=(data.albums||defaults.albums).map((x,i)=>({...defaults.albums[i],...x}));
 
