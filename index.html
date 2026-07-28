@@ -290,7 +290,7 @@ data.th.footprintsTitle=data.th.footprintsTitle||defaults.th.footprintsTitle;
 data.th.footprintsDesc=data.th.footprintsDesc||defaults.th.footprintsDesc;
 data.zh.footprints=defaults.zh.footprints.map((x,i)=>({...x,...(data.zh.footprints?.[i]||{})}));
 data.th.footprints=defaults.th.footprints.map((x,i)=>({...x,...(data.th.footprints?.[i]||{})}));
-['zh','th'].forEach(l=>{data[l].videoTitle=data[l].videoTitle||defaults[l].videoTitle;data[l].videoDesc=data[l].videoDesc||defaults[l].videoDesc;data[l].videos=defaults[l].videos.map((x,i)=>({...x,...(data[l].videos?.[i]||{})}))});
+['zh','th'].forEach(l=>{data[l].videoTitle=data[l].videoTitle||defaults[l].videoTitle;data[l].videoDesc=data[l].videoDesc||defaults[l].videoDesc;const savedVideos=Array.isArray(data[l].videos)?data[l].videos:[];const sourceVideos=savedVideos.length?savedVideos:defaults[l].videos;data[l].videos=sourceVideos.map((x,i)=>({...(defaults[l].videos[i]||{src:'',title:''}),...x}))});
 ['finalTitle','finalText','finalSign'].forEach(k=>{data.zh[k]=data.zh[k]||defaults.zh[k];data.th[k]=data.th[k]||defaults.th[k]});
 data.coverStyle={...defaults.coverStyle,...(data.coverStyle||{})};data.zh.chapters=defaults.zh.chapters.map((x,i)=>({...x,...(data.zh.chapters?.[i]||{})}));data.th.chapters=defaults.th.chapters.map((x,i)=>({...x,...(data.th.chapters?.[i]||{})}));let currentLang=data.lang==='th'?'th':'zh';
 const ui={zh:{days:'相爱的日子',empty:'照片墙还没有照片',count:n=>`共 ${n} 张照片`,music:'音乐未开始',project:'投屏',edit:'编辑',exit:'退出',open:'轻触开启我们的故事',coverEmpty:'上传一张最喜欢的合照'},th:{days:'วันที่เรารักกัน',empty:'ยังไม่มีรูปภาพในกำแพงรูปภาพ',count:n=>`รูปภาพทั้งหมด ${n} รูป`,music:'ยังไม่ได้เปิดเพลง',project:'นำเสนอ',edit:'แก้ไข',exit:'ออก',open:'แตะเพื่อเปิดเรื่องราวของเรา',coverEmpty:'อัปโหลดรูปคู่ที่ชอบที่สุด'}};
@@ -553,6 +553,349 @@ applyLanguage();openDB().then(render).catch(()=>alert('浏览器未允许本地�
 (function(){
   const edit=new URLSearchParams(location.search).get('edit')==='1';
   if(edit) document.title='编辑模式 · 我们的恋爱纪念馆';
+})();
+</script>
+<!-- 视频管理升级补丁：请粘贴到 index.html 的 </body> 前面 -->
+<style id="videoManagerUpgradeStyle">
+#videoTab .video-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+#videoTab .video-toolbar .btn{flex:1;min-width:145px}
+.video-editor-row{position:relative}
+.video-editor-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.video-editor-head h4{margin:0}
+.video-order-actions{display:flex;gap:6px}
+.video-order-actions button{border:1px solid #ead4dc;border-radius:10px;background:#fff;color:#4b2c39;padding:7px 10px}
+.video-path-preview{margin-top:7px;padding:9px 10px;border-radius:10px;background:#f8eef2;color:#70485a;font-size:.8rem;word-break:break-all}
+.video-path-preview.ready{background:#eaf8ee;color:#28633a}
+.video-path-preview.error{background:#fff0f0;color:#9a3030}
+.video-local-preview{display:none;width:100%;max-height:360px;margin-top:10px;border-radius:12px;background:#000}
+.video-local-preview.show{display:block}
+.video-file-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.video-file-actions button,.video-file-actions a{flex:1;min-width:130px;text-align:center;text-decoration:none;border:1px solid #ead4dc;border-radius:11px;background:#fff;color:#4b2c39;padding:10px}
+.video-remove-btn{width:100%;margin-top:10px;border:1px solid #efb8bf;border-radius:11px;background:#fff3f4;color:#a33b48;padding:10px}
+.video-save-summary{display:none;margin:10px 0;padding:11px;border-radius:12px;background:#eef8f1;color:#2c633e;line-height:1.65}
+.video-save-summary.show{display:block}
+@media(max-width:640px){
+  .video-file-actions{display:grid;grid-template-columns:1fr}
+  .video-file-actions button,.video-file-actions a{width:100%}
+}
+</style>
+
+<script id="videoManagerUpgradeScript">
+(function(){
+  'use strict';
+
+  const GH_UPLOAD='https://github.com/xx6110734-pixel/-love-100-days/upload/main/videos';
+  const allowedExtensions=['mp4','mov','m4v','webm','ogg'];
+
+  function blankVideo(){
+    return {src:'',title:''};
+  }
+
+  function ensureVideoArrays(){
+    ['zh','th'].forEach(lang=>{
+      if(!data[lang].videos || !Array.isArray(data[lang].videos)) data[lang].videos=[];
+    });
+    const max=Math.max(data.zh.videos.length,data.th.videos.length,1);
+    while(data.zh.videos.length<max) data.zh.videos.push(blankVideo());
+    while(data.th.videos.length<max) data.th.videos.push(blankVideo());
+  }
+
+  function filenameFromValue(value){
+    let v=String(value||'').trim().replace(/\\/g,'/');
+    if(!v) return '';
+    try{
+      if(/^https?:\/\//i.test(v)){
+        const u=new URL(v);
+        v=decodeURIComponent(u.pathname.split('/').pop()||'');
+      }
+    }catch(e){}
+    v=v.split('?')[0].split('#')[0];
+    if(v.includes('/')) v=v.split('/').pop();
+    return v.trim();
+  }
+
+  function normalizeFilename(value){
+    const name=filenameFromValue(value);
+    return name ? `videos/${name}` : '';
+  }
+
+  function extensionOf(name){
+    const m=String(name).toLowerCase().match(/\.([a-z0-9]+)$/);
+    return m ? m[1] : '';
+  }
+
+  function safeDisplayName(name){
+    return String(name||'').replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').trim();
+  }
+
+  function updatePathPreview(i){
+    const input=$(`videoFileName${i}`);
+    const box=$(`videoPathPreview${i}`);
+    if(!input||!box) return;
+    const filename=filenameFromValue(input.value);
+    const path=normalizeFilename(filename);
+    box.className='video-path-preview';
+    if(!filename){
+      box.textContent='填写文件名后，系统会自动生成 videos/文件名';
+      return;
+    }
+    const ext=extensionOf(filename);
+    if(!allowedExtensions.includes(ext)){
+      box.classList.add('error');
+      box.textContent=`格式可能不支持：${filename}。建议使用 MP4。`;
+      return;
+    }
+    box.classList.add('ready');
+    box.textContent=`网站播放路径：${path}`;
+  }
+
+  function revokePreview(i){
+    const preview=$(`videoPreview${i}`);
+    if(preview?.dataset.url){
+      URL.revokeObjectURL(preview.dataset.url);
+      delete preview.dataset.url;
+    }
+  }
+
+  function selectLocalVideo(i,file){
+    if(!file) return;
+    const filename=file.name;
+    $(`videoFileName${i}`).value=filename;
+    if(!$(`zh_videoTitle${i}`).value.trim()) $(`zh_videoTitle${i}`).value=safeDisplayName(filename);
+    updatePathPreview(i);
+
+    const status=$(`videoFileStatus${i}`);
+    status.textContent=`已选择：${filename}（${formatFileSize(file.size)}）。请把同一个文件上传到 GitHub 的 videos 文件夹。`;
+    status.classList.add('ready');
+
+    const preview=$(`videoPreview${i}`);
+    revokePreview(i);
+    const url=URL.createObjectURL(file);
+    preview.dataset.url=url;
+    preview.src=url;
+    preview.classList.add('show');
+  }
+
+  function collectRows(validate=true){
+    const rows=[...document.querySelectorAll('#videoEditors .video-editor-row')];
+    const result=[];
+    const seen=new Set();
+    const errors=[];
+
+    rows.forEach((row,i)=>{
+      const filename=filenameFromValue($(`videoFileName${i}`)?.value||'');
+      const zhTitle=$(`zh_videoTitle${i}`)?.value.trim()||'';
+      const thTitle=$(`th_videoTitle${i}`)?.value.trim()||'';
+
+      if(!filename && !zhTitle && !thTitle) return;
+
+      if(!filename){
+        errors.push(`视频 ${i+1}：缺少文件名`);
+        return;
+      }
+
+      const ext=extensionOf(filename);
+      if(!allowedExtensions.includes(ext)){
+        errors.push(`视频 ${i+1}：文件格式不支持，建议使用 .mp4`);
+      }
+
+      const key=filename.toLowerCase();
+      if(seen.has(key)) errors.push(`视频 ${i+1}：文件名重复（${filename}）`);
+      seen.add(key);
+
+      result.push({
+        src:normalizeFilename(filename),
+        zhTitle:zhTitle||safeDisplayName(filename),
+        thTitle:thTitle||zhTitle||safeDisplayName(filename)
+      });
+    });
+
+    if(validate && errors.length){
+      alert(errors.join('\n'));
+      return null;
+    }
+    return result;
+  }
+
+  function rebuildEditors(){
+    ensureVideoArrays();
+    const count=data.zh.videos.length;
+    $('videoEditors').innerHTML=Array.from({length:count},(_,i)=>{
+      const src=data.zh.videos[i]?.src||data.th.videos[i]?.src||'';
+      const filename=filenameFromValue(src);
+      return `
+      <div class="video-editor-row" data-video-row="${i}">
+        <div class="video-editor-head">
+          <h4>视频 ${i+1}</h4>
+          <div class="video-order-actions">
+            <button type="button" data-video-up="${i}" aria-label="上移">↑</button>
+            <button type="button" data-video-down="${i}" aria-label="下移">↓</button>
+          </div>
+        </div>
+
+        <label>视频文件名</label>
+        <input type="text" id="videoFileName${i}" value="${esc(filename)}" placeholder="例如：first-date.mp4" autocomplete="off">
+        <div class="video-path-preview" id="videoPathPreview${i}"></div>
+
+        <div class="video-file-actions">
+          <button type="button" data-pick-video="${i}">📱 选择手机视频</button>
+          <button type="button" data-copy-video="${i}">📋 复制文件名</button>
+          <a href="${GH_UPLOAD}" target="_blank" rel="noopener">📤 打开 GitHub 上传</a>
+        </div>
+
+        <input type="file" id="videoFile${i}" accept="video/*,.mp4,.mov,.m4v,.webm,.ogg" hidden>
+        <div class="video-file-status" id="videoFileStatus${i}">网页只保存文件名；视频本体需要手动上传到 GitHub 的 videos 文件夹。</div>
+        <video class="video-local-preview" id="videoPreview${i}" controls playsinline></video>
+
+        <div class="bilingual-grid">
+          <div><label>中文标题</label><input type="text" id="zh_videoTitle${i}" value="${esc(data.zh.videos[i]?.title||'')}"></div>
+          <div><label>ชื่อภาษาไทย</label><input type="text" id="th_videoTitle${i}" value="${esc(data.th.videos[i]?.title||'')}"></div>
+        </div>
+
+        <button type="button" class="video-remove-btn" data-remove-video="${i}">删除这个视频位置</button>
+      </div>`;
+    }).join('');
+
+    for(let i=0;i<count;i++) updatePathPreview(i);
+
+    document.querySelectorAll('[data-pick-video]').forEach(btn=>{
+      btn.onclick=()=> $(`videoFile${btn.dataset.pickVideo}`).click();
+    });
+
+    document.querySelectorAll('[data-copy-video]').forEach(btn=>{
+      btn.onclick=async()=>{
+        const i=Number(btn.dataset.copyVideo);
+        const filename=filenameFromValue($(`videoFileName${i}`).value);
+        if(!filename){notify('请先填写或选择视频');return}
+        try{await navigator.clipboard.writeText(filename)}
+        catch(e){$(`videoFileName${i}`).select();document.execCommand('copy')}
+        notify('视频文件名已复制');
+      };
+    });
+
+    document.querySelectorAll('[id^="videoFileName"]').forEach(input=>{
+      input.oninput=()=>updatePathPreview(Number(input.id.replace('videoFileName','')));
+    });
+
+    document.querySelectorAll('[id^="videoFile"]').forEach(input=>{
+      if(input.type!=='file') return;
+      input.onchange=e=>{
+        const i=Number(input.id.replace('videoFile',''));
+        selectLocalVideo(i,e.target.files?.[0]);
+      };
+    });
+
+    document.querySelectorAll('[data-remove-video]').forEach(btn=>{
+      btn.onclick=()=>{
+        const i=Number(btn.dataset.removeVideo);
+        if(data.zh.videos.length===1){
+          data.zh.videos=[blankVideo()];
+          data.th.videos=[blankVideo()];
+        }else{
+          data.zh.videos.splice(i,1);
+          data.th.videos.splice(i,1);
+        }
+        saveData();
+        rebuildEditors();
+        renderVideos();
+        notify('已删除视频位置');
+      };
+    });
+
+    document.querySelectorAll('[data-video-up]').forEach(btn=>{
+      btn.onclick=()=>moveVideo(Number(btn.dataset.videoUp),-1);
+    });
+    document.querySelectorAll('[data-video-down]').forEach(btn=>{
+      btn.onclick=()=>moveVideo(Number(btn.dataset.videoDown),1);
+    });
+  }
+
+  function syncFormToData(){
+    const rows=collectRows(false)||[];
+    data.zh.videos=rows.map(x=>({src:x.src,title:x.zhTitle}));
+    data.th.videos=rows.map(x=>({src:x.src,title:x.thTitle}));
+    if(!data.zh.videos.length){
+      data.zh.videos=[blankVideo()];
+      data.th.videos=[blankVideo()];
+    }
+  }
+
+  function moveVideo(i,step){
+    syncFormToData();
+    const j=i+step;
+    if(j<0||j>=data.zh.videos.length) return;
+    ['zh','th'].forEach(lang=>{
+      [data[lang].videos[i],data[lang].videos[j]]=[data[lang].videos[j],data[lang].videos[i]];
+    });
+    saveData();
+    rebuildEditors();
+    renderVideos();
+  }
+
+  function addVideo(){
+    syncFormToData();
+    data.zh.videos.push(blankVideo());
+    data.th.videos.push(blankVideo());
+    saveData();
+    rebuildEditors();
+    setTimeout(()=>{
+      const rows=document.querySelectorAll('#videoEditors .video-editor-row');
+      rows[rows.length-1]?.scrollIntoView({behavior:'smooth',block:'center'});
+    },50);
+    notify('已新增一个视频位置');
+  }
+
+  function upgradedSaveVideos(){
+    const rows=collectRows(true);
+    if(!rows) return;
+    data.zh.videos=rows.map(x=>({src:x.src,title:x.zhTitle}));
+    data.th.videos=rows.map(x=>({src:x.src,title:x.thTitle}));
+    if(!rows.length){
+      data.zh.videos=[blankVideo()];
+      data.th.videos=[blankVideo()];
+    }
+    saveData();
+    renderVideos();
+    rebuildEditors();
+
+    const summary=$('videoSaveSummary');
+    if(summary){
+      summary.innerHTML=rows.length
+        ? `已保存 ${rows.length} 个视频。<br>请确认这些文件已经上传到 GitHub：<br>${rows.map(x=>`• ${esc(x.src)}`).join('<br>')}`
+        : '视频列表已清空。';
+      summary.classList.add('show');
+    }
+    notify('视频设置已保存');
+  }
+
+  function installToolbar(){
+    const tab=$('videoTab');
+    if(!tab || $('addVideoBtn')) return;
+    const editors=$('videoEditors');
+    const toolbar=document.createElement('div');
+    toolbar.className='video-toolbar';
+    toolbar.innerHTML=`
+      <button type="button" class="btn light" id="addVideoBtn">＋ 新增视频</button>
+      <a class="btn light" href="${GH_UPLOAD}" target="_blank" rel="noopener" style="text-decoration:none;text-align:center">打开 videos 上传文件夹</a>`;
+    editors.before(toolbar);
+
+    const summary=document.createElement('div');
+    summary.id='videoSaveSummary';
+    summary.className='video-save-summary';
+    $('saveVideos').before(summary);
+
+    $('addVideoBtn').onclick=addVideo;
+  }
+
+  function init(){
+    ensureVideoArrays();
+    installToolbar();
+    rebuildEditors();
+    $('saveVideos').onclick=upgradedSaveVideos;
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+  else init();
 })();
 </script>
 </body></html>
