@@ -271,7 +271,7 @@ body:after{
 <div class="tab active" id="textTab"><div class="hint">中文和泰语分别保存。切换网站语言时，只显示对应语言。泰语内容可由你确认后手动填写，避免机器翻译改变语气。</div><div id="textEditors"></div><button class="btn" id="saveText">保存全部双语文字</button></div>
 <div class="tab" id="photoTab"><label>封面主照片</label><div class="upload"><input type="file" id="coverUpload" accept="image/*"></div><div class="editor-card"><h4>封面照片显示调节</h4><label>宽度 <span id="coverWidthValue"></span></label><input type="range" id="coverWidth" min="60" max="100" step="1"><label>手机端高度 <span id="coverHeightValue"></span></label><input type="range" id="coverHeight" min="260" max="760" step="10"><label>圆角 <span id="coverRadiusValue"></span></label><input type="range" id="coverRadius" min="0" max="50" step="1"><label>缩放 <span id="coverScaleValue"></span></label><input type="range" id="coverScale" min="100" max="190" step="1"><label>水平位置 <span id="coverXValue"></span></label><input type="range" id="coverX" min="0" max="100" step="1"><label>垂直位置 <span id="coverYValue"></span></label><input type="range" id="coverY" min="0" max="100" step="1"><button class="btn light" id="resetCoverStyle">恢复默认尺寸</button></div><label>唯一照片墙</label><div class="upload"><input type="file" id="galleryUpload" accept="image/*" multiple><div class="hint">手机端以小照片平铺。最多 120 张；点击照片可放大并左右滑动。</div></div><div class="asset-list" id="photoManager"></div></div>
 <div class="tab" id="videoTab">
-<div class="editor-card"><h4>公开展示视频</h4><div class="hint">点击下方“选择手机视频”可自动识别文件名、填写路径并预览；随后点击“打开 GitHub 上传”，把同一个视频上传到仓库的 videos 文件夹。普通网页打开后即可播放。</div></div>
+<div class="editor-card"><h4>公开展示视频</h4><div class="hint">点击“选择手机视频”自动识别文件名、填写路径并预览；再点击“上传到 videos 文件夹”，把同一个视频提交到 GitHub。普通网页打开后即可播放。</div></div>
 <div id="videoEditors"></div><button class="btn" id="saveVideos">保存视频设置</button>
 </div>
 <div class="tab" id="musicTab"><div class="editor-card"><h4>内置音乐库</h4><div class="hint">网站已接入 8 首中文恋爱歌曲的 YouTube 官方播放器。音乐不会储存在你的网页中；访客第一次播放时需要轻触播放键。部分地区或版权设置可能导致个别歌曲无法嵌入。你仍可添加自己拥有使用权的音频。</div></div><label>添加多首歌曲</label><div class="upload"><input type="file" id="musicUpload" accept="audio/*" multiple></div><label>播放模式</label><select id="playMode"><option value="sequence">顺序循环</option><option value="shuffle">随机播放</option><option value="single">单曲循环</option></select><div class="asset-list" id="musicManager"></div></div>
@@ -340,12 +340,13 @@ function buildVideoEditors(){
       <input type="text" id="videoSrc${i}" placeholder="videos/video${i+1}.mp4">
       <div class="video-file-actions">
         <button type="button" class="video-pick-btn" data-pick-video="${i}">📤 选择手机视频</button>
-        <a class="github-upload-btn" href="https://github.com/xx6110734-pixel/-love-100-days/upload/main" target="_blank" rel="noopener">打开 GitHub 上传</a>
+        <button type="button" class="github-upload-btn" data-copy-video-path="${i}">📋 复制视频路径</button>
+        <a class="github-upload-btn" href="https://github.com/xx6110734-pixel/-love-100-days/upload/main/videos" target="_blank" rel="noopener">上传到 videos 文件夹</a>
       </div>
       <input type="file" id="videoFile${i}" accept="video/*,.mp4,.mov,.m4v,.webm" hidden>
       <div class="video-file-status" id="videoFileStatus${i}">尚未选择视频。选择后会自动填写视频路径。</div>
       <video class="video-local-preview" id="videoPreview${i}" controls playsinline></video>
-      <div class="video-upload-warning">选择按钮负责自动识别文件名和预览。要让其他人看到，仍需把同一个视频文件上传到 GitHub 仓库的 videos 文件夹。</div>
+      <div class="video-upload-warning">选择视频后会自动填写路径并预览。点击“上传到 videos 文件夹”，在 GitHub 页面重新选择同一个视频并提交即可。</div>
       <div class="bilingual-grid">
         <div><label>中文标题</label><input type="text" id="zh_videoTitle${i}"></div>
         <div><label>ชื่อภาษาไทย</label><input type="text" id="th_videoTitle${i}"></div>
@@ -355,6 +356,21 @@ function buildVideoEditors(){
     btn.onclick=()=>{
       const i=Number(btn.dataset.pickVideo);
       $(`videoFile${i}`).click();
+    };
+  });
+  document.querySelectorAll('[data-copy-video-path]').forEach(btn=>{
+    btn.onclick=async()=>{
+      const i=Number(btn.dataset.copyVideoPath);
+      const value=$(`videoSrc${i}`).value.trim();
+      if(!value){notify('请先选择视频');return}
+      try{
+        await navigator.clipboard.writeText(value);
+        notify('视频路径已复制');
+      }catch(e){
+        $(`videoSrc${i}`).select();
+        document.execCommand('copy');
+        notify('视频路径已复制');
+      }
     };
   });
   for(let i=0;i<6;i++){
