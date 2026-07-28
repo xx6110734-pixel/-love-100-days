@@ -290,7 +290,7 @@ data.th.footprintsTitle=data.th.footprintsTitle||defaults.th.footprintsTitle;
 data.th.footprintsDesc=data.th.footprintsDesc||defaults.th.footprintsDesc;
 data.zh.footprints=defaults.zh.footprints.map((x,i)=>({...x,...(data.zh.footprints?.[i]||{})}));
 data.th.footprints=defaults.th.footprints.map((x,i)=>({...x,...(data.th.footprints?.[i]||{})}));
-['zh','th'].forEach(l=>{data[l].videoTitle=data[l].videoTitle||defaults[l].videoTitle;data[l].videoDesc=data[l].videoDesc||defaults[l].videoDesc;const savedVideos=Array.isArray(data[l].videos)?data[l].videos:[];const total=Math.max(6,savedVideos.length,defaults[l].videos.length);data[l].videos=Array.from({length:total},(_,i)=>({...(defaults[l].videos[i]||{src:'',title:''}),...((savedVideos[i]&&typeof savedVideos[i]==='object')?savedVideos[i]:{})}))});
+['zh','th'].forEach(l=>{data[l].videoTitle=data[l].videoTitle||defaults[l].videoTitle;data[l].videoDesc=data[l].videoDesc||defaults[l].videoDesc;const savedVideos=Array.isArray(data[l].videos)?data[l].videos.filter(x=>x&&typeof x==='object'):[];const sourceVideos=savedVideos.length?savedVideos:defaults[l].videos;data[l].videos=sourceVideos.map((x,i)=>({...(defaults[l].videos[i]||{src:'',title:''}),...x}))});
 ['finalTitle','finalText','finalSign'].forEach(k=>{data.zh[k]=data.zh[k]||defaults.zh[k];data.th[k]=data.th[k]||defaults.th[k]});
 data.coverStyle={...defaults.coverStyle,...(data.coverStyle||{})};data.zh.chapters=defaults.zh.chapters.map((x,i)=>({...x,...(data.zh.chapters?.[i]||{})}));data.th.chapters=defaults.th.chapters.map((x,i)=>({...x,...(data.th.chapters?.[i]||{})}));let currentLang=data.lang==='th'?'th':'zh';
 const ui={zh:{days:'相爱的日子',empty:'照片墙还没有照片',count:n=>`共 ${n} 张照片`,music:'音乐未开始',project:'投屏',edit:'编辑',exit:'退出',open:'轻触开启我们的故事',coverEmpty:'上传一张最喜欢的合照'},th:{days:'วันที่เรารักกัน',empty:'ยังไม่มีรูปภาพในกำแพงรูปภาพ',count:n=>`รูปภาพทั้งหมด ${n} รูป`,music:'ยังไม่ได้เปิดเพลง',project:'นำเสนอ',edit:'แก้ไข',exit:'ออก',open:'แตะเพื่อเปิดเรื่องราวของเรา',coverEmpty:'อัปโหลดรูปคู่ที่ชอบที่สุด'}};
@@ -687,12 +687,9 @@ applyLanguage();openDB().then(render).catch(()=>alert('浏览器未允许本地�
       const zhTitle=$(`zh_videoTitle${i}`)?.value.trim()||'';
       const thTitle=$(`th_videoTitle${i}`)?.value.trim()||'';
 
-      if(!filename && !zhTitle && !thTitle) return;
-
-      if(!filename){
-        errors.push(`视频 ${i+1}：缺少文件名`);
-        return;
-      }
+      // 没有文件名的空位置直接忽略。这样只添加 1 个视频时，
+      // 其余预留位置不会阻止保存，也不会再次出现在公开页面。
+      if(!filename) return;
 
       const ext=extensionOf(filename);
       if(!allowedExtensions.includes(ext)){
@@ -861,7 +858,7 @@ applyLanguage();openDB().then(render).catch(()=>alert('浏览器未允许本地�
     const summary=$('videoSaveSummary');
     if(summary){
       summary.innerHTML=rows.length
-        ? `已保存 ${rows.length} 个视频。<br>请确认这些文件已经上传到 GitHub：<br>${rows.map(x=>`• ${esc(x.src)}`).join('<br>')}`
+        ? `已成功保存 ${rows.length} 个视频。一个视频也可以单独保存。<br>请确认这些文件已经上传到 GitHub：<br>${rows.map(x=>`• ${esc(x.src)}`).join('<br>')}`
         : '视频列表已清空。';
       summary.classList.add('show');
     }
