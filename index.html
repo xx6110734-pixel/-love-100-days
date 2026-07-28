@@ -225,6 +225,13 @@ textarea{min-height:94px;resize:vertical;line-height:1.6}
 <div class="toast" id="toast"></div>
 
 <script>
+const el=id=>document.getElementById(id);
+const openBtn=el("open"), panelEl=el("panel"), closeBtn=el("close"), saveTextBtn=el("saveText");
+const coverFrameEl=el("coverFrame"), galleryEl=el("gallery"), thumbsEl=el("thumbs");
+const coverUploadEl=el("coverUpload"), galleryUploadEl=el("galleryUpload");
+const exportBackupBtnEl=el("exportBackup"), importBackupBtnEl=el("importBackupBtn"), importBackupEl=el("importBackup");
+const resetBtn=el("reset"), makeShareBtn=el("makeShare"), heartsEl=el("hearts");
+
 const defaults={
  title:"我们的100天",
  cover:"老婆，\n不知不觉，我们已经在一起100天了。❤️",
@@ -249,8 +256,8 @@ function apply(){
 apply();
 
 function notify(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800)}
-open.onclick=()=>panel.classList.add("open");close.onclick=()=>panel.classList.remove("open");
-saveText.onclick=()=>{
+openBtn.onclick=()=>panelEl.classList.add("open");closeBtn.onclick=()=>panelEl.classList.remove("open");
+saveTextBtn.onclick=()=>{
  map.forEach(([k,v,i])=>text[k]=document.getElementById(i).value.trim());
  localStorage.setItem("love100_text_v2",JSON.stringify(text));apply();notify("文字已保存")
 };
@@ -281,39 +288,39 @@ function resize(file,max=1800,q=.84){
 }
 async function render(){
  const items=(await all()).sort((a,b)=>a.created-b.created),cover=items.find(x=>x.type==="cover"),pics=items.filter(x=>x.type==="gallery");
- coverFrame.innerHTML=cover?`<img src="${cover.data}" alt="封面合照">`:"点击右下角“网页编辑器”，上传你们最喜欢的合照。";
- gallery.innerHTML=pics.length?pics.map(x=>`<div class="gallery-item"><img src="${x.data}" alt="回忆照片"></div>`).join(""):`<div class="empty">还没有照片。<br>点击右下角“网页编辑器”即可批量上传。</div>`;
- thumbs.innerHTML=pics.map(x=>`<div class="thumb"><img src="${x.data}"><button data-id="${x.id}">×</button></div>`).join("");
- thumbs.querySelectorAll("button").forEach(b=>b.onclick=async()=>{await del(b.dataset.id);render()})
+ coverFrameEl.innerHTML=cover?`<img src="${cover.data}" alt="封面合照">`:"点击右下角“网页编辑器”，上传你们最喜欢的合照。";
+ galleryEl.innerHTML=pics.length?pics.map(x=>`<div class="gallery-item"><img src="${x.data}" alt="回忆照片"></div>`).join(""):`<div class="empty">还没有照片。<br>点击右下角“网页编辑器”即可批量上传。</div>`;
+ thumbsEl.innerHTML=pics.map(x=>`<div class="thumb"><img src="${x.data}"><button data-id="${x.id}">×</button></div>`).join("");
+ thumbsEl.querySelectorAll("button").forEach(b=>b.onclick=async()=>{await del(b.dataset.id);render()})
 }
-coverUpload.onchange=async e=>{
+coverUploadEl.onchange=async e=>{
  const f=e.target.files[0];if(!f)return;await put({id:"cover",type:"cover",data:await resize(f),created:0});render();notify("封面照片已保存");e.target.value=""
 };
-galleryUpload.onchange=async e=>{
+galleryUploadEl.onchange=async e=>{
  const fs=[...e.target.files];
  for(const f of fs)await put({id:"g_"+Date.now()+"_"+Math.random().toString(16).slice(2),type:"gallery",data:await resize(f),created:Date.now()+Math.random()});
  render();notify(`已添加 ${fs.length} 张照片`);e.target.value=""
 };
 
-exportBackup.onclick=async()=>{
+exportBackupBtnEl.onclick=async()=>{
  const blob=new Blob([JSON.stringify({version:2,text,images:await all()},null,2)],{type:"application/json"});
  downloadBlob(blob,"我们的100天_编辑备份.json")
 };
-importBackupBtn.onclick=()=>importBackup.click();
-importBackup.onchange=async e=>{
+importBackupBtnEl.onclick=()=>importBackupEl.click();
+importBackupEl.onchange=async e=>{
  try{
   const d=JSON.parse(await e.target.files[0].text());if(!d.text||!Array.isArray(d.images))throw 0;
   text=d.text;localStorage.setItem("love100_text_v2",JSON.stringify(text));apply();await clearAll();for(const x of d.images)await put(x);render();notify("备份已导入")
  }catch{alert("备份文件无效或已损坏。")}e.target.value=""
 };
-reset.onclick=async()=>{
+resetBtn.onclick=async()=>{
  if(!confirm("确定恢复默认文字并清空全部照片吗？"))return;
  text={...defaults};localStorage.setItem("love100_text_v2",JSON.stringify(text));apply();await clearAll();render();notify("已恢复默认")
 };
 function downloadBlob(blob,name){
  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)
 }
-makeShare.onclick=async()=>{
+makeShareBtn.onclick=async()=>{
  map.forEach(([k,v,i])=>text[k]=document.getElementById(i).value.trim());
  localStorage.setItem("love100_text_v2",JSON.stringify(text));apply();
  const items=await all();
@@ -334,7 +341,7 @@ makeShare.onclick=async()=>{
 for(let i=0;i<15;i++){
  const s=document.createElement("span");s.className="float";s.textContent=i%3?"·":"♡";
  s.style.left=Math.random()*100+"vw";s.style.animationDuration=10+Math.random()*14+"s";
- s.style.animationDelay=-Math.random()*20+"s";s.style.fontSize=12+Math.random()*25+"px";hearts.appendChild(s)
+ s.style.animationDelay=-Math.random()*20+"s";s.style.fontSize=12+Math.random()*25+"px";heartsEl.appendChild(s)
 }
 openDB().then(render).catch(()=>alert("浏览器未允许本地储存，请尝试使用 Chrome、Edge 或 Safari。"));
 </script>
