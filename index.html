@@ -89,7 +89,37 @@ let playlist=[],trackIndex=0,playing=false,mode=localStorage.getItem('love_play_
 let ytPlayer=null,ytReady=false,pendingYoutube=null;
 function loadYouTubeAPI(){if(window.YT&&window.YT.Player){initYouTubePlayer();return}if(document.querySelector('script[src*="youtube.com/iframe_api"]'))return;const tag=document.createElement('script');tag.src='https://www.youtube.com/iframe_api';document.head.appendChild(tag)}
 window.onYouTubeIframeAPIReady=initYouTubePlayer;
-function initYouTubePlayer(){if(ytPlayer||!window.YT)return;ytPlayer=new YT.Player('youtubePlayer',{height:'1',width:'1',playerVars:{playsinline:1,controls:0,rel:0,modestbranding:1,origin:location.origin},events:{onReady:()=>{ytReady=true;if(pendingYoutube){const p=pendingYoutube;pendingYoutube=null;playYoutube(p)}},onStateChange:e=>{if(e.data===YT.PlayerState.ENDED)nextTrack()},onError:()=>{notify('这首歌暂时无法在网页内播放，已切换下一首');setTimeout(nextTrack,700)}})}
+function initYouTubePlayer(){
+  if(ytPlayer || !window.YT) return;
+  ytPlayer = new YT.Player('youtubePlayer', {
+    height: '1',
+    width: '1',
+    playerVars: {
+      playsinline: 1,
+      controls: 0,
+      rel: 0,
+      modestbranding: 1,
+      origin: location.origin
+    },
+    events: {
+      onReady: () => {
+        ytReady = true;
+        if(pendingYoutube){
+          const p = pendingYoutube;
+          pendingYoutube = null;
+          playYoutube(p);
+        }
+      },
+      onStateChange: e => {
+        if(e.data === YT.PlayerState.ENDED) nextTrack();
+      },
+      onError: () => {
+        notify('这首歌暂时无法在网页内播放，已切换下一首');
+        setTimeout(nextTrack, 700);
+      }
+    }
+  });
+}
 function stopAllAudio(){try{$('bgm').pause()}catch{};try{ytPlayer?.pauseVideo()}catch{}}
 function playYoutube(t){if(!ytReady){pendingYoutube=t;loadYouTubeAPI();return}ytPlayer.loadVideoById(t.videoId);ytPlayer.playVideo()}
 async function playTrack(i){if(!playlist.length)return;trackIndex=(i+playlist.length)%playlist.length;const t=playlist[trackIndex];stopAllAudio();try{if(t.type==='youtube'){playYoutube(t)}else{$('bgm').src=t.data;await $('bgm').play()}playing=true;$('musicBtn').textContent='Ⅱ';$('nowPlaying').textContent='正在播放：'+t.name}catch{notify('请再次点击播放')}}
