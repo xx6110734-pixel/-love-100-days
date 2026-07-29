@@ -698,7 +698,6 @@ html.edit-mode:has(.start-overlay:not(.hide))::after{display:none}
 <div class="upload"><input accept="image/*" id="slideshowUpload" multiple="" type="file"/><div class="hint">用于“我们的故事”幻灯片。建议上传 5 张；使用 ↑ ↓ 单独调整播放顺序，不会影响章节照片和第八章照片墙。</div></div>
 <div class="asset-list" id="slideshowManager"></div>
 <label>第一章至第七章照片</label>
-<div class="upload"><input accept="image/*" id="chapterUpload" multiple="" type="file"/><div class="hint">第一章至第七章照片合计最多 40 张，可在各章节中分别上传并调整顺序。</div></div>
 <div class="asset-list" id="chapterPhotoManager"></div>
 <label>第八章照片排序</label>
 <div class="upload"><input accept="image/*" id="galleryUpload" multiple="" type="file"/><div class="hint">第八章照片仅按下方顺序展示。使用 ↑ ↓ 调整位置；照片墙最多 120 张，点击照片可放大并左右滑动。</div></div>
@@ -1822,12 +1821,6 @@ async function initUnified(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initUnified,{once:true});else initUnified();
 })();
 </script>
-<style id="chapterFortyTotalStyle20260729">
-.chapter-photo.count-many{grid-template-columns:repeat(2,minmax(0,1fr))}
-.chapter-photo.count-many img{min-height:240px;max-height:430px}
-.chapter-total-status{margin:0 0 16px;padding:14px 16px;border:1px solid rgba(116,70,89,.16);border-radius:16px;background:rgba(255,255,255,.62);font-size:.92rem;line-height:1.6;color:#6f5360}
-@media(max-width:720px){.chapter-photo.count-many{grid-template-columns:repeat(2,minmax(0,1fr))}.chapter-photo.count-many img{min-height:180px;max-height:340px}.chapter-total-status{font-size:.88rem}}
-</style>
 <!-- Build: UNIFIED-RECTIFICATION-20260729 -->
 <script id="homepageCinemaScript20260729">
 (()=>{
@@ -2106,204 +2099,184 @@ img{content-visibility:auto}
 <!-- Build: PERFORMANCE-HOTFIX-20260729 -->
 
 <!-- Build: PHOTO-COLLECTIONS-SPLIT-20260729 -->
-<style id="chapterUnifiedUploadButtonFix20260729">
-#chapterPhotoManager .chapter-manager-grid,
-#chapterPhotoManager .chapter-manager-card,
-#chapterPhotoManager>.chapter-total-status{display:none!important}
-#chapterPhotoManager .chapter-unified-final{display:block!important}
-#chapterPhotoManager .chapter-unified-head{margin:0 0 14px;padding:16px 18px;border:1px solid #e5d4dc;border-radius:16px;background:#fff;color:#6f5360;line-height:1.65}
-#chapterPhotoManager .chapter-unified-head strong{display:block;color:#4f3c46;font-size:1rem;margin-bottom:3px}
-#chapterPhotoManager .chapter-unified-picker{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;margin:0 0 14px;border:0;border-radius:14px;background:#c97891;color:#fff;font-weight:700;font-size:1rem;cursor:pointer}
-#chapterPhotoManager .chapter-unified-picker.disabled{opacity:.5;cursor:not-allowed}
-#chapterPhotoManager .chapter-unified-picker input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
-#chapterPhotoManager .chapter-unified-hint{margin:-4px 4px 14px;color:#8a7480;font-size:.79rem;line-height:1.55}
-#chapterPhotoManager .chapter-unified-list{display:grid;gap:12px}
-#chapterPhotoManager .chapter-unified-row{display:grid;grid-template-columns:34px 58px minmax(120px,1fr) auto;gap:10px;align-items:center;padding:11px;border:1px solid rgba(116,70,89,.15);border-radius:16px;background:rgba(255,255,255,.72)}
-#chapterPhotoManager .chapter-unified-row img{width:58px;height:58px;object-fit:cover;border-radius:12px}
-#chapterPhotoManager .chapter-unified-index{text-align:center;font-weight:700;color:#765867}
-#chapterPhotoManager .chapter-unified-select{width:100%;min-width:0;border:1px solid #e7d8de;border-radius:12px;padding:10px;background:#fff;color:#5f4653;font:inherit}
-#chapterPhotoManager .chapter-unified-actions{display:flex;gap:7px}
-#chapterPhotoManager .chapter-unified-actions button{min-width:42px;height:42px;border:0;border-radius:12px;background:#efe4e9;color:#5f4653;font-size:1.05rem}
-#chapterPhotoManager .chapter-unified-actions .del{background:#f4d9e1;color:#8d4059}
-#chapterPhotoManager .chapter-unified-empty{padding:18px;border:1px dashed rgba(116,70,89,.2);border-radius:16px;text-align:center;color:#987d89;background:rgba(255,255,255,.38)}
-@media(max-width:720px){
- #chapterPhotoManager .chapter-unified-row{grid-template-columns:28px 50px minmax(0,1fr);gap:8px}
- #chapterPhotoManager .chapter-unified-row img{width:50px;height:50px}
- #chapterPhotoManager .chapter-unified-actions{grid-column:1/-1;justify-content:flex-end}
- #chapterPhotoManager .chapter-unified-actions button{min-width:50px}
-}
-</style>
 
 <!-- Build: CHAPTER-UNIFIED-LIBRARY-DISPLAY-FIX-20260729 -->
-<style id="chapterImageLayoutRefine20260729">
-/* 章节图片精修：第二章仅足迹双图；其余章节采用紧凑 2×2 主题图 */
-.chapter-glass .chapter-photo{
-  width:min(100%,700px)!important;
-  height:auto!important;
-  aspect-ratio:auto!important;
-  margin:0 auto 24px!important;
-  display:grid!important;
-  gap:12px!important;
-  overflow:visible!important;
-  border:0!important;
-  background:transparent!important;
-  box-shadow:none!important;
-}
-.chapter-glass .chapter-photo.chapter-theme-grid.count-0{display:none!important}
-.chapter-glass .chapter-photo.chapter-theme-grid.count-1{grid-template-columns:minmax(0,58%);justify-content:center}
-.chapter-glass .chapter-photo.chapter-theme-grid.count-2,
-.chapter-glass .chapter-photo.chapter-theme-grid.count-3,
-.chapter-glass .chapter-photo.chapter-theme-grid.count-4{grid-template-columns:repeat(2,minmax(0,1fr))}
-.chapter-glass .chapter-photo.chapter-theme-grid.count-3 img:last-child{grid-column:1/-1;width:calc(50% - 6px);justify-self:center}
-.chapter-glass .chapter-photo.chapter-theme-grid img{
-  width:100%!important;
-  height:260px!important;
-  min-height:0!important;
-  max-height:none!important;
-  object-fit:cover!important;
-  object-position:center!important;
-  border-radius:22px!important;
-  border:1px solid rgba(255,255,255,.18)!important;
-  background:rgba(255,255,255,.04)!important;
-  box-shadow:0 14px 34px rgba(0,0,0,.18)!important;
-}
-.chapter-glass .chapter-photo.chapter-theme-grid.count-1 img{height:330px!important}
-#chapterPhoto2{display:none!important}
-.footprint-card .footprint-photo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 15px}
-.footprint-card .footprint-photo-grid.one{grid-template-columns:minmax(0,62%);justify-content:center}
-.footprint-card .footprint-photo-grid img{
-  width:100%;height:250px;object-fit:cover;object-position:center;display:block;
-  border-radius:18px;border:1px solid rgba(255,255,255,.15);box-shadow:0 12px 28px rgba(0,0,0,.16)
-}
-#chapterPhotoManager .chapter-limit-note{margin:0 0 14px;padding:12px 14px;border-radius:14px;background:#f8f0f3;color:#735965;font-size:.84rem;line-height:1.65}
-#chapterPhotoManager .chapter-limit-badge{display:inline-flex;align-items:center;margin-top:5px;padding:3px 9px;border-radius:999px;background:#efe1e7;color:#765867;font-size:.76rem;font-weight:700}
-#chapterPhotoManager .chapter-unified-row.is-over-limit{opacity:.58}
-#chapterPhotoManager .chapter-unified-row.is-over-limit:after{content:"超出当前章节展示上限，数据仍保留";grid-column:1/-1;font-size:.72rem;color:#9b6678;text-align:right}
-@media(max-width:720px){
- .chapter-glass .chapter-photo{width:100%!important;gap:9px!important;margin-bottom:20px!important}
- .chapter-glass .chapter-photo.chapter-theme-grid.count-1{grid-template-columns:minmax(0,62%)}
- .chapter-glass .chapter-photo.chapter-theme-grid img{height:205px!important;border-radius:18px!important}
- .chapter-glass .chapter-photo.chapter-theme-grid.count-1 img{height:270px!important}
- .footprint-card .footprint-photo-grid{gap:8px;margin-bottom:13px}
- .footprint-card .footprint-photo-grid.one{grid-template-columns:minmax(0,68%)}
- .footprint-card .footprint-photo-grid img{height:205px;border-radius:16px}
+<!-- Build: CHAPTER-IMAGE-LAYOUT-REFINE-20260729-PER-CHAPTER -->
+
+
+<style id="chaptersIndependentModuleStyle20260729">
+#chapterPhotoManager{display:block!important}
+#chapterPhotoManager .chapter-independent-summary{margin:0 0 16px;padding:15px 17px;border:1px solid #ead9e0;border-radius:17px;background:rgba(255,255,255,.74);color:#765d69;line-height:1.6}
+#chapterPhotoManager .chapter-independent-summary strong{display:block;margin-bottom:3px;color:#4f3c46;font-size:1.03rem}
+#chapterPhotoManager .chapter-independent-grid{display:grid;grid-template-columns:1fr;gap:16px}
+#chapterPhotoManager .chapter-independent-window{padding:16px;border:1px solid #ead9e0;border-radius:18px;background:rgba(255,255,255,.84);overflow:hidden}
+#chapterPhotoManager .chapter-independent-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+#chapterPhotoManager .chapter-independent-head strong{display:block;color:#4f3c46;font-size:1.02rem}
+#chapterPhotoManager .chapter-independent-head small{display:block;margin-top:4px;color:#8a7480;line-height:1.5}
+#chapterPhotoManager .chapter-independent-count{flex:0 0 auto;padding:5px 10px;border-radius:999px;background:#efe1e7;color:#765867;font-size:.78rem;font-weight:700}
+#chapterPhotoManager .chapter-independent-upload{position:relative;display:flex;align-items:center;justify-content:center;min-height:52px;margin-bottom:12px;border-radius:14px;background:#c97891;color:#fff;font-weight:700;cursor:pointer}
+#chapterPhotoManager .chapter-independent-upload.is-full{opacity:.5;cursor:not-allowed}
+#chapterPhotoManager .chapter-independent-upload input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+#chapterPhotoManager .chapter-independent-upload.is-full input{pointer-events:none}
+#chapterPhotoManager .chapter-independent-empty{padding:14px;border:1px dashed #e8d8df;border-radius:14px;text-align:center;color:#9a838e}
+#chapterPhotoManager .chapter-independent-list{display:grid;gap:10px}
+#chapterPhotoManager .chapter-independent-row{display:grid;grid-template-columns:28px 72px minmax(0,1fr) auto;align-items:center;gap:10px;padding:10px;border:1px solid #eadde2;border-radius:14px;background:#fff}
+#chapterPhotoManager .chapter-independent-row img{width:72px;height:72px;object-fit:cover;border-radius:12px}
+#chapterPhotoManager .chapter-independent-index{font-weight:700;text-align:center;color:#765867}
+#chapterPhotoManager .chapter-independent-info strong{display:block;color:#5f4653}
+#chapterPhotoManager .chapter-independent-info span{display:block;margin-top:3px;color:#927b86;font-size:.76rem;line-height:1.35}
+#chapterPhotoManager .chapter-independent-actions{display:flex;gap:6px}
+#chapterPhotoManager .chapter-independent-actions button{min-width:40px;min-height:40px;border:0;border-radius:11px;background:#efe2e7;color:#604954;font-size:1rem}
+#chapterPhotoManager .chapter-independent-actions button.del{background:#f4dce4;color:#8b3e59}
+#chapterPhotoManager .chapter-independent-actions button:disabled{opacity:.35}
+.chapter-theme-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.chapter-theme-grid.count-0{display:none}
+.chapter-theme-grid.count-1{grid-template-columns:minmax(0,420px);justify-content:center}
+.chapter-theme-grid.count-3 img:last-child{grid-column:1/-1;max-width:420px;justify-self:center;width:100%}
+.chapter-theme-grid img{width:100%;height:100%;min-height:210px;max-height:430px;object-fit:cover;border-radius:18px}
+.footprint-photo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-bottom:12px}
+.footprint-photo-grid.one{grid-template-columns:minmax(0,420px);justify-content:center}
+.footprint-photo-grid img{width:100%;height:220px;object-fit:cover;border-radius:15px}
+@media(max-width:560px){
+ #chapterPhotoManager .chapter-independent-window{padding:13px}
+ #chapterPhotoManager .chapter-independent-row{grid-template-columns:24px 62px minmax(0,1fr)}
+ #chapterPhotoManager .chapter-independent-row img{width:62px;height:62px}
+ #chapterPhotoManager .chapter-independent-actions{grid-column:2/-1;justify-content:flex-end}
+ .chapter-theme-grid img{min-height:150px;max-height:300px}
+ .footprint-photo-grid img{height:170px}
 }
 </style>
-<script id="chapterImageLayoutRefineScript20260729">
+<script id="chaptersIndependentModuleScript20260729">
 (()=>{
 'use strict';
-const chapterLabels=['第一章 · 我们的开始','第二章 · 我们的足迹','第三章 · 她的故事','第四章 · 那些回忆','第五章 · 第一次吵架','第六章 · 我的自责','第七章 · 第二次吵架'];
-const limitFor=n=>n===2?6:4;
-const chapterItems=n=>(Array.isArray(chapterPhotoItems)?chapterPhotoItems:[])
- .filter(x=>x&&x.type==='photo'&&Number(x.chapterIndex)===n)
- .sort((a,b)=>(a.chapterOrder??9999)-(b.chapterOrder??9999));
-const htmlEsc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const labels=['第一章 · 我们的开始','第二章 · 我们的足迹','第三章 · 她的故事','第四章 · 那些回忆','第五章 · 第一次吵架','第六章 · 我的自责','第七章 · 第二次吵架'];
+const limits=[4,6,4,4,4,4,4];
+const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const itemsFor=n=>(Array.isArray(window.chapterPhotoItems)?window.chapterPhotoItems:[])
+ .filter(item=>item&&item.type==='photo'&&Number(item.chapterIndex)===n)
+ .sort((a,b)=>(Number(a.chapterOrder)??9999)-(Number(b.chapterOrder)??9999));
+const limitFor=n=>limits[n-1];
+let operationBusy=false;
 
-function renderRefinedChapterImages(){
- for(let n=1;n<=7;n++){
-  const frame=document.getElementById(`chapterPhoto${n}`);if(!frame)continue;
-  if(n===2){frame.innerHTML='';frame.className='chapter-photo chapter-theme-grid count-0';continue}
-  const items=chapterItems(n).slice(0,4);
-  frame.className=`chapter-photo chapter-theme-grid count-${items.length}`;
-  frame.innerHTML=items.map((x,i)=>`<img src="${htmlEsc(x.data)}" alt="第 ${n} 章主题照片 ${i+1}" loading="lazy" decoding="async">`).join('');
+async function normalize(n){
+ const list=itemsFor(n);
+ for(let i=0;i<list.length;i++){
+  if(Number(list[i].chapterOrder)!==i){list[i].chapterOrder=i;await put(list[i]);}
  }
- renderRefinedFootprints();
 }
-function renderRefinedFootprints(){
- const host=document.getElementById('footprintsList');if(!host||typeof data==='undefined')return;
+function renderChapterDisplays(){
+ for(let n=1;n<=7;n++){
+  const frame=document.getElementById(`chapterPhoto${n}`);
+  if(!frame)continue;
+  if(n===2){frame.innerHTML='';frame.className='chapter-photo chapter-theme-grid count-0';continue;}
+  const list=itemsFor(n).slice(0,limitFor(n));
+  frame.className=`chapter-photo chapter-theme-grid count-${list.length}`;
+  frame.innerHTML=list.map((item,index)=>`<img src="${esc(item.data)}" alt="${esc(labels[n-1])}主题照片 ${index+1}" loading="lazy" decoding="async">`).join('');
+ }
+ renderFootprints();
+}
+function renderFootprints(){
+ const host=document.getElementById('footprintsList');
+ if(!host||typeof data==='undefined')return;
  const copy=data[currentLang]||data.zh;
- const photos=chapterItems(2).slice(0,6);
+ const photos=itemsFor(2).slice(0,6);
  const rows=[];
  for(let i=0;i<3;i++){
   const item=copy.footprints?.[i]||{};
   const pair=photos.slice(i*2,i*2+2);
   if(!item.date&&!item.text&&!pair.length)continue;
-  const images=pair.length?`<div class="footprint-photo-grid ${pair.length===1?'one':''}">${pair.map((p,j)=>`<img src="${htmlEsc(p.data)}" alt="足迹 ${i+1} 照片 ${j+1}" loading="lazy" decoding="async">`).join('')}</div>`:'';
-  rows.push(`<div class="footprint-item"><div class="footprint-card">${images}<div class="footprint-top">${item.date?`<span class="footprint-date">${htmlEsc(item.date)}</span>`:''}</div>${item.text?`<div class="footprint-text">${htmlEsc(item.text)}</div>`:''}</div></div>`);
+  const images=pair.length?`<div class="footprint-photo-grid ${pair.length===1?'one':''}">${pair.map((photo,j)=>`<img src="${esc(photo.data)}" alt="足迹 ${i+1} 照片 ${j+1}" loading="lazy" decoding="async">`).join('')}</div>`:'';
+  rows.push(`<div class="footprint-item"><div class="footprint-card">${images}<div class="footprint-top">${item.date?`<span class="footprint-date">${esc(item.date)}</span>`:''}</div>${item.text?`<div class="footprint-text">${esc(item.text)}</div>`:''}</div></div>`);
  }
  host.innerHTML=rows.join('');
 }
-
-async function normalizeOrders(n){
- const list=chapterItems(n);for(let i=0;i<list.length;i++){if(list[i].chapterOrder!==i){list[i].chapterOrder=i;await put(list[i])}}
+function row(item,n,index,total){
+ const detail=n===2?`足迹 ${Math.floor(index/2)+1} · 第 ${index%2+1} 张`:'本章主题照片';
+ return `<div class="chapter-independent-row"><div class="chapter-independent-index">${index+1}</div><img src="${esc(item.thumb||item.data)}" alt="${esc(labels[n-1])}照片 ${index+1}" loading="lazy" decoding="async"><div class="chapter-independent-info"><strong>${n===2?'足迹照片':'主题照片'} ${index+1}</strong><span>${detail}</span></div><div class="chapter-independent-actions"><button type="button" data-chapter-action="up" data-id="${esc(item.id)}" ${index===0?'disabled':''}>↑</button><button type="button" data-chapter-action="down" data-id="${esc(item.id)}" ${index===total-1?'disabled':''}>↓</button><button type="button" class="del" data-chapter-action="delete" data-id="${esc(item.id)}">删</button></div></div>`;
 }
-async function changeChapterSafe(id,target){
- const all=Array.isArray(chapterPhotoItems)?chapterPhotoItems:[];
- const item=all.find(x=>x.id===id);if(!item)return;
- const old=Number(item.chapterIndex)||1;
- if(old===target)return;
- if(chapterItems(target).length>=limitFor(target)){notify?.(target===2?'第二章最多 6 张照片（3 个足迹各 2 张）':'该章节主题最多 4 张照片');drawManager();return}
- item.chapterIndex=target;item.chapterOrder=chapterItems(target).length;await put(item);
- await normalizeOrders(old);await normalizeOrders(target);await render();
+function renderManager(){
+ const host=document.getElementById('chapterPhotoManager');
+ if(!host)return;
+ const total=labels.reduce((sum,_,i)=>sum+itemsFor(i+1).length,0);
+ const capacity=limits.reduce((a,b)=>a+b,0);
+ const windows=labels.map((label,index)=>{
+  const n=index+1,list=itemsFor(n),limit=limitFor(n),full=list.length>=limit;
+  const note=n===2?'3 个足迹，每个足迹固定 2 张。':'本章最多 4 张主题照片。';
+  return `<section class="chapter-independent-window" data-chapter-window="${n}"><div class="chapter-independent-head"><div><strong>${esc(label)}</strong><small>${note}</small></div><span class="chapter-independent-count">${list.length}/${limit}</span></div><label class="chapter-independent-upload ${full?'is-full':''}">＋ 上传到第${n}章<input type="file" accept="image/*" multiple data-independent-upload="${n}" ${full?'disabled':''}></label><div class="chapter-independent-list">${list.length?list.map((item,i)=>row(item,n,i,list.length)).join(''):'<div class="chapter-independent-empty">本章暂时没有照片。</div>'}</div></section>`;
+ }).join('');
+ host.innerHTML=`<div class="chapter-independent-summary"><strong>第一章至第七章独立照片窗口</strong>每章独立上传、排序和删除，互不占用其他章节容量。当前共 ${total}/${capacity} 张。</div><div class="chapter-independent-grid">${windows}</div>`;
 }
-async function moveSafe(id,delta){
- const item=(Array.isArray(chapterPhotoItems)?chapterPhotoItems:[]).find(x=>x.id===id);if(!item)return;
- const list=chapterItems(Number(item.chapterIndex)),i=list.findIndex(x=>x.id===id),j=i+delta;if(i<0||j<0||j>=list.length)return;
- const a=list[i],b=list[j];[a.chapterOrder,b.chapterOrder]=[b.chapterOrder,a.chapterOrder];await put(a);await put(b);await render();
+async function upload(n,input){
+ if(operationBusy||input.dataset.busy==='1')return;
+ const room=limitFor(n)-itemsFor(n).length;
+ const files=Array.from(input.files||[]).slice(0,Math.max(0,room));
+ input.value='';
+ if(room<=0){notify?.(n===2?'第二章最多 6 张照片':'本章最多 4 张照片');return;}
+ if(!files.length)return;
+ operationBusy=true;input.dataset.busy='1';
+ let added=0;
+ try{
+  notify?.(`正在处理第${n}章照片…`);
+  for(const [index,file] of files.entries()){
+   try{
+    const compressor=typeof stableResize==='function'?stableResize:resize;
+    const full=await compressor(file,1200,.72);
+    const thumb=await compressor(file,300,.62);
+    const record={id:`chapter_${Date.now()}_${n}_${index}_${Math.random().toString(36).slice(2,7)}`,type:'photo',data:full,thumb,caption:'',roles:['chapter'],chapterIndex:n,chapterOrder:itemsFor(n).length,order:9999,slideshowOrder:9999};
+    await put(record);
+    window.chapterPhotoItems.push(record);
+    added++;
+   }catch(error){console.error('章节照片处理失败',error);}
+  }
+  renderChapterDisplays();renderManager();
+  notify?.(`第${n}章已添加 ${added} 张照片`);
+ }finally{operationBusy=false;delete input.dataset.busy;}
 }
-async function deleteSafe(id){
- if(!confirm('确定删除这张照片吗？'))return;
- const item=(Array.isArray(chapterPhotoItems)?chapterPhotoItems:[]).find(x=>x.id===id);const n=Number(item?.chapterIndex);
- await del(id);if(n)await normalizeOrders(n);await render();
+async function move(id,delta){
+ if(operationBusy)return;
+ const item=(window.chapterPhotoItems||[]).find(x=>x.id===id);if(!item)return;
+ const n=Number(item.chapterIndex),list=itemsFor(n),from=list.findIndex(x=>x.id===id),to=from+delta;
+ if(from<0||to<0||to>=list.length)return;
+ operationBusy=true;
+ try{
+  const other=list[to];
+  [item.chapterOrder,other.chapterOrder]=[other.chapterOrder,item.chapterOrder];
+  await put(item);await put(other);
+  renderChapterDisplays();renderManager();
+ }finally{operationBusy=false;}
 }
-let refinedUploadChapter=1;
-function drawManager(){
- const host=document.getElementById('chapterPhotoManager');if(!host)return;
- const all=(Array.isArray(chapterPhotoItems)?chapterPhotoItems:[]).filter(x=>x&&x.type==='photo'&&Number(x.chapterIndex)>=1&&Number(x.chapterIndex)<=7)
-  .sort((a,b)=>Number(a.chapterIndex)-Number(b.chapterIndex)||(a.chapterOrder??9999)-(b.chapterOrder??9999));
- const totalCapacity=chapterLabels.reduce((sum,_,i)=>sum+limitFor(i+1),0);
- const remaining=Math.max(0,totalCapacity-all.length);
- const rows=all.length?all.map((x,i)=>{
-  const n=Number(x.chapterIndex),pos=chapterItems(n).findIndex(y=>y.id===x.id),over=pos>=limitFor(n);
-  return `<div class="chapter-unified-row ${over?'is-over-limit':''}"><div class="chapter-unified-index">${i+1}</div><img src="${htmlEsc(x.thumb||x.data)}" alt="章节照片 ${i+1}" loading="lazy" decoding="async"><div><select class="chapter-unified-select" data-refined-select="${htmlEsc(x.id)}">${chapterLabels.map((v,j)=>`<option value="${j+1}" ${n===j+1?'selected':''}>${v}</option>`).join('')}</select><span class="chapter-limit-badge">${n===2?'足迹图片 '+Math.min(pos+1,6)+'/6':'主题图片 '+Math.min(pos+1,4)+'/4'}</span></div><div class="chapter-unified-actions"><button type="button" data-refined-up="${htmlEsc(x.id)}">↑</button><button type="button" data-refined-down="${htmlEsc(x.id)}">↓</button><button type="button" class="del" data-refined-del="${htmlEsc(x.id)}">删</button></div></div>`;
- }).join(''):'<div class="chapter-unified-empty">暂时没有照片。点击上方“添加照片”开始上传。</div>';
- host.innerHTML=`<div class="chapter-unified-final"><div class="chapter-unified-head"><strong>第一章至第七章统一照片库</strong>已上传 ${all.length} / ${totalCapacity} 张，剩余 ${remaining} 张。</div><div class="chapter-limit-note">第二章最多 6 张照片，对应 3 个足迹，每个足迹 2 张；第一章、第三章至第七章每章最多 4 张主题图片。</div><label for="chapterUploadTarget" style="display:block;margin:0 0 7px;font-weight:700;color:#5f4653">上传到章节</label><select id="chapterUploadTarget" class="chapter-unified-select" style="margin-bottom:10px">${chapterLabels.map((v,j)=>{const n=j+1,count=chapterItems(n).length,limit=limitFor(n);return `<option value="${n}" ${refinedUploadChapter===n?'selected':''} ${count>=limit?'disabled':''}>${v}（${count}/${limit}）</option>`}).join('')}</select><label class="chapter-unified-picker ${remaining?'':'disabled'}">＋ 添加照片<input id="chapterRefinedInput" type="file" accept="image/*" multiple ${remaining?'':'disabled'}></label><div class="chapter-unified-hint">先选择章节，再添加照片。上传完成后章节选项会一直保留；下方也可以重新调整每张照片所属章节。</div><div class="chapter-unified-list">${rows}</div></div>`;
- const targetSelect=document.getElementById('chapterUploadTarget');
- if(targetSelect){
-  const enabled=[...targetSelect.options].find(o=>!o.disabled);
-  if(targetSelect.selectedOptions[0]?.disabled&&enabled){targetSelect.value=enabled.value;refinedUploadChapter=Number(enabled.value)}
-  targetSelect.onchange=()=>{refinedUploadChapter=Number(targetSelect.value)||1};
- }
- const input=document.getElementById('chapterRefinedInput');if(input)input.onchange=async e=>{
-  if(input.dataset.busy==='1')return;
-  input.dataset.busy='1';
-  const target=Number(targetSelect?.value||refinedUploadChapter)||1;
-  refinedUploadChapter=target;
-  const chapterRoom=Math.max(0,limitFor(target)-chapterItems(target).length);
-  const files=[...e.target.files].slice(0,Math.min(remaining,chapterRoom));e.target.value='';
-  if(!chapterRoom){delete input.dataset.busy;notify?.(target===2?'第二章最多上传 6 张照片':'该章节最多上传 4 张照片');return}
-  if(!files.length){delete input.dataset.busy;notify?.('没有可上传的照片，或照片数量已达到上限');return}
-  notify?.(`正在处理${chapterLabels[target-1]}照片…`);
-  let added=0;
-  try{
-   for(let i=0;i<files.length;i++){
-    try{
-     const compressor=typeof stableResize==='function'?stableResize:resize;
-     const full=await compressor(files[i],1200,.72),thumb=await compressor(files[i],300,.62);
-     const order=chapterItems(target).length;
-     const record={id:`p_${Date.now()}_chapter_refined_${i}`,type:'photo',data:full,thumb,caption:'',roles:['chapter'],chapterIndex:target,chapterOrder:order,order:9999,slideshowOrder:9999};
-     await put(record);
-     chapterPhotoItems.push(record);
-     added++;
-    }catch(error){console.error('章节照片处理失败',error)}
-   }
-   await render();notify?.(`已为${chapterLabels[target-1]}添加 ${added} 张照片`);
-  }finally{delete input.dataset.busy}
- };
- host.querySelectorAll('[data-refined-select]').forEach(el=>el.onchange=()=>changeChapterSafe(el.dataset.refinedSelect,Number(el.value)));
- host.querySelectorAll('[data-refined-up]').forEach(el=>el.onclick=()=>moveSafe(el.dataset.refinedUp,-1));
- host.querySelectorAll('[data-refined-down]').forEach(el=>el.onclick=()=>moveSafe(el.dataset.refinedDown,1));
- host.querySelectorAll('[data-refined-del]').forEach(el=>el.onclick=()=>deleteSafe(el.dataset.refinedDel));
+async function remove(id){
+ if(operationBusy||!confirm('确定删除这张照片吗？'))return;
+ const item=(window.chapterPhotoItems||[]).find(x=>x.id===id);if(!item)return;
+ const n=Number(item.chapterIndex);operationBusy=true;
+ try{
+  await del(id);
+  window.chapterPhotoItems=window.chapterPhotoItems.filter(x=>x.id!==id);
+  await normalize(n);
+  renderChapterDisplays();renderManager();
+ }finally{operationBusy=false;}
 }
-window.renderRefinedChapterImages=renderRefinedChapterImages;
-window.drawRefinedChapterManager=drawManager;
-function install(){
- renderRefinedChapterImages();
- drawManager();
+function bindOnce(){
+ const host=document.getElementById('chapterPhotoManager');
+ if(!host||host.dataset.independentBound==='1')return;
+ host.dataset.independentBound='1';
+ host.addEventListener('change',event=>{
+  const input=event.target.closest('[data-independent-upload]');
+  if(input)upload(Number(input.dataset.independentUpload),input);
+ });
+ host.addEventListener('click',event=>{
+  const button=event.target.closest('[data-chapter-action]');if(!button)return;
+  const action=button.dataset.chapterAction,id=button.dataset.id;
+  if(action==='up')move(id,-1);else if(action==='down')move(id,1);else if(action==='delete')remove(id);
+ });
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
+function renderAll(){bindOnce();renderChapterDisplays();renderManager();}
+window.ChaptersIndependent={render:renderAll,renderDisplays:renderChapterDisplays,renderManager};
+window.renderRefinedChapterImages=renderChapterDisplays;
+window.drawRefinedChapterManager=()=>{bindOnce();renderManager();};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',renderAll,{once:true});else renderAll();
 })();
 </script>
-<!-- Build: CHAPTER-IMAGE-LAYOUT-REFINE-20260729 -->
+<!-- Build: CHAPTERS-1-7-INDEPENDENT-REFACTOR-20260729 -->
 
 </html>
