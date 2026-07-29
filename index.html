@@ -1144,36 +1144,43 @@ openDB()
 <script id="viewerModeScript">
 (function(){
   const params = new URLSearchParams(location.search);
-  const editMode = params.get('edit') === '1';
+  const editMode = params.get('mode') === 'editor' || params.get('edit') === '1';
+
   if (!editMode) {
     document.documentElement.classList.add('viewer-mode');
     document.addEventListener('DOMContentLoaded', function(){
       document.body.classList.add('viewer-mode');
 
-      // Hide common editing controls without affecting viewing.
       const selectors = [
         '[data-editor]', '.editor-only', '#editorPanel', '#editPanel',
         '#settingsPanel', '#adminPanel', '#openEditor', '#editBtn',
         '#settingsBtn', '#panel', '.edit-btn', '.settings-btn',
         'button[aria-label*="编辑"]', 'button[title*="编辑"]'
       ];
-      document.querySelectorAll(selectors.join(',')).forEach(el => {
+      document.querySelectorAll(selectors.join(',')).forEach(function(el){
         el.style.setProperty('display','none','important');
       });
 
-      // Prevent accidental keyboard shortcuts from opening editing interfaces.
       document.addEventListener('keydown', function(e){
         if ((e.ctrlKey || e.metaKey) && ['e','s'].includes(e.key.toLowerCase())) {
           e.preventDefault();
         }
       }, true);
     });
-  } else {
-    document.documentElement.classList.add('edit-mode');
-    document.addEventListener('DOMContentLoaded', function(){
-      document.body.classList.add('edit-mode');
-    });
+    return;
   }
+
+  document.documentElement.classList.add('edit-mode');
+  document.addEventListener('DOMContentLoaded', function(){
+    document.body.classList.remove('viewer-mode');
+    document.body.classList.add('edit-mode');
+
+    // Open the existing editor directly. No content or stored data is changed.
+    const panel = document.getElementById('panel');
+    if (panel) {
+      requestAnimationFrame(function(){ panel.classList.add('open'); });
+    }
+  });
 })();
 </script>
 
