@@ -1127,7 +1127,13 @@ async function buildPublicShareHTML(){
   html=html.replace(/const EMBEDDED_BACKUP_VERSION='[^']*';/,`const EMBEDDED_BACKUP_VERSION='public-share-${Date.now()}';`);
   html=html.replace("const editMode = params.get('edit') === '1';","const editMode = false;");
   html=html.replace('</head>',`<style id="publicShareOnlyStyle">#panel,#openEditor,#projectFromEditor,.editor-only{display:none!important}</style></head>`);
-  html=html.replace('</body>',`<script id="publicShareLock">document.documentElement.classList.add('public-share');document.addEventListener('DOMContentLoaded',()=>{document.body.classList.add('public-share','viewer-mode');document.querySelectorAll('#panel,#openEditor,[data-editor],.editor-only').forEach(el=>el.remove());});<\/script></body>`);
+  html=html.replace('
+<style id="photoUploadStabilityStyle20260729">
+.chapter-unified-picker.disabled{opacity:.55;pointer-events:none}
+.chapter-unified-picker input:disabled{pointer-events:none}
+</style>
+<!-- Build: PHOTO-UPLOAD-STABILITY-20260729 -->
+</body>',`<script id="publicShareLock">document.documentElement.classList.add('public-share');document.addEventListener('DOMContentLoaded',()=>{document.body.classList.add('public-share','viewer-mode');document.querySelectorAll('#panel,#openEditor,[data-editor],.editor-only').forEach(el=>el.remove());});<\/script></body>`);
   return html;
 }
 $('exportPublicShare').onclick=async()=>{const btn=$('exportPublicShare'),status=$('publicShareStatus');const original=btn.textContent;btn.disabled=true;btn.textContent='正在生成…';status.textContent='正在整理当前文字、图片和媒体设置，请稍候。';try{const html=await buildPublicShareHTML();downloadBlob(new Blob([html],{type:'text/html;charset=utf-8'}),'share.html');status.textContent='share.html 已生成。请上传并覆盖 GitHub 仓库中的同名文件。';notify('公开分享文件已生成')}catch(err){console.error(err);status.textContent='生成失败，请重新尝试。';alert('生成公开分享文件失败：'+(err?.message||'未知错误'))}finally{btn.disabled=false;btn.textContent=original}};
@@ -2196,7 +2202,7 @@ function draw(){
  drawing=true;
  try{
   const total=getItems().length,remaining=Math.max(0,40-total);
-  host.innerHTML=`<div class="chapter-unified-final"><div class="chapter-unified-head"><strong>第一章至第七章统一照片库</strong>已上传 ${total} / 40 张，剩余 ${remaining} 张。</div><label class="chapter-unified-picker ${remaining?'':'disabled'}">＋ 添加照片<input id="chapterUnifiedFinalInput" type="file" accept="image/*" multiple ${remaining?'':'disabled'}></label><div class="chapter-unified-hint">新照片默认放入第一章；上传后可选择所属章节，↑ ↓ 只调整该章节内的顺序。</div><div class="chapter-unified-list">${rows()}</div></div>`;
+  host.innerHTML=`<div class="chapter-unified-final"><div class="chapter-unified-head"><strong>第一章至第七章统一照片库</strong>已上传 ${total} / 40 张，剩余 ${remaining} 张。</div><label class="chapter-unified-picker ${remaining?'':'disabled'}">＋ 添加照片<input id="chapterUnifiedFinalInput" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple ${remaining?'':'disabled'}></label><div class="chapter-unified-hint">新照片默认放入第一章；上传后可选择所属章节，↑ ↓ 只调整该章节内的顺序。</div><div class="chapter-unified-list">${rows()}</div></div>`;
   const input=document.getElementById('chapterUnifiedFinalInput');
   if(input)input.onchange=async e=>{const files=[...e.target.files];e.target.value='';await upload(files)};
   host.querySelectorAll('[data-cu-select]').forEach(el=>el.onchange=()=>changeChapter(el.dataset.cuSelect,Number(el.value)));
@@ -2206,16 +2212,55 @@ function draw(){
  }finally{drawing=false}
 }
 async function refresh(){if(typeof window.render==='function')await window.render();else draw()}
-async function upload(files){
- const remain=Math.max(0,40-getItems().length),chosen=files.slice(0,remain);
- if(!chosen.length){window.notify?.('第一章至第七章最多上传 40 张照片');return}
- window.notify?.('正在处理章节照片…');
- const base=chapterList(1).length;
- for(let i=0;i<chosen.length;i++){
-  const data=await window.resize(chosen[i],1500,.8),thumb=await window.resize(chosen[i],420,.7);
-  await window.put({id:`p_${Date.now()}_chapter_unified_final_${i}`,type:'photo',data,thumb,caption:'',roles:['chapter'],chapterIndex:1,chapterOrder:base+i,order:9999,slideshowOrder:9999});
+let uploadBusy=false;
+async function stableResize(file,max,q){
+ try{
+  return await window.resize(file,max,q);
+ }catch(err){
+  console.error('图片处理失败',file?.name,err);
+  throw new Error(`无法读取图片：${file?.name||'未知文件'}`);
  }
- await refresh();window.notify?.(`已添加 ${chosen.length} 张照片`);
+}
+async function upload(files){
+ if(uploadBusy){window.notify?.('照片正在处理中，请稍候');return}
+ const remain=Math.max(0,40-getItems().length);
+ const chosen=Array.from(files||[]).filter(f=>f&&String(f.type||'').startsWith('image/')).slice(0,remain);
+ if(!chosen.length){window.notify?.(remain?'请选择有效的图片文件':'第一章至第七章最多上传 40 张照片');return}
+ uploadBusy=true;
+ const picker=document.getElementById('chapterUnifiedFinalInput');
+ const label=picker?.closest('.chapter-unified-picker');
+ if(picker)picker.disabled=true;
+ if(label)label.classList.add('disabled');
+ const base=chapterList(1).length;
+ let ok=0,failed=0;
+ try{
+  for(let i=0;i<chosen.length;i++){
+   window.notify?.(`正在处理照片 ${i+1} / ${chosen.length}…`);
+   try{
+    const data=await stableResize(chosen[i],1200,.72);
+    const thumb=await stableResize(chosen[i],260,.62);
+    await window.put({
+     id:`p_${Date.now()}_${Math.random().toString(36).slice(2,9)}_chapter`,
+     type:'photo',data,thumb,caption:'',roles:['chapter'],
+     chapterIndex:1,chapterOrder:base+ok,order:9999,slideshowOrder:9999
+    });
+    ok++;
+   }catch(err){
+    failed++;
+    console.error(err);
+   }
+   await new Promise(r=>setTimeout(r,30));
+  }
+  await refresh();
+  if(ok&&failed)window.notify?.(`成功添加 ${ok} 张，${failed} 张处理失败`);
+  else if(ok)window.notify?.(`已添加 ${ok} 张照片`);
+  else window.notify?.('图片上传失败，请改用 JPG、PNG 或较小的照片重试');
+ }finally{
+  uploadBusy=false;
+  const latest=document.getElementById('chapterUnifiedFinalInput');
+  if(latest)latest.disabled=false;
+  latest?.closest('.chapter-unified-picker')?.classList.remove('disabled');
+ }
 }
 async function normalize(n){const list=chapterList(n);for(let i=0;i<list.length;i++){if(list[i].chapterOrder!==i){list[i].chapterOrder=i;await window.put(list[i])}}}
 async function changeChapter(id,n){const item=getItems().find(x=>x.id===id);if(!item||n<1||n>7)return;const old=Number(item.chapterIndex);if(old===n)return;item.chapterIndex=n;item.chapterOrder=chapterList(n).length;await window.put(item);await normalize(old);await normalize(n);await refresh()}
