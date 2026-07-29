@@ -1127,13 +1127,7 @@ async function buildPublicShareHTML(){
   html=html.replace(/const EMBEDDED_BACKUP_VERSION='[^']*';/,`const EMBEDDED_BACKUP_VERSION='public-share-${Date.now()}';`);
   html=html.replace("const editMode = params.get('edit') === '1';","const editMode = false;");
   html=html.replace('</head>',`<style id="publicShareOnlyStyle">#panel,#openEditor,#projectFromEditor,.editor-only{display:none!important}</style></head>`);
-  html=html.replace('
-<style id="photoUploadStabilityStyle20260729">
-.chapter-unified-picker.disabled{opacity:.55;pointer-events:none}
-.chapter-unified-picker input:disabled{pointer-events:none}
-</style>
-<!-- Build: PHOTO-UPLOAD-STABILITY-20260729 -->
-</body>',`<script id="publicShareLock">document.documentElement.classList.add('public-share');document.addEventListener('DOMContentLoaded',()=>{document.body.classList.add('public-share','viewer-mode');document.querySelectorAll('#panel,#openEditor,[data-editor],.editor-only').forEach(el=>el.remove());});<\/script></body>`);
+  html=html.replace('</body>',`<script id="publicShareLock">document.documentElement.classList.add('public-share');document.addEventListener('DOMContentLoaded',()=>{document.body.classList.add('public-share','viewer-mode');document.querySelectorAll('#panel,#openEditor,[data-editor],.editor-only').forEach(el=>el.remove());});<\/script></body>`);
   return html;
 }
 $('exportPublicShare').onclick=async()=>{const btn=$('exportPublicShare'),status=$('publicShareStatus');const original=btn.textContent;btn.disabled=true;btn.textContent='正在生成…';status.textContent='正在整理当前文字、图片和媒体设置，请稍候。';try{const html=await buildPublicShareHTML();downloadBlob(new Blob([html],{type:'text/html;charset=utf-8'}),'share.html');status.textContent='share.html 已生成。请上传并覆盖 GitHub 仓库中的同名文件。';notify('公开分享文件已生成')}catch(err){console.error(err);status.textContent='生成失败，请重新尝试。';alert('生成公开分享文件失败：'+(err?.message||'未知错误'))}finally{btn.disabled=false;btn.textContent=original}};
