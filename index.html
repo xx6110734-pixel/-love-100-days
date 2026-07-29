@@ -2223,3 +2223,146 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 <!-- Build: CHAPTER-UNIFIED-LIBRARY-DISPLAY-FIX-20260729 -->
+
+<style id="chapterImageLayoutRefine20260729">
+/* 章节图片精修：第二章仅足迹双图；其余章节采用紧凑 2×2 主题图 */
+.chapter-glass .chapter-photo{
+  width:min(100%,700px)!important;
+  height:auto!important;
+  aspect-ratio:auto!important;
+  margin:0 auto 24px!important;
+  display:grid!important;
+  gap:12px!important;
+  overflow:visible!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.chapter-glass .chapter-photo.chapter-theme-grid.count-0{display:none!important}
+.chapter-glass .chapter-photo.chapter-theme-grid.count-1{grid-template-columns:minmax(0,58%);justify-content:center}
+.chapter-glass .chapter-photo.chapter-theme-grid.count-2,
+.chapter-glass .chapter-photo.chapter-theme-grid.count-3,
+.chapter-glass .chapter-photo.chapter-theme-grid.count-4{grid-template-columns:repeat(2,minmax(0,1fr))}
+.chapter-glass .chapter-photo.chapter-theme-grid.count-3 img:last-child{grid-column:1/-1;width:calc(50% - 6px);justify-self:center}
+.chapter-glass .chapter-photo.chapter-theme-grid img{
+  width:100%!important;
+  height:260px!important;
+  min-height:0!important;
+  max-height:none!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  border-radius:22px!important;
+  border:1px solid rgba(255,255,255,.18)!important;
+  background:rgba(255,255,255,.04)!important;
+  box-shadow:0 14px 34px rgba(0,0,0,.18)!important;
+}
+.chapter-glass .chapter-photo.chapter-theme-grid.count-1 img{height:330px!important}
+#chapterPhoto2{display:none!important}
+.footprint-card .footprint-photo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 15px}
+.footprint-card .footprint-photo-grid.one{grid-template-columns:minmax(0,62%);justify-content:center}
+.footprint-card .footprint-photo-grid img{
+  width:100%;height:250px;object-fit:cover;object-position:center;display:block;
+  border-radius:18px;border:1px solid rgba(255,255,255,.15);box-shadow:0 12px 28px rgba(0,0,0,.16)
+}
+#chapterPhotoManager .chapter-limit-note{margin:0 0 14px;padding:12px 14px;border-radius:14px;background:#f8f0f3;color:#735965;font-size:.84rem;line-height:1.65}
+#chapterPhotoManager .chapter-limit-badge{display:inline-flex;align-items:center;margin-top:5px;padding:3px 9px;border-radius:999px;background:#efe1e7;color:#765867;font-size:.76rem;font-weight:700}
+#chapterPhotoManager .chapter-unified-row.is-over-limit{opacity:.58}
+#chapterPhotoManager .chapter-unified-row.is-over-limit:after{content:"超出当前章节展示上限，数据仍保留";grid-column:1/-1;font-size:.72rem;color:#9b6678;text-align:right}
+@media(max-width:720px){
+ .chapter-glass .chapter-photo{width:100%!important;gap:9px!important;margin-bottom:20px!important}
+ .chapter-glass .chapter-photo.chapter-theme-grid.count-1{grid-template-columns:minmax(0,62%)}
+ .chapter-glass .chapter-photo.chapter-theme-grid img{height:205px!important;border-radius:18px!important}
+ .chapter-glass .chapter-photo.chapter-theme-grid.count-1 img{height:270px!important}
+ .footprint-card .footprint-photo-grid{gap:8px;margin-bottom:13px}
+ .footprint-card .footprint-photo-grid.one{grid-template-columns:minmax(0,68%)}
+ .footprint-card .footprint-photo-grid img{height:205px;border-radius:16px}
+}
+</style>
+<script id="chapterImageLayoutRefineScript20260729">
+(()=>{
+'use strict';
+const chapterLabels=['第一章 · 我们的开始','第二章 · 我们的足迹','第三章 · 她的故事','第四章 · 那些回忆','第五章 · 第一次吵架','第六章 · 我的自责','第七章 · 第二次吵架'];
+const limitFor=n=>n===2?6:4;
+const chapterItems=n=>(Array.isArray(chapterPhotoItems)?chapterPhotoItems:[])
+ .filter(x=>x&&x.type==='photo'&&Number(x.chapterIndex)===n)
+ .sort((a,b)=>(a.chapterOrder??9999)-(b.chapterOrder??9999));
+const htmlEsc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function renderRefinedChapterImages(){
+ for(let n=1;n<=7;n++){
+  const frame=document.getElementById(`chapterPhoto${n}`);if(!frame)continue;
+  if(n===2){frame.innerHTML='';frame.className='chapter-photo chapter-theme-grid count-0';continue}
+  const items=chapterItems(n).slice(0,4);
+  frame.className=`chapter-photo chapter-theme-grid count-${items.length}`;
+  frame.innerHTML=items.map((x,i)=>`<img src="${htmlEsc(x.data)}" alt="第 ${n} 章主题照片 ${i+1}" loading="lazy" decoding="async">`).join('');
+ }
+ renderRefinedFootprints();
+}
+function renderRefinedFootprints(){
+ const host=document.getElementById('footprintsList');if(!host||typeof data==='undefined')return;
+ const copy=data[currentLang]||data.zh;
+ const photos=chapterItems(2).slice(0,6);
+ const rows=[];
+ for(let i=0;i<3;i++){
+  const item=copy.footprints?.[i]||{};
+  const pair=photos.slice(i*2,i*2+2);
+  if(!item.date&&!item.text&&!pair.length)continue;
+  const images=pair.length?`<div class="footprint-photo-grid ${pair.length===1?'one':''}">${pair.map((p,j)=>`<img src="${htmlEsc(p.data)}" alt="足迹 ${i+1} 照片 ${j+1}" loading="lazy" decoding="async">`).join('')}</div>`:'';
+  rows.push(`<div class="footprint-item"><div class="footprint-card">${images}<div class="footprint-top">${item.date?`<span class="footprint-date">${htmlEsc(item.date)}</span>`:''}</div>${item.text?`<div class="footprint-text">${htmlEsc(item.text)}</div>`:''}</div></div>`);
+ }
+ host.innerHTML=rows.join('');
+}
+
+async function normalizeOrders(n){
+ const list=chapterItems(n);for(let i=0;i<list.length;i++){if(list[i].chapterOrder!==i){list[i].chapterOrder=i;await put(list[i])}}
+}
+async function changeChapterSafe(id,target){
+ const all=Array.isArray(chapterPhotoItems)?chapterPhotoItems:[];
+ const item=all.find(x=>x.id===id);if(!item)return;
+ const old=Number(item.chapterIndex)||1;
+ if(old===target)return;
+ if(chapterItems(target).length>=limitFor(target)){notify?.(target===2?'第二章最多 6 张照片（3 个足迹各 2 张）':'该章节主题最多 4 张照片');drawManager();return}
+ item.chapterIndex=target;item.chapterOrder=chapterItems(target).length;await put(item);
+ await normalizeOrders(old);await normalizeOrders(target);await render();
+}
+async function moveSafe(id,delta){
+ const item=(Array.isArray(chapterPhotoItems)?chapterPhotoItems:[]).find(x=>x.id===id);if(!item)return;
+ const list=chapterItems(Number(item.chapterIndex)),i=list.findIndex(x=>x.id===id),j=i+delta;if(i<0||j<0||j>=list.length)return;
+ const a=list[i],b=list[j];[a.chapterOrder,b.chapterOrder]=[b.chapterOrder,a.chapterOrder];await put(a);await put(b);await render();
+}
+async function deleteSafe(id){
+ if(!confirm('确定删除这张照片吗？'))return;
+ const item=(Array.isArray(chapterPhotoItems)?chapterPhotoItems:[]).find(x=>x.id===id);const n=Number(item?.chapterIndex);
+ await del(id);if(n)await normalizeOrders(n);await render();
+}
+function drawManager(){
+ const host=document.getElementById('chapterPhotoManager');if(!host)return;
+ const all=(Array.isArray(chapterPhotoItems)?chapterPhotoItems:[]).filter(x=>x&&x.type==='photo'&&Number(x.chapterIndex)>=1&&Number(x.chapterIndex)<=7)
+  .sort((a,b)=>Number(a.chapterIndex)-Number(b.chapterIndex)||(a.chapterOrder??9999)-(b.chapterOrder??9999));
+ const remaining=Math.max(0,40-all.length);
+ const rows=all.length?all.map((x,i)=>{
+  const n=Number(x.chapterIndex),pos=chapterItems(n).findIndex(y=>y.id===x.id),over=pos>=limitFor(n);
+  return `<div class="chapter-unified-row ${over?'is-over-limit':''}"><div class="chapter-unified-index">${i+1}</div><img src="${htmlEsc(x.thumb||x.data)}" alt="章节照片 ${i+1}" loading="lazy" decoding="async"><div><select class="chapter-unified-select" data-refined-select="${htmlEsc(x.id)}">${chapterLabels.map((v,j)=>`<option value="${j+1}" ${n===j+1?'selected':''}>${v}</option>`).join('')}</select><span class="chapter-limit-badge">${n===2?'足迹图片 '+Math.min(pos+1,6)+'/6':'主题图片 '+Math.min(pos+1,4)+'/4'}</span></div><div class="chapter-unified-actions"><button type="button" data-refined-up="${htmlEsc(x.id)}">↑</button><button type="button" data-refined-down="${htmlEsc(x.id)}">↓</button><button type="button" class="del" data-refined-del="${htmlEsc(x.id)}">删</button></div></div>`;
+ }).join(''):'<div class="chapter-unified-empty">暂时没有照片。点击上方“添加照片”开始上传。</div>';
+ host.innerHTML=`<div class="chapter-unified-final"><div class="chapter-unified-head"><strong>第一章至第七章统一照片库</strong>已上传 ${all.length} / 40 张，剩余 ${remaining} 张。</div><div class="chapter-limit-note">第二章不显示主题图片：前 2 张对应足迹一，第 3–4 张对应足迹二，第 5–6 张对应足迹三。第一章、第三章至第七章每章最多展示 4 张主题图片，自动排列为 2 × 2。</div><label class="chapter-unified-picker ${remaining?'':'disabled'}">＋ 添加照片<input id="chapterRefinedInput" type="file" accept="image/*" multiple ${remaining?'':'disabled'}></label><div class="chapter-unified-hint">新照片默认放入第一章；上传后可选择所属章节，↑ ↓ 只调整该章节内顺序。</div><div class="chapter-unified-list">${rows}</div></div>`;
+ const input=document.getElementById('chapterRefinedInput');if(input)input.onchange=async e=>{
+  const files=[...e.target.files],room=Math.min(remaining,Math.max(0,4-chapterItems(1).length)),chosen=files.slice(0,room);e.target.value='';
+  if(!chosen.length){notify?.('第一章主题最多 4 张，请先把照片调整到其他章节');return}
+  notify?.('正在处理章节照片…');const base=chapterItems(1).length;
+  for(let i=0;i<chosen.length;i++){const full=await resize(chosen[i],1500,.8),thumb=await resize(chosen[i],420,.7);await put({id:`p_${Date.now()}_chapter_refined_${i}`,type:'photo',data:full,thumb,caption:'',roles:['chapter'],chapterIndex:1,chapterOrder:base+i,order:9999,slideshowOrder:9999})}
+  await render();notify?.(`已添加 ${chosen.length} 张照片`);
+ };
+ host.querySelectorAll('[data-refined-select]').forEach(el=>el.onchange=()=>changeChapterSafe(el.dataset.refinedSelect,Number(el.value)));
+ host.querySelectorAll('[data-refined-up]').forEach(el=>el.onclick=()=>moveSafe(el.dataset.refinedUp,-1));
+ host.querySelectorAll('[data-refined-down]').forEach(el=>el.onclick=()=>moveSafe(el.dataset.refinedDown,1));
+ host.querySelectorAll('[data-refined-del]').forEach(el=>el.onclick=()=>deleteSafe(el.dataset.refinedDel));
+}
+function install(){
+ renderRefinedChapterImages();drawManager();
+ if(typeof render==='function'&&!render.__refinedChapterImages){const old=render;render=async function(...args){const out=await old.apply(this,args);renderRefinedChapterImages();drawManager();return out};render.__refinedChapterImages=true;window.render=render}
+ if(typeof applyLanguage==='function'&&!applyLanguage.__refinedChapterImages){const oldLang=applyLanguage;applyLanguage=function(...args){const out=oldLang.apply(this,args);renderRefinedChapterImages();return out};applyLanguage.__refinedChapterImages=true;window.applyLanguage=applyLanguage}
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(install,160));else setTimeout(install,160);
+})();
+</script>
+<!-- Build: CHAPTER-IMAGE-LAYOUT-REFINE-20260729 -->
