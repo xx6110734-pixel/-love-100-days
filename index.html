@@ -2143,7 +2143,7 @@ img{content-visibility:auto}
 const labels=['第一章 · 我们的开始','第二章 · 我们的足迹','第三章 · 她的故事','第四章 · 那些回忆','第五章 · 第一次吵架','第六章 · 我的自责','第七章 · 第二次吵架'];
 const limits=[4,6,4,4,4,4,4];
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-const itemsFor=n=>(Array.isArray(window.chapterPhotoItems)?window.chapterPhotoItems:[])
+const itemsFor=n=>(Array.isArray(chapterPhotoItems)?chapterPhotoItems:[])
  .filter(item=>item&&item.type==='photo'&&Number(item.chapterIndex)===n)
  .sort((a,b)=>{const ao=Number.isFinite(Number(a.chapterOrder))?Number(a.chapterOrder):9999;const bo=Number.isFinite(Number(b.chapterOrder))?Number(b.chapterOrder):9999;return ao-bo;});
 const limitFor=n=>limits[n-1];
@@ -2215,7 +2215,7 @@ async function upload(n,input){
     const thumb=await compressor(file,300,.62);
     const record={id:`chapter_${Date.now()}_${n}_${index}_${Math.random().toString(36).slice(2,7)}`,type:'photo',data:full,thumb,caption:'',roles:['chapter'],chapterIndex:n,chapterOrder:itemsFor(n).length,order:9999,slideshowOrder:9999};
     await put(record);
-    window.chapterPhotoItems.push(record);
+    chapterPhotoItems.push(record);
     added++;
    }catch(error){console.error('章节照片处理失败',error);}
   }
@@ -2225,7 +2225,7 @@ async function upload(n,input){
 }
 async function move(id,delta){
  if(operationBusy)return;
- const item=(window.chapterPhotoItems||[]).find(x=>x.id===id);if(!item)return;
+ const item=(chapterPhotoItems||[]).find(x=>x.id===id);if(!item)return;
  const n=Number(item.chapterIndex),list=itemsFor(n),from=list.findIndex(x=>x.id===id),to=from+delta;
  if(from<0||to<0||to>=list.length)return;
  operationBusy=true;
@@ -2238,11 +2238,11 @@ async function move(id,delta){
 }
 async function remove(id){
  if(operationBusy||!confirm('确定删除这张照片吗？'))return;
- const item=(window.chapterPhotoItems||[]).find(x=>x.id===id);if(!item)return;
+ const item=(chapterPhotoItems||[]).find(x=>x.id===id);if(!item)return;
  const n=Number(item.chapterIndex);operationBusy=true;
  try{
   await del(id);
-  window.chapterPhotoItems=window.chapterPhotoItems.filter(x=>x.id!==id);
+  chapterPhotoItems=chapterPhotoItems.filter(x=>x.id!==id);
   await normalize(n);
   renderChapterDisplays();renderManager();
  }finally{operationBusy=false;}
