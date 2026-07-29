@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#160d18">
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<meta content="#160d18" name="theme-color"/>
 <title>我们的恋爱纪念馆</title>
 <style>
 :root{--rose:#f3a4bc;--gold:#e8ca91;--ink:#fff8fb;--muted:#dacbd2;--line:rgba(255,255,255,.15);--panel:#fff9fb}
@@ -120,7 +121,6 @@ body:before{content:"";position:fixed;inset:0;z-index:-3;background:radial-gradi
 #photoManager .sort-number{width:28px;height:28px;border-radius:999px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:rgba(255,255,255,.78);font-size:.78rem;font-variant-numeric:tabular-nums}
 @media(max-width:720px){#photoManager .asset-row{grid-template-columns:30px 46px 1fr}#photoManager .sort-number{width:25px;height:25px;font-size:.72rem}#photoManager .asset-row .mini{grid-column:1/-1}}
 </style>
-
 <style id="viewerModeStyles">
   body.viewer-mode [data-editor],
   body.viewer-mode .editor-only,
@@ -138,8 +138,6 @@ body:before{content:"";position:fixed;inset:0;z-index:-3;background:radial-gradi
     display:none !important;
   }
 </style>
-
-
 <style>
 html.edit-mode::after{
   content:"编辑模式";
@@ -156,8 +154,6 @@ html.edit-mode::after{
   backdrop-filter:blur(8px);
 }
 </style>
-
-
 <style id="surpriseEditionStyles">
 :root{
   --blush:#ffdbe6;
@@ -257,7 +253,6 @@ html[lang="th"] .final-page .glass:after{content:"จดหมายรัก"}
   .open-card:before{animation:none}
 }
 </style>
-
 <style id="videoUploadButtonStyles">
 .video-file-actions{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
 .video-pick-btn,.github-upload-btn{
@@ -293,8 +288,6 @@ html[lang="th"] .final-page .glass:after{content:"จดหมายรัก"}
   .video-pick-btn,.github-upload-btn{width:100%}
 }
 </style>
-
-
 <style id="finalPolishStyles">
 .start-overlay{position:fixed;inset:0;z-index:220;display:grid;place-items:center;overflow:hidden;padding:max(24px,env(safe-area-inset-top)) 20px max(24px,env(safe-area-inset-bottom));background:radial-gradient(circle at 50% 42%,rgba(151,70,108,.25),transparent 32%),radial-gradient(circle at 15% 10%,rgba(107,69,138,.22),transparent 34%),linear-gradient(145deg,#100910 0%,#1b101d 52%,#0d0810 100%);transition:opacity .75s ease,visibility .75s ease}
 .start-overlay::before{content:"";position:absolute;inset:-30%;background:conic-gradient(from 130deg,transparent,rgba(255,196,216,.08),transparent 28%,rgba(139,104,188,.08),transparent 58%);animation:openingAura 24s linear infinite}
@@ -319,7 +312,6 @@ html[lang="th"] .final-page .glass:after{content:"จดหมายรัก"}
 @media(max-width:640px){.start-overlay::after{inset:10px;border-radius:26px}.opener{padding:24px 10px}.opening-kicker{letter-spacing:.24em}.seal-wrap{width:116px;height:116px}.seal{width:82px;height:82px;font-size:2.55rem}.opening-foot{max-width:300px;margin-left:auto;margin-right:auto}.video-gallery.single,.video-gallery.double{grid-template-columns:minmax(0,1fr)}}
 @media(prefers-reduced-motion:reduce){.start-overlay::before,.opening-orbit,.seal,.seal-glow,.seal-ripple{animation:none!important}}
 </style>
-
 <style id="storySlideshowUpgradeStyles">
 .story-slideshow-slide{min-height:100svh;padding-top:18px;padding-bottom:92px}
 .story-slideshow-shell{
@@ -400,7 +392,6 @@ html[lang="th"] .final-page .glass:after{content:"จดหมายรัก"}
 }
 
 </style>
-
 <style id="storyDetailRefine20260729">
 /* 主题、恋爱时间与小型幻灯片定稿 */
 .story-slideshow-slide{padding-top:clamp(42px,6vw,70px)!important;padding-bottom:104px!important}
@@ -448,9 +439,7 @@ html[lang="th"] .final-page .glass:after{content:"จดหมายรัก"}
 .chapter-body .copy{margin-bottom:0}
 @media(max-width:720px){.chapter-glass>.section-kicker{margin-bottom:18px}.chapter-photo{margin-bottom:22px;border-radius:18px}.chapter-body{width:100%}}
 </style>
-
 <!-- Build: CHAPTER-TITLES-ON-GLASS-20260729 -->
-
 <style id="transparentFrames20260729">
 /* 保留原有框架结构，仅改为轻透明玻璃质感 */
 .start-overlay::after{
@@ -521,9 +510,7 @@ html[lang="th"] .final-page .glass:after{content:"จดหมายรัก"}
 .chapter-body .copy{margin-bottom:0}
 @media(max-width:720px){.chapter-glass>.section-kicker{margin-bottom:18px}.chapter-photo{margin-bottom:22px;border-radius:18px}.chapter-body{width:100%}}
 </style>
-
 <!-- Build: TRANSPARENT-FRAMES-20260729-1600 -->
-
 <style id="allThemeGlassFrames20260729">
 /* 所有章节/主题主框统一为透明玻璃框：保留原结构，只改变框架质感 */
 .slide > .content > .glass,
@@ -586,7 +573,6 @@ html[lang="th"] .final-page .glass:after{content:"จดหมายรัก"}
 .chapter-body .copy{margin-bottom:0}
 @media(max-width:720px){.chapter-glass>.section-kicker{margin-bottom:18px}.chapter-photo{margin-bottom:22px;border-radius:18px}.chapter-body{width:100%}}
 </style>
-
 <!-- Build: CHAPTER-LAYOUT-1-10-20260729 -->
 <!-- Build: ENTRY-FIX-20260729 -->
 <style id="toolbarRefinement20260729">
@@ -601,7 +587,6 @@ html[lang="th"] .final-page .glass:after{content:"จดหมายรัก"}
 @media(max-width:720px){.music-dock-toggle{left:8px;bottom:max(8px,env(safe-area-inset-bottom));width:48px;height:48px;border-radius:16px}.pro-music-dock{left:62px;bottom:max(8px,env(safe-area-inset-bottom));width:calc(100vw - 224px)}.pro-tools{right:8px}.pro-tool-language{min-width:68px;padding:0 10px}}
 @media(max-width:420px){.pro-music-dock{width:calc(100vw - 205px)}.pro-tool-language{min-width:64px}}
 </style>
-
 <style id="homepageCinemaRedesign20260729">
 /* 首页：恋爱电影封面式布局 */
 .start-overlay{place-items:center;background:radial-gradient(circle at 50% 30%,rgba(108,49,79,.28),transparent 35%),radial-gradient(circle at 82% 78%,rgba(72,49,92,.20),transparent 38%),linear-gradient(155deg,#120a13 0%,#1a0e19 55%,#0d0910 100%)}
@@ -635,107 +620,106 @@ html.edit-mode:has(.start-overlay:not(.hide))::after{display:none}
 <body>
 <div class="scroll-progress" id="scrollProgress"></div><div id="aurora"></div><div id="particles"></div>
 <div class="start-overlay" id="startOverlay">
-  <div class="opening-orbit opening-orbit-one"></div><div class="opening-orbit opening-orbit-two"></div>
-  <div class="opener" id="openStory" role="button" tabindex="0" aria-label="开启我们的故事">
-    <div class="opening-kicker" id="openingKicker">恋爱纪念馆</div>
-    <h2 id="openTitle">我们的故事</h2>
-    <p class="opening-welcome" id="openHint">从相遇那天开始，<br>每一天都值得被记住。</p>
-    <div class="home-cover" id="homeCover"><img id="homeCoverImage" alt="我们的回忆"><div class="home-cover-fallback" id="homeCoverFallback"><span>♡</span><small>OUR STORY</small></div></div>
-    <div class="opening-love-copy">
-      <span id="openingToday">今天，</span>
-      <span id="openingLoveLine">是我们相爱的</span>
-      <strong><span id="openingDaysNumber">1</span><small id="openingDayUnit">天</small></strong>
-    </div>
-    <div class="opening-since" id="openingSince">2026.05.10 — 至今</div>
-    <div class="opening-enter" id="openingEnter">进入我们的故事 <span>→</span></div>
-  </div>
+<div class="opening-orbit opening-orbit-one"></div><div class="opening-orbit opening-orbit-two"></div>
+<div aria-label="开启我们的故事" class="opener" id="openStory" role="button" tabindex="0">
+<div class="opening-kicker" id="openingKicker">恋爱纪念馆</div>
+<h2 id="openTitle">我们的故事</h2>
+<p class="opening-welcome" id="openHint">从相遇那天开始，<br/>每一天都值得被记住。</p>
+<div class="home-cover" id="homeCover"><img alt="我们的回忆" id="homeCoverImage"/><div class="home-cover-fallback" id="homeCoverFallback"><span>♡</span><small>OUR STORY</small></div></div>
+<div class="opening-love-copy">
+<span id="openingToday">今天，</span>
+<span id="openingLoveLine">是我们相爱的</span>
+<strong><span id="openingDaysNumber">1</span><small id="openingDayUnit">天</small></strong>
+</div>
+<div class="opening-since" id="openingSince">2026.05.10 — 至今</div>
+<div class="opening-enter" id="openingEnter">进入我们的故事 <span>→</span></div>
+</div>
 </div>
 <!-- STORY-DETAIL-REFINE-20260729: duplicate legacy hero removed -->
 <section class="slide story-slideshow-slide active">
-  <div class="content story-page-content">
-    <header class="story-page-head">
-      <h2 id="storySlideshowTitle">我们的故事</h2>
-      <div class="story-slideshow-sub" id="storySlideshowSub">从相遇那天开始，<br>直到未来。</div>
-      <div class="story-page-date" id="storyPageDate">2026.05.10</div>
-    </header>
-    <div class="love-time-card" id="loveTimeCard">
-      <div class="love-time-title" id="loveTimeTitle">恋爱时间</div>
-      <div class="love-time-grid">
-        <div class="love-time-item"><span class="love-time-icon">❤️</span><span id="togetherTimeText">在一起的第 1 天</span></div>
-        <div class="love-time-item"><span class="love-time-icon">🎂</span><span id="nextAnniversaryText">距离下一个纪念日还有 0 天</span></div>
-        <div class="love-time-item"><span class="love-time-icon">💯</span><span id="nextHundredText">距离 100 天纪念日还有 99 天</span></div>
-      </div>
-    </div>
-    <div class="story-slideshow-shell" id="storySlideshow">
-      <div class="story-slideshow-track" id="storySlideshowTrack"></div>
-      <button class="story-slide-arrow story-slide-prev" id="storySlidePrev" aria-label="上一张">‹</button>
-      <button class="story-slide-arrow story-slide-next" id="storySlideNext" aria-label="下一张">›</button>
-      <div class="story-slide-dots" id="storySlideDots"></div>
-    </div>
-  </div>
+<div class="content story-page-content">
+<header class="story-page-head">
+<h2 id="storySlideshowTitle">我们的故事</h2>
+<div class="story-slideshow-sub" id="storySlideshowSub">从相遇那天开始，<br/>直到未来。</div>
+<div class="story-page-date" id="storyPageDate">2026.05.10</div>
+</header>
+<div class="love-time-card" id="loveTimeCard">
+<div class="love-time-title" id="loveTimeTitle">恋爱时间</div>
+<div class="love-time-grid">
+<div class="love-time-item"><span class="love-time-icon">❤️</span><span id="togetherTimeText">在一起的第 1 天</span></div>
+<div class="love-time-item"><span class="love-time-icon">🎂</span><span id="nextAnniversaryText">距离下一个纪念日还有 0 天</span></div>
+<div class="love-time-item"><span class="love-time-icon">💯</span><span id="nextHundredText">距离 100 天纪念日还有 99 天</span></div>
+</div>
+</div>
+<div class="story-slideshow-shell" id="storySlideshow">
+<div class="story-slideshow-track" id="storySlideshowTrack"></div>
+<button aria-label="上一张" class="story-slide-arrow story-slide-prev" id="storySlidePrev">‹</button>
+<button aria-label="下一张" class="story-slide-arrow story-slide-next" id="storySlideNext">›</button>
+<div class="story-slide-dots" id="storySlideDots"></div>
+</div>
+</div>
 </section>
-
-<section class="slide"><div class="content"><div class="glass chapter-glass"><div class="section-kicker bilingual-kicker frame-title" data-zh="第一章 · 我们的开始" data-th="บทที่ 1 · จุดเริ่มต้นของเรา">第一章 · 我们的开始</div><div class="chapter-photo" id="chapterPhoto1"></div><div class="chapter-body"><h2 id="vPeriodTitle"></h2><p class="copy" id="vPeriod"></p></div></div></div></section>
-<section class="slide"><div class="content"><div class="glass chapter-glass"><div class="section-kicker bilingual-kicker frame-title" data-zh="第二章 · 我们的足迹" data-th="บทที่ 2 · เส้นทางของเรา">第二章 · 我们的足迹</div><div class="chapter-photo" id="chapterPhoto2"></div><div class="chapter-body"><h2 id="vFootprintsTitle"></h2><p class="copy" id="vFootprintsDesc"></p><div class="footprints" id="footprintsList"></div></div></div></div></section>
-<section class="slide"><div class="content"><div class="glass chapter-glass"><div class="section-kicker bilingual-kicker frame-title" data-zh="第三章 · 她的故事" data-th="บทที่ 3 · เรื่องราวของเธอ">第三章 · 她的故事</div><div class="chapter-photo" id="chapterPhoto3"></div><div class="chapter-body"><h2 id="vTitle1"></h2><p class="copy" id="vText1"></p></div></div></div></section>
-<section class="slide"><div class="content"><div class="glass chapter-glass"><div class="section-kicker bilingual-kicker frame-title" data-zh="第四章 · 那些回忆" data-th="บทที่ 4 · ความทรงจำเหล่านั้น">第四章 · 那些回忆</div><div class="chapter-photo" id="chapterPhoto4"></div><div class="chapter-body"><h2 id="vTitle2"></h2><p class="copy" id="vText2"></p></div></div></div></section>
-<section class="slide"><div class="content"><div class="glass chapter-glass"><div class="section-kicker bilingual-kicker frame-title" data-zh="第五章 · 第一次吵架" data-th="บทที่ 5 · การทะเลาะกันครั้งแรก">第五章 · 第一次吵架</div><div class="chapter-photo" id="chapterPhoto5"></div><div class="chapter-body"><h2 id="vTitle3"></h2><p class="copy" id="vText3"></p></div></div></div></section>
-<section class="slide"><div class="content"><div class="glass chapter-glass"><div class="section-kicker bilingual-kicker frame-title" data-zh="第六章 · 我的自责" data-th="บทที่ 6 · ความรู้สึกผิดของฉัน">第六章 · 我的自责</div><div class="chapter-photo" id="chapterPhoto6"></div><div class="chapter-body"><h2 id="vTitle4"></h2><p class="copy" id="vText4"></p></div></div></div></section>
-<section class="slide"><div class="content"><div class="glass chapter-glass"><div class="section-kicker bilingual-kicker frame-title" data-zh="第七章 · 第二次吵架" data-th="บทที่ 7 · การทะเลาะกันครั้งที่สอง">第七章 · 第二次吵架</div><div class="chapter-photo" id="chapterPhoto7"></div><div class="chapter-body"><h2 id="vTitle5"></h2><p class="copy" id="vText5"></p></div></div></div></section>
-<section class="slide"><div class="content"><div class="glass media-glass"><div class="section-kicker bilingual-kicker frame-title" data-zh="第八章 · 我们的照片" data-th="บทที่ 8 · รูปภาพของเรา">第八章 · 我们的照片</div><div class="gallery-head"><div><h2 id="vGalleryTitle"></h2></div><span class="photo-count" id="photoCount"></span></div><p class="copy" id="vGalleryDesc"></p><div class="gallery" id="gallery"></div></div></div></section><section class="slide"><div class="content"><div class="glass media-glass"><div class="section-kicker bilingual-kicker frame-title" data-zh="第九章 · 我们的影像" data-th="บทที่ 9 · ภาพความทรงจำของเรา">第九章 · 我们的影像</div><div class="gallery-head"><div><h2 id="vVideoTitle"></h2></div><span class="photo-count" id="videoCount"></span></div><p class="copy" id="vVideoDesc"></p><div class="video-gallery" id="videoGallery"></div></div></div></section>
-<section class="slide"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker frame-title" data-zh="第十章 · 我们的承诺" data-th="บทที่ 10 · คำสัญญาของเรา">第十章 · 我们的承诺</div><div style="font-size:5rem">❤</div><h2 id="vEndTitle"></h2><p class="copy" id="vEndText"></p></div></div></section>
-<section class="slide final-page"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker frame-title" data-zh="最终章 · 未完待续" data-th="บทสุดท้าย · เรื่องราวยังไม่จบ">最终章 · 未完待续</div><div class="final-mark">∞</div><h2 id="vFinalTitle"></h2><p class="copy" id="vFinalText"></p><div class="final-sign" id="vFinalSign"></div></div></div></section>
-<button class="music-dock-toggle" id="musicDockToggle" type="button" aria-label="显示音乐播放器" aria-expanded="false">♫</button>
-<div class="pro-music-dock is-collapsed" id="musicDock" aria-label="音乐播放器" aria-hidden="true">
-<button class="pro-icon-btn prev-mini" id="prevTrack" aria-label="上一首"><svg viewBox="0 0 24 24"><path d="M19 20 9 12l10-8v16Z"/><path d="M5 5v14"/></svg></button>
-<button class="pro-icon-btn pro-play" id="musicBtn" aria-label="播放或暂停">▶</button>
-<button class="pro-track-info" id="nowPlaying" type="button" aria-label="打开歌单"><span class="pro-track-kicker" id="musicKicker">音乐播放器 · 点击查看歌单</span><span class="pro-track-name" id="musicTrackName">音乐未开始</span></button>
-<button class="pro-icon-btn next-mini" id="nextTrack" aria-label="下一首"><svg viewBox="0 0 24 24"><path d="m5 4 10 8-10 8V4Z"/><path d="M19 5v14"/></svg></button>
+<section class="slide"><div class="content"><div class="glass chapter-glass"><div class="section-kicker bilingual-kicker frame-title" data-th="บทที่ 1 · จุดเริ่มต้นของเรา" data-zh="第一章 · 我们的开始">第一章 · 我们的开始</div><div class="chapter-photo" id="chapterPhoto1"></div><div class="chapter-body"><h2 id="vPeriodTitle"></h2><p class="copy" id="vPeriod"></p></div></div></div></section>
+<section class="slide"><div class="content"><div class="glass chapter-glass"><div class="section-kicker bilingual-kicker frame-title" data-th="บทที่ 2 · เส้นทางของเรา" data-zh="第二章 · 我们的足迹">第二章 · 我们的足迹</div><div class="chapter-photo" id="chapterPhoto2"></div><div class="chapter-body"><h2 id="vFootprintsTitle"></h2><p class="copy" id="vFootprintsDesc"></p><div class="footprints" id="footprintsList"></div></div></div></div></section>
+<section class="slide"><div class="content"><div class="glass chapter-glass"><div class="section-kicker bilingual-kicker frame-title" data-th="บทที่ 3 · เรื่องราวของเธอ" data-zh="第三章 · 她的故事">第三章 · 她的故事</div><div class="chapter-photo" id="chapterPhoto3"></div><div class="chapter-body"><h2 id="vTitle1"></h2><p class="copy" id="vText1"></p></div></div></div></section>
+<section class="slide"><div class="content"><div class="glass chapter-glass"><div class="section-kicker bilingual-kicker frame-title" data-th="บทที่ 4 · ความทรงจำเหล่านั้น" data-zh="第四章 · 那些回忆">第四章 · 那些回忆</div><div class="chapter-photo" id="chapterPhoto4"></div><div class="chapter-body"><h2 id="vTitle2"></h2><p class="copy" id="vText2"></p></div></div></div></section>
+<section class="slide"><div class="content"><div class="glass chapter-glass"><div class="section-kicker bilingual-kicker frame-title" data-th="บทที่ 5 · การทะเลาะกันครั้งแรก" data-zh="第五章 · 第一次吵架">第五章 · 第一次吵架</div><div class="chapter-photo" id="chapterPhoto5"></div><div class="chapter-body"><h2 id="vTitle3"></h2><p class="copy" id="vText3"></p></div></div></div></section>
+<section class="slide"><div class="content"><div class="glass chapter-glass"><div class="section-kicker bilingual-kicker frame-title" data-th="บทที่ 6 · ความรู้สึกผิดของฉัน" data-zh="第六章 · 我的自责">第六章 · 我的自责</div><div class="chapter-photo" id="chapterPhoto6"></div><div class="chapter-body"><h2 id="vTitle4"></h2><p class="copy" id="vText4"></p></div></div></div></section>
+<section class="slide"><div class="content"><div class="glass chapter-glass"><div class="section-kicker bilingual-kicker frame-title" data-th="บทที่ 7 · การทะเลาะกันครั้งที่สอง" data-zh="第七章 · 第二次吵架">第七章 · 第二次吵架</div><div class="chapter-photo" id="chapterPhoto7"></div><div class="chapter-body"><h2 id="vTitle5"></h2><p class="copy" id="vText5"></p></div></div></div></section>
+<section class="slide"><div class="content"><div class="glass media-glass"><div class="section-kicker bilingual-kicker frame-title" data-th="บทที่ 8 · รูปภาพของเรา" data-zh="第八章 · 我们的照片">第八章 · 我们的照片</div><div class="gallery-head"><div><h2 id="vGalleryTitle"></h2></div><span class="photo-count" id="photoCount"></span></div><p class="copy" id="vGalleryDesc"></p><div class="gallery" id="gallery"></div></div></div></section><section class="slide"><div class="content"><div class="glass media-glass"><div class="section-kicker bilingual-kicker frame-title" data-th="บทที่ 9 · ภาพความทรงจำของเรา" data-zh="第九章 · 我们的影像">第九章 · 我们的影像</div><div class="gallery-head"><div><h2 id="vVideoTitle"></h2></div><span class="photo-count" id="videoCount"></span></div><p class="copy" id="vVideoDesc"></p><div class="video-gallery" id="videoGallery"></div></div></div></section>
+<section class="slide"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker frame-title" data-th="บทที่ 10 · คำสัญญาของเรา" data-zh="第十章 · 我们的承诺">第十章 · 我们的承诺</div><div style="font-size:5rem">❤</div><h2 id="vEndTitle"></h2><p class="copy" id="vEndText"></p></div></div></section>
+<section class="slide final-page"><div class="content"><div class="glass"><div class="section-kicker bilingual-kicker frame-title" data-th="บทสุดท้าย · เรื่องราวยังไม่จบ" data-zh="最终章 · 未完待续">最终章 · 未完待续</div><div class="final-mark">∞</div><h2 id="vFinalTitle"></h2><p class="copy" id="vFinalText"></p><div class="final-sign" id="vFinalSign"></div></div></div></section>
+<button aria-expanded="false" aria-label="显示音乐播放器" class="music-dock-toggle" id="musicDockToggle" type="button">♫</button>
+<div aria-hidden="true" aria-label="音乐播放器" class="pro-music-dock is-collapsed" id="musicDock">
+<button aria-label="上一首" class="pro-icon-btn prev-mini" id="prevTrack"><svg viewbox="0 0 24 24"><path d="M19 20 9 12l10-8v16Z"></path><path d="M5 5v14"></path></svg></button>
+<button aria-label="播放或暂停" class="pro-icon-btn pro-play" id="musicBtn">▶</button>
+<button aria-label="打开歌单" class="pro-track-info" id="nowPlaying" type="button"><span class="pro-track-kicker" id="musicKicker">音乐播放器 · 点击查看歌单</span><span class="pro-track-name" id="musicTrackName">音乐未开始</span></button>
+<button aria-label="下一首" class="pro-icon-btn next-mini" id="nextTrack"><svg viewbox="0 0 24 24"><path d="m5 4 10 8-10 8V4Z"></path><path d="M19 5v14"></path></svg></button>
 </div><div id="youtubePlayerWrap"><div id="youtubePlayer"></div></div>
-<div class="playlist-modal" id="playlistModal"><div class="playlist-sheet"><div class="playlist-head"><h3 id="playlistTitle">我们的歌单</h3><button class="playlist-close" id="playlistClose" aria-label="关闭歌单">×</button></div><div class="playlist-items" id="playlistItems"></div></div></div>
-<div class="pro-tools" aria-label="页面工具">
-<button class="pro-tool pro-tool-language" id="langToggle" aria-label="切换语言"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg><span id="langToolLabel">泰语</span></button>
-<button class="pro-tool" id="moreTools" aria-label="更多工具"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg><span id="moreToolLabel">更多</span></button>
+<div class="playlist-modal" id="playlistModal"><div class="playlist-sheet"><div class="playlist-head"><h3 id="playlistTitle">我们的歌单</h3><button aria-label="关闭歌单" class="playlist-close" id="playlistClose">×</button></div><div class="playlist-items" id="playlistItems"></div></div></div>
+<div aria-label="页面工具" class="pro-tools">
+<button aria-label="切换语言" class="pro-tool pro-tool-language" id="langToggle"><svg viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"></path></svg><span id="langToolLabel">泰语</span></button>
+<button aria-label="更多工具" class="pro-tool" id="moreTools"><svg viewbox="0 0 24 24"><circle cx="5" cy="12" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle></svg><span id="moreToolLabel">更多</span></button>
 </div>
 <div class="action-modal" id="actionModal"><div class="action-sheet"><div class="action-grabber"></div><div class="action-title" id="actionTitle">网站管理</div><div class="action-grid">
-<button class="action-item" id="openEditor"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg><span><strong id="editActionTitle">编辑网站</strong><small id="editActionDesc">文字、照片、视频和音乐</small></span></button>
-<button class="action-item" id="projectStart" aria-label="投屏展示"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span><strong id="projectToolLabel">投屏</strong><small id="projectActionDesc">全屏浏览纪念馆</small></span></button>
-<button class="action-item" id="openPlaylistFromMenu"><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span><strong id="playlistActionTitle">查看歌单</strong><small id="playlistActionDesc">选择和切换音乐</small></span></button>
+<button class="action-item" id="openEditor"><svg viewbox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"></path></svg><span><strong id="editActionTitle">编辑网站</strong><small id="editActionDesc">文字、照片、视频和音乐</small></span></button>
+<button aria-label="投屏展示" class="action-item" id="projectStart"><svg viewbox="0 0 24 24"><rect height="13" rx="2" width="18" x="3" y="4"></rect><path d="M8 21h8M12 17v4"></path></svg><span><strong id="projectToolLabel">投屏</strong><small id="projectActionDesc">全屏浏览纪念馆</small></span></button>
+<button class="action-item" id="openPlaylistFromMenu"><svg viewbox="0 0 24 24"><path d="M9 18V5l11-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="17" cy="16" r="3"></circle></svg><span><strong id="playlistActionTitle">查看歌单</strong><small id="playlistActionDesc">选择和切换音乐</small></span></button>
 </div><button class="action-cancel" id="actionClose">取消</button></div></div>
 <div class="project-controls"><button id="prevSlide">‹</button><button id="autoSlide">▶</button><span id="slideCounter">1 / 12</span><button id="nextSlide">›</button><button id="exitProject">退出</button></div>
 <audio id="bgm" preload="metadata"></audio>
-<div class="lightbox" id="lightbox"><button class="lightbox-close" id="lightboxClose">×</button><button class="lightbox-nav lightbox-prev" id="lightboxPrev">‹</button><img id="lightboxImage" alt=""><button class="lightbox-nav lightbox-next" id="lightboxNext">›</button><div class="lightbox-caption" id="lightboxCaption"></div></div><div class="video-modal" id="videoModal"><div class="video-modal-box"><button class="video-modal-close" id="videoModalClose">×</button><video id="videoModalPlayer" controls playsinline></video></div></div>
+<div class="lightbox" id="lightbox"><button class="lightbox-close" id="lightboxClose">×</button><button class="lightbox-nav lightbox-prev" id="lightboxPrev">‹</button><img alt="" id="lightboxImage"/><button class="lightbox-nav lightbox-next" id="lightboxNext">›</button><div class="lightbox-caption" id="lightboxCaption"></div></div><div class="video-modal" id="videoModal"><div class="video-modal-box"><button class="video-modal-close" id="videoModalClose">×</button><video controls="" id="videoModalPlayer" playsinline=""></video></div></div>
 <aside class="panel" id="panel">
 <div class="panel-head"><h3>恋爱纪念馆编辑器</h3><button class="close" id="closeEditor">×</button></div>
 <div class="tabs"><button class="active" data-tab="textTab">双语文字</button><button data-tab="photoTab">照片</button><button data-tab="videoTab">视频</button><button data-tab="musicTab">音乐</button><button data-tab="dataTab">备份</button></div>
 <div class="tab active" id="textTab"><div class="hint">中文和泰语分别保存。切换网站语言时，只显示对应语言。泰语内容可由你确认后手动填写，避免机器翻译改变语气。</div><div id="textEditors"></div><button class="btn" id="saveText">保存全部双语文字</button></div>
 <div class="tab" id="photoTab">
 <label>幻灯片图片</label>
-<div class="upload"><input type="file" id="slideshowUpload" accept="image/*" multiple><div class="hint">用于“我们的故事”幻灯片。建议上传 5 张；使用 ↑ ↓ 单独调整播放顺序，不会影响章节照片和第八章照片墙。</div></div>
+<div class="upload"><input accept="image/*" id="slideshowUpload" multiple="" type="file"/><div class="hint">用于“我们的故事”幻灯片。建议上传 5 张；使用 ↑ ↓ 单独调整播放顺序，不会影响章节照片和第八章照片墙。</div></div>
 <div class="asset-list" id="slideshowManager"></div>
 <label>第一章至第七章照片</label>
-<div class="upload"><input type="file" id="chapterUpload" accept="image/*" multiple><div class="hint">第一章至第七章照片合计最多 40 张，可在各章节中分别上传并调整顺序。</div></div>
+<div class="upload"><input accept="image/*" id="chapterUpload" multiple="" type="file"/><div class="hint">第一章至第七章照片合计最多 40 张，可在各章节中分别上传并调整顺序。</div></div>
 <div class="asset-list" id="chapterPhotoManager"></div>
 <label>第八章照片排序</label>
-<div class="upload"><input type="file" id="galleryUpload" accept="image/*" multiple><div class="hint">第八章照片仅按下方顺序展示。使用 ↑ ↓ 调整位置；照片墙最多 120 张，点击照片可放大并左右滑动。</div></div>
+<div class="upload"><input accept="image/*" id="galleryUpload" multiple="" type="file"/><div class="hint">第八章照片仅按下方顺序展示。使用 ↑ ↓ 调整位置；照片墙最多 120 张，点击照片可放大并左右滑动。</div></div>
 <div class="asset-list" id="photoManager"></div>
 </div>
 <div class="tab" id="videoTab">
 <div class="editor-card"><h4>公开展示视频</h4><div class="hint">第九章视频按下方顺序展示。使用 ↑ ↓ 调整视频位置；选择视频后会自动识别文件名、填写路径并生成画面封面，避免列表出现黑屏。再把同一个视频上传到 GitHub 的 videos 文件夹。</div></div>
 <div id="videoEditors"></div><button class="btn" id="saveVideos">保存视频设置</button>
 </div>
-<div class="tab" id="musicTab"><div class="editor-card"><h4>内置音乐库</h4><div class="hint">网站已接入 8 首中文恋爱歌曲的 YouTube 官方播放器。音乐不会储存在你的网页中；访客第一次播放时需要轻触播放键。部分地区或版权设置可能导致个别歌曲无法嵌入。你仍可添加自己拥有使用权的音频。</div></div><label>添加多首歌曲</label><div class="upload"><input type="file" id="musicUpload" accept="audio/*" multiple></div><label>播放模式</label><select id="playMode"><option value="sequence">顺序循环</option><option value="shuffle">随机播放</option><option value="single">单曲循环</option></select><div class="asset-list" id="musicManager"></div></div>
+<div class="tab" id="musicTab"><div class="editor-card"><h4>内置音乐库</h4><div class="hint">网站已接入 8 首中文恋爱歌曲的 YouTube 官方播放器。音乐不会储存在你的网页中；访客第一次播放时需要轻触播放键。部分地区或版权设置可能导致个别歌曲无法嵌入。你仍可添加自己拥有使用权的音频。</div></div><label>添加多首歌曲</label><div class="upload"><input accept="audio/*" id="musicUpload" multiple="" type="file"/></div><label>播放模式</label><select id="playMode"><option value="sequence">顺序循环</option><option value="shuffle">随机播放</option><option value="single">单曲循环</option></select><div class="asset-list" id="musicManager"></div></div>
 <div class="tab" id="dataTab">
 <div class="editor-card public-share-card">
 <h4>发布故事</h4>
 <div class="hint">生成包含当前文字、照片、视频设置和音乐的只读分享文件。将下载的 <b>share.html</b> 上传并覆盖 GitHub 仓库中的同名文件，公开链接始终不变。</div>
 <button class="btn" id="exportPublicShare">生成公开分享文件</button>
 <label for="publicShareUrl">公开链接</label>
-<input id="publicShareUrl" type="text" value="https://xx6110734-pixel.github.io/share.html" readonly>
+<input id="publicShareUrl" readonly="" type="text" value="https://xx6110734-pixel.github.io/share.html"/>
 <button class="btn light" id="copyPublicShareUrl">复制公开链接</button>
 <div class="hint" id="publicShareStatus">公开页面只供浏览，不显示编辑器、上传、删除、排序、备份或恢复功能。</div>
 </div>
-<button class="btn dark" id="projectFromEditor">进入投屏模式</button><button class="btn" id="exportBackup">导出完整备份</button><input type="file" id="importBackup" accept=".json" hidden><button class="btn light" id="importBackupBtn">导入备份</button><button class="btn danger" id="reset">恢复默认并清空资料</button></div>
+<button class="btn dark" id="projectFromEditor">进入投屏模式</button><button class="btn" id="exportBackup">导出完整备份</button><input accept=".json" hidden="" id="importBackup" type="file"/><button class="btn light" id="importBackupBtn">导入备份</button><button class="btn danger" id="reset">恢复默认并清空资料</button></div>
 </aside><div class="toast" id="toast"></div>
 <script>
 'use strict';
@@ -1147,7 +1131,6 @@ openDB()
   .catch(()=>alert('浏览器未允许本地储存，请使用 Safari、Chrome 或 Edge。'));
 </script>
 <!-- 升级：歌单弹窗、弱化音乐按钮、恋爱时间线、正式结尾页 -->
-
 <script id="viewerModeScript">
 (function(){
   const params = new URLSearchParams(location.search);
@@ -1190,8 +1173,6 @@ openDB()
   });
 })();
 </script>
-
-
 <script id="surpriseEditionScript">
 (function(){
   function initSurpriseEdition(){
@@ -1216,15 +1197,6 @@ openDB()
         });
       },{threshold:.12,rootMargin:'0px 0px -5% 0px'});
       targets.forEach(el=>io.observe(el));
-      const refresh=()=>{
-        document.querySelectorAll('.footprint-item,.gallery-item,.video-card').forEach(el=>{
-          if(!el.classList.contains('reveal')){
-            el.classList.add('reveal');
-            io.observe(el);
-          }
-        });
-      };
-      new MutationObserver(refresh).observe(document.body,{childList:true,subtree:true});
     }else{
       targets.forEach(el=>el.classList.add('visible'));
     }
@@ -1238,7 +1210,6 @@ openDB()
   else initSurpriseEdition();
 })();
 </script>
-
 <script>
 (function(){
   const edit=new URLSearchParams(location.search).get('edit')==='1';
@@ -1247,8 +1218,6 @@ openDB()
 </script>
 <!-- 视频管理升级补丁：请粘贴到 index.html 的 <!-- Build: CHAPTER9-VIDEO-SORT-AUTO-COVER-20260729 -->
 <!-- Build: TOOLBAR-COMPACT-CLEAR-CHAPTERS-20260729 -->
-
-
 <style id="performanceHotfix20260729">
 /* 手机性能优化：屏幕外章节延迟绘制，图片异步解码 */
 .story-section,.chapter,.timeline-section,.gallery-section,.video-section{content-visibility:auto;contain-intrinsic-size:900px}
@@ -1265,7 +1234,7 @@ img{content-visibility:auto}
 })();
 </script>
 <!-- Build: PERFORMANCE-HOTFIX-20260729 -->
-</body> 前面 -->
+</body> 前面 --&gt;
 <style id="videoManagerUpgradeStyle">
 #videoTab .video-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
 #videoTab .video-toolbar .btn{flex:1;min-width:145px}
@@ -1289,7 +1258,6 @@ img{content-visibility:auto}
   .video-file-actions button,.video-file-actions a{width:100%}
 }
 </style>
-
 <script id="videoManagerUpgradeScript">
 (function(){
   'use strict';
@@ -1606,7 +1574,6 @@ img{content-visibility:auto}
 })();
 </script>
 <!-- Build: CHAPTER9-VIDEO-SORT-AUTO-COVER-20260729 -->
-
 <style id="unifiedRectification20260729">
 @import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600&family=Noto+Serif+Thai:wght@400;500;600&display=swap');
 body{font-family:"Noto Serif SC","Noto Serif Thai","Songti SC","PingFang SC",serif}
@@ -1819,7 +1786,7 @@ applyLanguage=function(){
    $('openingKicker').textContent='恋爱纪念馆';$('openTitle').textContent='我们的故事';$('openHint').textContent='欢迎来到属于我们的回忆。';
    $('storySlideshowTitle').textContent='我们的故事';$('storySlideshowSub').innerHTML='从相遇那天开始，<br>直到未来。';$('storyPageDate').textContent=`开始日期 · ${formatStartDate()}`;
  }
- renderChapterDates();renderUnifiedChapterPhotos();renderSixVideos();
+ renderChapterDates();if(typeof window.renderRefinedChapterImages==='function')window.renderRefinedChapterImages();else renderUnifiedChapterPhotos();renderSixVideos();
 };
 renderChapterPhotos=renderUnifiedChapterPhotos;
 renderVideos=renderSixVideos;
@@ -1830,7 +1797,7 @@ render=async function(){
  if(await migrateChapterAssets()){
    const allItems=await all();chapterPhotoItems=allItems.filter(x=>x.type==='photo'&&hasRole(x,'chapter'));
  }
- renderUnifiedChapterPhotos();renderChapterManager();renderSixVideos();renderChapterDates();
+ if(typeof window.renderRefinedChapterImages==='function')window.renderRefinedChapterImages();else renderUnifiedChapterPhotos();if(typeof window.drawRefinedChapterManager==='function')window.drawRefinedChapterManager();else renderChapterManager();renderSixVideos();renderChapterDates();
 };
 function capVideosToSix(){
  ['zh','th'].forEach(lang=>{data[lang].videos=(data[lang].videos||[]).slice(0,6);while(data[lang].videos.length<6)data[lang].videos.push({src:'',title:''})});saveData();
@@ -1838,13 +1805,21 @@ function capVideosToSix(){
  const hint=$('videoTab')?.querySelector('.hint');if(hint)hint.textContent='第九章固定 6 个视频位置，按 2 列 × 3 行展示；视频比例为 9:16，并自动生成封面。';
 }
 async function initUnified(){
+ if(initUnified.started)return;
+ initUnified.started=true;
  ensureUpgradeData();installChapterDates();buildUnifiedTextEditors();fillUnifiedEditors();$('saveText').onclick=saveUnifiedTexts;
  capVideosToSix();
  const photoHint=$('chapterUpload')?.closest('.upload')?.querySelector('.hint');if(photoHint)photoHint.textContent='第一章至第七章合计最多 40 张，可自行分配到各章。';
- if(typeof db!=='undefined'&&db)await render();else setTimeout(initUnified,180);
+ let ready=false;
+ for(let attempt=0;attempt<30;attempt++){
+   if(typeof db!=='undefined'&&db){ready=true;break}
+   await new Promise(resolve=>setTimeout(resolve,100));
+ }
+ if(ready)await render();
+ else if(typeof notify==='function')notify('本地照片库初始化超时，请刷新页面重试');
  applyLanguage();
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initUnified);else initUnified();
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initUnified,{once:true});else initUnified();
 })();
 </script>
 <style id="chapterFortyTotalStyle20260729">
@@ -1854,7 +1829,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 @media(max-width:720px){.chapter-photo.count-many{grid-template-columns:repeat(2,minmax(0,1fr))}.chapter-photo.count-many img{min-height:180px;max-height:340px}.chapter-total-status{font-size:.88rem}}
 </style>
 <!-- Build: UNIFIED-RECTIFICATION-20260729 -->
-
 <script id="homepageCinemaScript20260729">
 (()=>{
  const OLD_HINT='ยินดีต้อนรับสู่ความทรงจำของเรา';
@@ -1903,8 +1877,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,0));else setTimeout(init,0);
 })();
 </script>
-
-
 <style id="storyTimeMinimalRedesign20260729">
 /* 故事页与恋爱时间：开放式纪念册排版，不使用边框或分界线 */
 .story-slideshow-slide{
@@ -2022,7 +1994,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 <!-- Build: STORY-TIME-MINIMAL-REDESIGN-20260729 -->
-
 <style id="editorVideoAddAndThaiFixStyles20260729">
 #editorAddVideoBtn{width:100%;margin:12px 0 10px;display:flex;align-items:center;justify-content:center;gap:8px}
 #editorAddVideoBtn .plus{font-size:1.25rem;line-height:1}
@@ -2125,31 +2096,16 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 <!-- Build: EDITOR-VIDEO-ADD-AND-FIXED-THAI-20260729 -->
-
 <style id="performanceHotfix20260729">
 /* 手机性能优化：屏幕外章节延迟绘制，图片异步解码 */
 .story-section,.chapter,.timeline-section,.gallery-section,.video-section{content-visibility:auto;contain-intrinsic-size:900px}
 img{content-visibility:auto}
 #chapterPhotoManager .chapter-unified-list{contain:layout style paint}
 </style>
-<script id="performanceHotfixScript20260729">
-(()=>{
- const tune=()=>document.querySelectorAll('img').forEach(img=>{
-  if(!img.hasAttribute('decoding'))img.decoding='async';
-  if(!img.hasAttribute('loading')&&!img.closest('.hero,.cover,.slideshow'))img.loading='lazy';
- });
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tune,{once:true});else tune();
-})();
-</script>
+
 <!-- Build: PERFORMANCE-HOTFIX-20260729 -->
-</body></html>
 
 <!-- Build: PHOTO-COLLECTIONS-SPLIT-20260729 -->
-
-
-
-
-
 <style id="chapterUnifiedUploadButtonFix20260729">
 #chapterPhotoManager .chapter-manager-grid,
 #chapterPhotoManager .chapter-manager-card,
@@ -2177,99 +2133,8 @@ img{content-visibility:auto}
  #chapterPhotoManager .chapter-unified-actions button{min-width:50px}
 }
 </style>
-<script id="chapterUnifiedUploadButtonFixScript20260729">
-(()=>{
-'use strict';
-const labels=['第一章 · 我们的开始','第二章 · 我们的足迹','第三章 · 她的故事','第四章 · 那些回忆','第五章 · 第一次吵架','第六章 · 我的自责','第七章 · 第二次吵架'];
-let drawing=false;
-const getItems=()=>Array.isArray(chapterPhotoItems)?chapterPhotoItems.filter(x=>x&&x.type==='photo'&&Number(x.chapterIndex)>=1&&Number(x.chapterIndex)<=7):[];
-const chapterList=n=>getItems().filter(x=>Number(x.chapterIndex)===n).sort((a,b)=>(a.chapterOrder??9999)-(b.chapterOrder??9999));
-const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function rows(){
- const items=getItems().sort((a,b)=>(Number(a.chapterIndex)||99)-(Number(b.chapterIndex)||99)||(a.chapterOrder??9999)-(b.chapterOrder??9999));
- if(!items.length)return '<div class="chapter-unified-empty">暂时没有照片。点击上方“添加照片”开始上传。</div>';
- return items.map((x,i)=>`<div class="chapter-unified-row"><div class="chapter-unified-index">${i+1}</div><img src="${esc(x.thumb||x.data)}" alt="章节照片 ${i+1}" loading="lazy" decoding="async"><select class="chapter-unified-select" data-cu-select="${esc(x.id)}">${labels.map((v,j)=>`<option value="${j+1}" ${Number(x.chapterIndex)===j+1?'selected':''}>${v}</option>`).join('')}</select><div class="chapter-unified-actions"><button type="button" data-cu-up="${esc(x.id)}">↑</button><button type="button" data-cu-down="${esc(x.id)}">↓</button><button type="button" class="del" data-cu-del="${esc(x.id)}">删</button></div></div>`).join('');
-}
-function draw(){
- if(drawing)return;
- const host=document.getElementById('chapterPhotoManager');if(!host)return;
- drawing=true;
- try{
-  const total=getItems().length,remaining=Math.max(0,40-total);
-  host.innerHTML=`<div class="chapter-unified-final"><div class="chapter-unified-head"><strong>第一章至第七章统一照片库</strong>已上传 ${total} / 40 张，剩余 ${remaining} 张。</div><label class="chapter-unified-picker ${remaining?'':'disabled'}">＋ 添加照片<input id="chapterUnifiedFinalInput" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple ${remaining?'':'disabled'}></label><div class="chapter-unified-hint">新照片默认放入第一章；上传后可选择所属章节，↑ ↓ 只调整该章节内的顺序。</div><div class="chapter-unified-list">${rows()}</div></div>`;
-  const input=document.getElementById('chapterUnifiedFinalInput');
-  if(input)input.onchange=async e=>{const files=[...e.target.files];e.target.value='';await upload(files)};
-  host.querySelectorAll('[data-cu-select]').forEach(el=>el.onchange=()=>changeChapter(el.dataset.cuSelect,Number(el.value)));
-  host.querySelectorAll('[data-cu-up]').forEach(el=>el.onclick=()=>move(el.dataset.cuUp,-1));
-  host.querySelectorAll('[data-cu-down]').forEach(el=>el.onclick=()=>move(el.dataset.cuDown,1));
-  host.querySelectorAll('[data-cu-del]').forEach(el=>el.onclick=()=>remove(el.dataset.cuDel));
- }finally{drawing=false}
-}
-async function refresh(){if(typeof window.render==='function')await window.render();else draw()}
-let uploadBusy=false;
-async function stableResize(file,max,q){
- try{
-  return await window.resize(file,max,q);
- }catch(err){
-  console.error('图片处理失败',file?.name,err);
-  throw new Error(`无法读取图片：${file?.name||'未知文件'}`);
- }
-}
-async function upload(files){
- if(uploadBusy){window.notify?.('照片正在处理中，请稍候');return}
- const remain=Math.max(0,40-getItems().length);
- const chosen=Array.from(files||[]).filter(f=>f&&String(f.type||'').startsWith('image/')).slice(0,remain);
- if(!chosen.length){window.notify?.(remain?'请选择有效的图片文件':'第一章至第七章最多上传 40 张照片');return}
- uploadBusy=true;
- const picker=document.getElementById('chapterUnifiedFinalInput');
- const label=picker?.closest('.chapter-unified-picker');
- if(picker)picker.disabled=true;
- if(label)label.classList.add('disabled');
- const base=chapterList(1).length;
- let ok=0,failed=0;
- try{
-  for(let i=0;i<chosen.length;i++){
-   window.notify?.(`正在处理照片 ${i+1} / ${chosen.length}…`);
-   try{
-    const data=await stableResize(chosen[i],1200,.72);
-    const thumb=await stableResize(chosen[i],260,.62);
-    await window.put({
-     id:`p_${Date.now()}_${Math.random().toString(36).slice(2,9)}_chapter`,
-     type:'photo',data,thumb,caption:'',roles:['chapter'],
-     chapterIndex:1,chapterOrder:base+ok,order:9999,slideshowOrder:9999
-    });
-    ok++;
-   }catch(err){
-    failed++;
-    console.error(err);
-   }
-   await new Promise(r=>setTimeout(r,30));
-  }
-  await refresh();
-  if(ok&&failed)window.notify?.(`成功添加 ${ok} 张，${failed} 张处理失败`);
-  else if(ok)window.notify?.(`已添加 ${ok} 张照片`);
-  else window.notify?.('图片上传失败，请改用 JPG、PNG 或较小的照片重试');
- }finally{
-  uploadBusy=false;
-  const latest=document.getElementById('chapterUnifiedFinalInput');
-  if(latest)latest.disabled=false;
-  latest?.closest('.chapter-unified-picker')?.classList.remove('disabled');
- }
-}
-async function normalize(n){const list=chapterList(n);for(let i=0;i<list.length;i++){if(list[i].chapterOrder!==i){list[i].chapterOrder=i;await window.put(list[i])}}}
-async function changeChapter(id,n){const item=getItems().find(x=>x.id===id);if(!item||n<1||n>7)return;const old=Number(item.chapterIndex);if(old===n)return;item.chapterIndex=n;item.chapterOrder=chapterList(n).length;await window.put(item);await normalize(old);await normalize(n);await refresh()}
-async function move(id,delta){const item=getItems().find(x=>x.id===id);if(!item)return;const n=Number(item.chapterIndex),list=chapterList(n),i=list.findIndex(x=>x.id===id),j=i+delta;if(i<0||j<0||j>=list.length)return;const a=list[i],b=list[j],ao=a.chapterOrder??i,bo=b.chapterOrder??j;a.chapterOrder=bo;b.chapterOrder=ao;await window.put(a);await window.put(b);await refresh()}
-async function remove(id){if(!confirm('确定删除这张照片吗？'))return;const item=getItems().find(x=>x.id===id),n=Number(item?.chapterIndex);await window.del(id);if(n)await normalize(n);await refresh()}
-function install(){
- const host=document.getElementById('chapterPhotoManager');if(!host){setTimeout(install,100);return}
- draw();
- if(typeof window.render==='function'&&!window.render.__chapterUnifiedFinal){const old=window.render;const wrapped=async function(...args){const r=await old.apply(this,args);draw();return r};wrapped.__chapterUnifiedFinal=true;window.render=wrapped}
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
-})();
-</script>
-<!-- Build: CHAPTER-UNIFIED-LIBRARY-DISPLAY-FIX-20260729 -->
 
+<!-- Build: CHAPTER-UNIFIED-LIBRARY-DISPLAY-FIX-20260729 -->
 <style id="chapterImageLayoutRefine20260729">
 /* 章节图片精修：第二章仅足迹双图；其余章节采用紧凑 2×2 主题图 */
 .chapter-glass .chapter-photo{
@@ -2392,23 +2257,41 @@ function drawManager(){
  }).join(''):'<div class="chapter-unified-empty">暂时没有照片。点击上方“添加照片”开始上传。</div>';
  host.innerHTML=`<div class="chapter-unified-final"><div class="chapter-unified-head"><strong>第一章至第七章统一照片库</strong>已上传 ${all.length} / 40 张，剩余 ${remaining} 张。</div><div class="chapter-limit-note">第二章不显示主题图片：前 2 张对应足迹一，第 3–4 张对应足迹二，第 5–6 张对应足迹三。第一章、第三章至第七章每章最多展示 4 张主题图片，自动排列为 2 × 2。</div><label class="chapter-unified-picker ${remaining?'':'disabled'}">＋ 添加照片<input id="chapterRefinedInput" type="file" accept="image/*" multiple ${remaining?'':'disabled'}></label><div class="chapter-unified-hint">新照片默认放入第一章；上传后可选择所属章节，↑ ↓ 只调整该章节内顺序。</div><div class="chapter-unified-list">${rows}</div></div>`;
  const input=document.getElementById('chapterRefinedInput');if(input)input.onchange=async e=>{
-  const files=[...e.target.files],room=Math.min(remaining,Math.max(0,4-chapterItems(1).length)),chosen=files.slice(0,room);e.target.value='';
-  if(!chosen.length){notify?.('第一章主题最多 4 张，请先把照片调整到其他章节');return}
-  notify?.('正在处理章节照片…');const base=chapterItems(1).length;
-  for(let i=0;i<chosen.length;i++){const full=await resize(chosen[i],1500,.8),thumb=await resize(chosen[i],420,.7);await put({id:`p_${Date.now()}_chapter_refined_${i}`,type:'photo',data:full,thumb,caption:'',roles:['chapter'],chapterIndex:1,chapterOrder:base+i,order:9999,slideshowOrder:9999})}
-  await render();notify?.(`已添加 ${chosen.length} 张照片`);
+  if(input.dataset.busy==='1')return;
+  input.dataset.busy='1';
+  const files=[...e.target.files].slice(0,remaining);e.target.value='';
+  if(!files.length){delete input.dataset.busy;notify?.('第一章至第七章合计最多 40 张照片');return}
+  notify?.('正在处理章节照片…');
+  let added=0;
+  try{
+   for(let i=0;i<files.length;i++){
+    const target=[1,3,4,5,6,7,2].find(n=>chapterItems(n).length<(n===2?6:4));
+    if(!target)break;
+    try{
+     const compressor=typeof stableResize==='function'?stableResize:resize;
+     const full=await compressor(files[i],1200,.72),thumb=await compressor(files[i],300,.62);
+     await put({id:`p_${Date.now()}_chapter_refined_${i}`,type:'photo',data:full,thumb,caption:'',roles:['chapter'],chapterIndex:target,chapterOrder:chapterItems(target).length,order:9999,slideshowOrder:9999});
+     chapterPhotoItems.push({id:`__pending_${i}`,type:'photo',chapterIndex:target,chapterOrder:chapterItems(target).length});
+     added++;
+    }catch(error){console.error('章节照片处理失败',error)}
+   }
+   await render();notify?.(`已添加 ${added} 张照片`);
+  }finally{delete input.dataset.busy}
  };
  host.querySelectorAll('[data-refined-select]').forEach(el=>el.onchange=()=>changeChapterSafe(el.dataset.refinedSelect,Number(el.value)));
  host.querySelectorAll('[data-refined-up]').forEach(el=>el.onclick=()=>moveSafe(el.dataset.refinedUp,-1));
  host.querySelectorAll('[data-refined-down]').forEach(el=>el.onclick=()=>moveSafe(el.dataset.refinedDown,1));
  host.querySelectorAll('[data-refined-del]').forEach(el=>el.onclick=()=>deleteSafe(el.dataset.refinedDel));
 }
+window.renderRefinedChapterImages=renderRefinedChapterImages;
+window.drawRefinedChapterManager=drawManager;
 function install(){
- renderRefinedChapterImages();drawManager();
- if(typeof render==='function'&&!render.__refinedChapterImages){const old=render;render=async function(...args){const out=await old.apply(this,args);renderRefinedChapterImages();drawManager();return out};render.__refinedChapterImages=true;window.render=render}
- if(typeof applyLanguage==='function'&&!applyLanguage.__refinedChapterImages){const oldLang=applyLanguage;applyLanguage=function(...args){const out=oldLang.apply(this,args);renderRefinedChapterImages();return out};applyLanguage.__refinedChapterImages=true;window.applyLanguage=applyLanguage}
+ renderRefinedChapterImages();
+ drawManager();
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(install,160));else setTimeout(install,160);
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
 })();
 </script>
 <!-- Build: CHAPTER-IMAGE-LAYOUT-REFINE-20260729 -->
+
+</html>
