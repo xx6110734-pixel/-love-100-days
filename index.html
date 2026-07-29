@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="zh-CN">
 <head>
@@ -1031,7 +1032,7 @@ async function uploadPhotoCollection(files,role,max){
   const key=orderKey(role);for(let i=0;i<fs.length;i++){const dataUrl=await resize(fs[i],1500,.8),thumb=await resize(fs[i],420,.7);const item={id:'p_'+Date.now()+'_'+role+'_'+i,type:'photo',data:dataUrl,thumb,caption:'',roles:[role],order:9999,slideshowOrder:9999,chapterOrder:9999};item[key]=current.length+i;await put(item);if(i%5===4)await new Promise(r=>setTimeout(r,0))}return fs.length;
 }
 $('slideshowUpload').onchange=async e=>{notify('正在处理幻灯片图片…');const n=await uploadPhotoCollection(e.target.files,'slideshow',12);await render();notify(`已添加 ${n} 张幻灯片图片`);e.target.value=''};
-$('chapterUpload').onchange=async e=>{notify('正在处理章节照片…');const n=await uploadPhotoCollection(e.target.files,'chapter',40);await render();notify(`已添加 ${n} 张章节照片`);e.target.value=''};
+{const legacyChapterUpload=$('chapterUpload');if(legacyChapterUpload)legacyChapterUpload.onchange=async e=>{notify('正在处理章节照片…');const n=await uploadPhotoCollection(e.target.files,'chapter',40);await render();notify(`已添加 ${n} 张章节照片`);e.target.value=''};}
 $('galleryUpload').onchange=async e=>{notify('正在处理第八章照片…');const n=await uploadPhotoCollection(e.target.files,'gallery',120);await render();notify(`已添加 ${n} 张第八章照片`);e.target.value=''};
 let playlist=[],trackIndex=0,playing=false,mode=localStorage.getItem('love_play_mode')||'sequence';$('playMode').value=mode;$('playMode').onchange=()=>{mode=$('playMode').value;localStorage.setItem('love_play_mode',mode)};function renderPlaylistPopup(){$('playlistItems').innerHTML=playlist.map((x,i)=>`<button class="playlist-item ${i===trackIndex?'active':''}" data-popup-play="${i}"><span class="playlist-number">${String(i+1).padStart(2,'0')}</span><span class="playlist-name">${esc(x.name)}</span><span class="playlist-state">${i===trackIndex&&playing?(currentLang==='zh'?'播放中':'กำลังเล่น'):''}</span></button>`).join('');document.querySelectorAll('[data-popup-play]').forEach(x=>x.onclick=()=>{playTrack(+x.dataset.popupPlay);$('playlistModal').classList.remove('open')})}
 function renderMusicManager(){playlist=[...builtinTracks,...trackItems];renderPlaylistPopup();$('musicManager').innerHTML=playlist.map((x,i)=>`<div class="track-row"><div class="track-title">${esc(x.name)} ${x.type==='youtube'?'<span class="builtin">内置</span>':''}</div><div class="mini"><button data-play="${i}">播放</button>${x.type==='music'?`<button data-trackup="${x.id}">↑</button><button data-trackdown="${x.id}">↓</button><button class="del" data-trackdel="${x.id}">删除</button>`:''}</div></div>`).join('');document.querySelectorAll('[data-play]').forEach(x=>x.onclick=()=>playTrack(+x.dataset.play));document.querySelectorAll('[data-trackdel]').forEach(x=>x.onclick=async()=>{await del(x.dataset.trackdel);render()});document.querySelectorAll('[data-trackup]').forEach(x=>x.onclick=()=>moveTrack(x.dataset.trackup,-1));document.querySelectorAll('[data-trackdown]').forEach(x=>x.onclick=()=>moveTrack(x.dataset.trackdown,1))}async function moveTrack(id,dir){const i=trackItems.findIndex(x=>x.id===id),j=i+dir;if(j<0||j>=trackItems.length)return;[trackItems[i].order,trackItems[j].order]=[trackItems[j].order,trackItems[i].order];await put(trackItems[i]);await put(trackItems[j]);render();notify('歌曲顺序已调整')}$('musicUpload').onchange=async e=>{const fs=[...e.target.files];for(let i=0;i<fs.length;i++)await put({id:'m_'+Date.now()+'_'+i,type:'music',name:fs[i].name.replace(/\.[^.]+$/,''),data:await fileData(fs[i]),order:trackItems.length+i});await render();notify(`已加入 ${fs.length} 首歌曲`);e.target.value=''};
@@ -1233,7 +1234,7 @@ img{content-visibility:auto}
 })();
 </script>
 <!-- Build: PERFORMANCE-HOTFIX-20260729 -->
-</body> 前面 --&gt;
+<!-- Build: FINAL-STABLE-NO-RESIDUAL-CHAPTER-CONFLICT-20260729 --></body> 前面 --&gt;
 <style id="videoManagerUpgradeStyle">
 #videoTab .video-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
 #videoTab .video-toolbar .btn{flex:1;min-width:145px}
@@ -1708,62 +1709,29 @@ function renderChapterDates(){
  }
 }
 function chapterAssets(index){return chapterPhotoItems.filter(x=>(Number(x.chapterIndex)||0)===index).sort((a,b)=>(a.chapterOrder??9999)-(b.chapterOrder??9999))}
-function chapterPhotoTotal(){return chapterPhotoItems.filter(x=>Number(x.chapterIndex)>=1&&Number(x.chapterIndex)<=7).length}
-function chapterPhotoRemaining(){return Math.max(0,40-chapterPhotoTotal())}
-function renderUnifiedChapterPhotos(){
- for(let i=1;i<=7;i++){
-   const frame=$(`chapterPhoto${i}`);if(!frame)continue;
-   let items=chapterAssets(i);
-   if(i===2)items=items.slice(3);
-   frame.className=`chapter-photo ${items.length>6?'count-many':`count-${items.length}`}`;
-   frame.innerHTML=items.map((item,j)=>`<img src="${item.data}" alt="第 ${i} 章回忆照片 ${j+1}" loading="lazy" decoding="async">`).join('');
- }
- renderFootprintsUnified();
-}
-function renderFootprintsUnified(){
- const c=data[currentLang],photos=chapterAssets(2).slice(0,3),rows=[];
- for(let i=0;i<3;i++){
-   const item=c.footprints[i]||{},photo=photos[i];
-   if(!item.date&&!item.text&&!photo)continue;
-   rows.push(`<div class="footprint-item"><div class="footprint-card">${photo?`<img class="footprint-photo" src="${photo.data}" alt="足迹 ${i+1}" loading="lazy">`:''}<div class="footprint-top">${item.date?`<span class="footprint-date">${esc(item.date)}</span>`:''}</div>${item.text?`<div class="footprint-text">${esc(item.text)}</div>`:''}</div></div>`);
- }
- $('footprintsList').innerHTML=rows.join('');
-}
+// Chapters 1–7 are exclusively managed by window.ChaptersIndependent.
+// Legacy unified upload/manager functions were removed to prevent competing limits,
+// duplicate event handlers, and cross-chapter reassignment.
 async function migrateChapterAssets(){
- const list=chapterPhotoItems.slice().sort((a,b)=>(a.chapterOrder??9999)-(b.chapterOrder??9999));let changed=false;
- for(let i=0;i<list.length;i++)if(!Number(list[i].chapterIndex)){list[i].chapterIndex=Math.min(7,i+1);list[i].chapterOrder=0;await put(list[i]);changed=true}
+ const list=chapterPhotoItems.slice().sort((a,b)=>{
+   const ao=Number.isFinite(Number(a.chapterOrder))?Number(a.chapterOrder):9999;
+   const bo=Number.isFinite(Number(b.chapterOrder))?Number(b.chapterOrder):9999;
+   return ao-bo;
+ });
+ let changed=false;
+ for(let i=0;i<list.length;i++){
+   if(!Number(list[i].chapterIndex)){
+     list[i].chapterIndex=Math.min(7,i+1);
+     list[i].chapterOrder=0;
+     await put(list[i]);
+     changed=true;
+   }
+ }
  return changed;
 }
-function chapterManagerRows(index){
- const items=chapterAssets(index);
- if(!items.length)return '<div class="chapter-manager-empty">本章暂时没有照片。</div>';
- return items.map((x,i)=>`<div class="asset-row"><div class="sort-number">${i+1}</div><img src="${x.thumb||x.data}" loading="lazy"><div class="meta"><strong>${chapterNames[index-1]}</strong></div><div class="mini"><button data-chapter-up="${x.id}">↑</button><button data-chapter-down="${x.id}">↓</button><button class="del" data-chapter-del="${x.id}">删</button></div></div>`).join('');
+function renderIndependentChapters(){
+ if(window.ChaptersIndependent)window.ChaptersIndependent.render();
 }
-function renderChapterManager(){
- const host=$('chapterPhotoManager');if(!host)return;
- const total=chapterPhotoTotal(),remaining=chapterPhotoRemaining();
- host.innerHTML=`<div class="chapter-total-status">第一章至第七章共可上传 40 张照片；当前 ${total} 张，剩余 ${remaining} 张。</div><div class="chapter-manager-grid">${chapterNames.map((name,i)=>`<section class="chapter-manager-card"><h4>${name}</h4><div class="upload"><input type="file" id="chapterUpload${i+1}" accept="image/*" multiple ${remaining===0?'disabled':''}><div class="hint">各章不单独限量，总数不超过 40 张；按当前顺序展示。</div></div>${chapterManagerRows(i+1)}</section>`).join('')}</div>`;
- const old=$('chapterUpload');if(old)old.closest('.upload').style.display='none';
- for(let i=1;i<=7;i++)$(`chapterUpload${i}`).onchange=async e=>{await uploadChapterFiles(i,e.target.files);e.target.value=''};
- document.querySelectorAll('[data-chapter-up]').forEach(b=>b.onclick=()=>moveChapterAsset(b.dataset.chapterUp,-1));
- document.querySelectorAll('[data-chapter-down]').forEach(b=>b.onclick=()=>moveChapterAsset(b.dataset.chapterDown,1));
- document.querySelectorAll('[data-chapter-del]').forEach(b=>b.onclick=()=>removeChapterAsset(b.dataset.chapterDel));
-}
-async function uploadChapterFiles(index,files){
- const current=chapterAssets(index),remaining=chapterPhotoRemaining(),fs=[...files].slice(0,remaining);
- if(!fs.length){notify('第一章至第七章合计最多只能上传 40 张照片');return}
- notify('正在处理章节照片…');
- for(let i=0;i<fs.length;i++){
-   const dataUrl=await resize(fs[i],1500,.8),thumb=await resize(fs[i],420,.7);
-   await put({id:`p_${Date.now()}_chapter_${index}_${i}`,type:'photo',data:dataUrl,thumb,caption:'',roles:['chapter'],chapterIndex:index,chapterOrder:current.length+i,order:9999,slideshowOrder:9999});
- }
- await render();notify(`已为第 ${index} 章添加 ${fs.length} 张照片`);
-}
-async function moveChapterAsset(id,dir){
- const item=chapterPhotoItems.find(x=>x.id===id);if(!item)return;const list=chapterAssets(Number(item.chapterIndex));const i=list.findIndex(x=>x.id===id),j=i+dir;if(j<0||j>=list.length)return;
- [list[i].chapterOrder,list[j].chapterOrder]=[list[j].chapterOrder,list[i].chapterOrder];await put(list[i]);await put(list[j]);await render();
-}
-async function removeChapterAsset(id){const item=chapterPhotoItems.find(x=>x.id===id);if(!item)return;item.roles=(item.roles||[]).filter(r=>r!=='chapter');if(item.roles.length)await put(item);else await del(id);await render();}
 function renderSixVideos(){
  const source=(data[currentLang].videos||[]).slice(0,6);while(source.length<6)source.push({src:'',title:''});
  $('videoCount').textContent=currentLang==='zh'?'6 个视频位置':'6 ตำแหน่งวิดีโอ';
@@ -1782,21 +1750,36 @@ applyLanguage=function(){
    $('storySlideshowSub').innerHTML=`${esc(th.storySub1||fixedThaiDefaults.storySub1)}<br>${esc(th.storySub2||fixedThaiDefaults.storySub2)}`;
    $('storyPageDate').textContent=`${th.storyDateLabel||fixedThaiDefaults.storyDateLabel} · ${formatStartDate()}`;
  }else{
-   $('openingKicker').textContent='恋爱纪念馆';$('openTitle').textContent='我们的故事';$('openHint').textContent='欢迎来到属于我们的回忆。';
-   $('storySlideshowTitle').textContent='我们的故事';$('storySlideshowSub').innerHTML='从相遇那天开始，<br>直到未来。';$('storyPageDate').textContent=`开始日期 · ${formatStartDate()}`;
+   $('openingKicker').textContent='恋爱纪念馆';
+   $('openTitle').textContent='我们的故事';
+   $('openHint').textContent='欢迎来到属于我们的回忆。';
+   $('storySlideshowTitle').textContent='我们的故事';
+   $('storySlideshowSub').innerHTML='从相遇那天开始，<br>直到未来。';
+   $('storyPageDate').textContent=`开始日期 · ${formatStartDate()}`;
  }
- renderChapterDates();if(typeof window.renderRefinedChapterImages==='function')window.renderRefinedChapterImages();else renderUnifiedChapterPhotos();renderSixVideos();
+ renderChapterDates();
+ renderIndependentChapters();
+ renderSixVideos();
 };
-renderChapterPhotos=renderUnifiedChapterPhotos;
+// Keep the original app hooks, but route chapter rendering to the single independent module.
+renderChapterPhotos=renderIndependentChapters;
 renderVideos=renderSixVideos;
 const originalRender=render;
 render=async function(){
  await originalRender();
- chapterPhotoItems.sort((a,b)=>(Number(a.chapterIndex)||99)-(Number(b.chapterIndex)||99)||(a.chapterOrder??9999)-(b.chapterOrder??9999));
+ chapterPhotoItems.sort((a,b)=>{
+   const ac=Number(a.chapterIndex)||99,bc=Number(b.chapterIndex)||99;
+   const ao=Number.isFinite(Number(a.chapterOrder))?Number(a.chapterOrder):9999;
+   const bo=Number.isFinite(Number(b.chapterOrder))?Number(b.chapterOrder):9999;
+   return ac-bc||ao-bo;
+ });
  if(await migrateChapterAssets()){
-   const allItems=await all();chapterPhotoItems=allItems.filter(x=>x.type==='photo'&&hasRole(x,'chapter'));
+   const allItems=await all();
+   chapterPhotoItems=allItems.filter(x=>x.type==='photo'&&hasRole(x,'chapter'));
  }
- if(typeof window.renderRefinedChapterImages==='function')window.renderRefinedChapterImages();else renderUnifiedChapterPhotos();if(typeof window.drawRefinedChapterManager==='function')window.drawRefinedChapterManager();else renderChapterManager();renderSixVideos();renderChapterDates();
+ renderIndependentChapters();
+ renderSixVideos();
+ renderChapterDates();
 };
 function capVideosToSix(){
  ['zh','th'].forEach(lang=>{data[lang].videos=(data[lang].videos||[]).slice(0,6);while(data[lang].videos.length<6)data[lang].videos.push({src:'',title:''})});saveData();
@@ -1806,16 +1789,29 @@ function capVideosToSix(){
 async function initUnified(){
  if(initUnified.started)return;
  initUnified.started=true;
- ensureUpgradeData();installChapterDates();buildUnifiedTextEditors();fillUnifiedEditors();$('saveText').onclick=saveUnifiedTexts;
+ ensureUpgradeData();
+ installChapterDates();
+ buildUnifiedTextEditors();
+ fillUnifiedEditors();
+ const saveTextButton=$('saveText');
+ if(saveTextButton)saveTextButton.onclick=saveUnifiedTexts;
  capVideosToSix();
- const photoHint=$('chapterUpload')?.closest('.upload')?.querySelector('.hint');if(photoHint)photoHint.textContent='第一章至第七章合计最多 40 张，可自行分配到各章。';
  let ready=false;
  for(let attempt=0;attempt<30;attempt++){
    if(typeof db!=='undefined'&&db){ready=true;break}
    await new Promise(resolve=>setTimeout(resolve,100));
  }
- if(ready)await render();
- else if(typeof notify==='function')notify('本地照片库初始化超时，请刷新页面重试');
+ if(ready){
+   const allItems=await all();
+   chapterPhotoItems=allItems.filter(x=>x.type==='photo'&&hasRole(x,'chapter'));
+   if(await migrateChapterAssets()){
+     const refreshed=await all();
+     chapterPhotoItems=refreshed.filter(x=>x.type==='photo'&&hasRole(x,'chapter'));
+   }
+   renderIndependentChapters();
+ }else if(typeof notify==='function'){
+   notify('本地照片库初始化超时，请刷新页面重试');
+ }
  applyLanguage();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initUnified,{once:true});else initUnified();
@@ -2095,15 +2091,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 img{content-visibility:auto}
 #chapterPhotoManager .chapter-unified-list{contain:layout style paint}
 </style>
-
 <!-- Build: PERFORMANCE-HOTFIX-20260729 -->
-
 <!-- Build: PHOTO-COLLECTIONS-SPLIT-20260729 -->
-
 <!-- Build: CHAPTER-UNIFIED-LIBRARY-DISPLAY-FIX-20260729 -->
 <!-- Build: CHAPTER-IMAGE-LAYOUT-REFINE-20260729-PER-CHAPTER -->
-
-
 <style id="chaptersIndependentModuleStyle20260729">
 #chapterPhotoManager{display:block!important}
 #chapterPhotoManager .chapter-independent-summary{margin:0 0 16px;padding:15px 17px;border:1px solid #ead9e0;border-radius:17px;background:rgba(255,255,255,.74);color:#765d69;line-height:1.6}
@@ -2154,7 +2145,7 @@ const limits=[4,6,4,4,4,4,4];
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const itemsFor=n=>(Array.isArray(window.chapterPhotoItems)?window.chapterPhotoItems:[])
  .filter(item=>item&&item.type==='photo'&&Number(item.chapterIndex)===n)
- .sort((a,b)=>(Number(a.chapterOrder)??9999)-(Number(b.chapterOrder)??9999));
+ .sort((a,b)=>{const ao=Number.isFinite(Number(a.chapterOrder))?Number(a.chapterOrder):9999;const bo=Number.isFinite(Number(b.chapterOrder))?Number(b.chapterOrder):9999;return ao-bo;});
 const limitFor=n=>limits[n-1];
 let operationBusy=false;
 
@@ -2274,9 +2265,8 @@ function renderAll(){bindOnce();renderChapterDisplays();renderManager();}
 window.ChaptersIndependent={render:renderAll,renderDisplays:renderChapterDisplays,renderManager};
 window.renderRefinedChapterImages=renderChapterDisplays;
 window.drawRefinedChapterManager=()=>{bindOnce();renderManager();};
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',renderAll,{once:true});else renderAll();
+// Startup is coordinated by the main initialization flow; no separate competing initializer.
 })();
 </script>
 <!-- Build: CHAPTERS-1-7-INDEPENDENT-REFACTOR-20260729 -->
-
 </html>
