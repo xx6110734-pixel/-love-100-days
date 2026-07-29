@@ -617,6 +617,46 @@ html.edit-mode:has(.start-overlay:not(.hide))::after{display:none}
 @media(max-width:640px){.opener{width:96vw;padding:14px 10px}.opening-orbit-one{min-width:520px;min-height:520px}.home-cover{width:min(280px,62vw);border-radius:25px}.opening-enter{margin-top:18px}.opening-welcome{max-width:330px!important}}
 @media(max-width:390px){.home-cover{width:min(245px,64vw)}.opener h2{font-size:clamp(2.35rem,13vw,3.5rem)}}
 </style>
+
+<style id="fiveConfirmedOptimizations20260730">
+/* ① 首页封面：独立 4:5 单图，点击可放大 */
+.home-cover{aspect-ratio:4/5!important;cursor:zoom-in}
+.home-cover img{object-fit:cover!important;object-position:center!important}
+.home-cover-editor input[type=file]{width:100%}
+.home-cover-manager-row .meta strong{display:block;color:#604954}
+.lightbox.home-cover-lightbox .lightbox-prev,.lightbox.home-cover-lightbox .lightbox-next{display:none!important}
+
+/* ② 第一章、第三章至第七章：与第八章一致的 4:5 双列尺度 */
+.chapter-theme-grid{width:min(100%,760px)!important;max-width:760px!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:clamp(15px,2.2vw,24px)!important;align-items:start!important}
+.chapter-theme-grid img{width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;aspect-ratio:4/5!important;object-fit:cover!important;border-radius:24px!important;display:block!important}
+.chapter-theme-grid.count-1{grid-template-columns:minmax(0,calc((100% - 24px)/2))!important;justify-content:center!important}
+.chapter-theme-grid.count-3 img:last-child{grid-column:1/-1!important;width:calc((100% - 24px)/2)!important;max-width:none!important;justify-self:center!important}
+
+/* ③ 第二章：三个足迹固定为左图右文，图片与文字不再挤在同一列 */
+.footprints{max-width:920px!important;display:grid!important;grid-template-columns:1fr!important;gap:18px!important}
+.footprint-item{width:100%!important;min-width:0!important}
+.footprint-card{display:grid!important;grid-template-columns:minmax(220px,40%) minmax(0,1fr)!important;grid-template-rows:auto 1fr!important;column-gap:clamp(18px,3vw,30px)!important;row-gap:10px!important;align-items:start!important;padding:18px!important}
+.footprint-photo-grid{grid-column:1!important;grid-row:1/3!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:0!important;align-self:start!important}
+.footprint-photo-grid.one{grid-template-columns:minmax(0,1fr)!important}
+.footprint-photo-grid img{width:100%!important;height:auto!important;aspect-ratio:9/16!important;object-fit:cover!important;border-radius:16px!important}
+.footprint-card .footprint-top{grid-column:2!important;grid-row:1!important;margin:0!important;min-width:0!important}
+.footprint-card .footprint-text{grid-column:2!important;grid-row:2!important;min-width:0!important;font-size:1rem!important;line-height:1.85!important;white-space:pre-line!important}
+
+@media(max-width:720px){
+ .chapter-theme-grid{gap:12px!important}
+ .chapter-theme-grid img{border-radius:18px!important}
+ .chapter-theme-grid.count-1{grid-template-columns:minmax(0,calc((100% - 12px)/2))!important}
+ .chapter-theme-grid.count-3 img:last-child{width:calc((100% - 12px)/2)!important}
+ .footprint-card{grid-template-columns:42% minmax(0,1fr)!important;column-gap:14px!important;padding:14px!important}
+ .footprint-photo-grid{gap:7px!important}
+ .footprint-photo-grid img{border-radius:13px!important}
+ .footprint-card .footprint-text{font-size:.96rem!important;line-height:1.75!important}
+}
+@media(max-width:390px){
+ .footprint-card{grid-template-columns:40% minmax(0,1fr)!important;column-gap:11px!important;padding:12px!important}
+ .footprint-card .footprint-text{font-size:.92rem!important;line-height:1.7!important}
+}
+</style>
 </head>
 <body>
 <div class="scroll-progress" id="scrollProgress"></div><div id="aurora"></div><div id="particles"></div>
@@ -695,7 +735,13 @@ html.edit-mode:has(.start-overlay:not(.hide))::after{display:none}
 <div class="tabs"><button class="active" data-tab="textTab">双语文字</button><button data-tab="photoTab">照片</button><button data-tab="videoTab">视频</button><button data-tab="musicTab">音乐</button><button data-tab="dataTab">备份</button></div>
 <div class="tab active" id="textTab"><div class="hint">中文和泰语分别保存。切换网站语言时，只显示对应语言。泰语内容可由你确认后手动填写，避免机器翻译改变语气。</div><div id="textEditors"></div><button class="btn" id="saveText">保存全部双语文字</button></div>
 <div class="tab" id="photoTab">
-<label>幻灯片图片</label>
+<label>首页封面</label>
+<div class="upload home-cover-editor">
+  <input accept="image/*" id="homeCoverUpload" type="file"/>
+  <div class="hint">首页封面独立保存，最多 1 张。选择新照片会自动替换旧封面；固定以 4:5 比例显示，不影响任何章节照片。</div>
+</div>
+<div class="asset-list" id="homeCoverManager"></div>
+<label>故事页幻灯片图片</label>
 <div class="upload"><input accept="image/*" id="slideshowUpload" multiple="" type="file"/><div class="hint">用于“我们的故事”幻灯片。建议上传 5 张；使用 ↑ ↓ 单独调整播放顺序，不会影响章节照片和第八章照片墙。</div></div>
 <div class="asset-list" id="slideshowManager"></div>
 <label>第一章至第七章照片</label>
@@ -918,7 +964,7 @@ async function importEmbeddedAssetsOnce(){
 }
 
 function resize(file,max=1600,q=.82){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{let w=im.width,h=im.height;if(Math.max(w,h)>max){const s=max/Math.max(w,h);w=Math.round(w*s);h=Math.round(h*s)}const c=document.createElement('canvas');c.width=w;c.height=h;const ctx=c.getContext('2d',{alpha:false});ctx.drawImage(im,0,0,w,h);res(c.toDataURL('image/jpeg',q))};im.onerror=rej;im.src=fr.result};fr.onerror=rej;fr.readAsDataURL(file)})}async function fileData(f){return await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}
-let photoItems=[],slideshowItems=[],chapterPhotoItems=[],trackItems=[];const builtinTracks=[
+let photoItems=[],slideshowItems=[],chapterPhotoItems=[],homeCoverItems=[],trackItems=[];const builtinTracks=[
 {id:'yt-simple',type:'youtube',name:'简单爱 · 周杰伦',videoId:'Y4xCVlyCvX4'},
 {id:'yt-warm',type:'youtube',name:'暖暖 · 梁静茹',videoId:'l10dJaY9OKo'},
 {id:'yt-sweet',type:'youtube',name:'有点甜 · 汪苏泷 / BY2',videoId:'OtEJ6LGCW-U'},
@@ -1003,6 +1049,7 @@ async function render(){
   if(await normalizePhotoCollections(items))items=await all();
   slideshowItems=items.filter(x=>x.type==='photo'&&hasRole(x,'slideshow')).sort((a,b)=>roleOrder(a,'slideshow')-roleOrder(b,'slideshow'));
   chapterPhotoItems=items.filter(x=>x.type==='photo'&&hasRole(x,'chapter')).sort((a,b)=>roleOrder(a,'chapter')-roleOrder(b,'chapter'));
+  homeCoverItems=items.filter(x=>x.type==='photo'&&hasRole(x,'homeCover')).sort((a,b)=>(a.order??0)-(b.order??0));
   photoItems=items.filter(x=>x.type==='photo'&&hasRole(x,'gallery')).sort((a,b)=>roleOrder(a,'gallery')-roleOrder(b,'gallery'));
   renderStorySlideshow();renderChapterPhotos();
   trackItems=items.filter(x=>x.type==='music').sort((a,b)=>(a.order||0)-(b.order||0));
@@ -1820,8 +1867,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <!-- Build: UNIFIED-RECTIFICATION-20260729 -->
 <script id="homepageCinemaScript20260729">
 (()=>{
+ 'use strict';
  const OLD_HINT='ยินดีต้อนรับสู่ความทรงจำของเรา';
  const NEW_HINT='ตั้งแต่วันที่เราได้พบกัน ทุกวันล้วนควรค่าแก่การจดจำ';
+ let coverBusy=false;
  function upgradeHomepageThai(){
    if(typeof data==='undefined')return;
    data.fixedThai=data.fixedThai||{};
@@ -1829,11 +1878,45 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    if(!data.fixedThai.openEnter)data.fixedThai.openEnter='เข้าสู่เรื่องราวของเรา';
    if(typeof saveData==='function')saveData();
  }
+ function currentCover(){return Array.isArray(homeCoverItems)?homeCoverItems.find(x=>x&&x.data):null;}
  function updateHomeCover(){
    const frame=document.getElementById('homeCover'),img=document.getElementById('homeCoverImage');
    if(!frame||!img)return;
-   const list=typeof slideshowItems!=='undefined'?slideshowItems:[];const item=list.find(x=>x&&x.data);
-   if(item){img.src=item.data;frame.classList.add('has-image')}else{img.removeAttribute('src');frame.classList.remove('has-image')}
+   const item=currentCover();
+   if(item){img.src=item.data;frame.classList.add('has-image');frame.setAttribute('aria-label','点击放大首页封面');frame.tabIndex=0;}
+   else{img.removeAttribute('src');frame.classList.remove('has-image');frame.removeAttribute('tabindex');frame.setAttribute('aria-label','尚未设置首页封面');}
+ }
+ function renderHomeCoverManager(){
+   const host=document.getElementById('homeCoverManager');if(!host)return;
+   const item=currentCover();
+   host.innerHTML=item?`<div class="asset-row home-cover-manager-row"><img src="${item.thumb||item.data}" alt="首页封面"><div class="meta"><strong>当前首页封面</strong><div class="hint">1 / 1 张 · 上传新照片会自动替换</div></div><div class="mini"><button type="button" id="replaceHomeCover">更换</button><button type="button" class="del" id="deleteHomeCover">删除</button></div></div>`:'<div class="chapter-independent-empty">尚未上传首页封面。</div>';
+   document.getElementById('replaceHomeCover')?.addEventListener('click',()=>document.getElementById('homeCoverUpload')?.click());
+   document.getElementById('deleteHomeCover')?.addEventListener('click',deleteHomeCover);
+ }
+ async function uploadHomeCover(input){
+   if(coverBusy)return;const file=input.files&&input.files[0];input.value='';if(!file)return;
+   coverBusy=true;
+   try{
+     notify?.('正在处理首页封面…');
+     const compressor=typeof stableResize==='function'?stableResize:resize;
+     const full=await compressor(file,1600,.78);
+     const thumb=await compressor(file,360,.66);
+     for(const old of [...(homeCoverItems||[])])await del(old.id);
+     const record={id:`home_cover_${Date.now()}`,type:'photo',data:full,thumb,caption:'首页封面',roles:['homeCover'],order:0};
+     await put(record);homeCoverItems=[record];updateHomeCover();renderHomeCoverManager();notify?.('首页封面已更新');
+   }catch(error){console.error('首页封面上传失败',error);notify?.('首页封面上传失败，请重试');}
+   finally{coverBusy=false;}
+ }
+ async function deleteHomeCover(){
+   const item=currentCover();if(!item||coverBusy||!confirm('确定删除首页封面吗？'))return;
+   coverBusy=true;try{await del(item.id);homeCoverItems=[];updateHomeCover();renderHomeCoverManager();notify?.('首页封面已删除');}finally{coverBusy=false;}
+ }
+ function openHomeCover(){
+   const item=currentCover();if(!item)return;
+   const box=document.getElementById('lightbox');if(!box)return;
+   document.getElementById('lightboxImage').src=item.data;
+   document.getElementById('lightboxCaption').textContent='首页封面';
+   box.classList.add('open','home-cover-lightbox');
  }
  function updateHomepageCopy(){
    if(typeof data==='undefined')return;
@@ -1856,14 +1939,19 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    const btn=document.getElementById('saveText');if(!btn||btn.dataset.homeThaiBound)return;btn.dataset.homeThaiBound='1';
    btn.addEventListener('click',()=>{const el=document.getElementById('fixedTh_openEnter');if(el){data.fixedThai=data.fixedThai||{};data.fixedThai.openEnter=el.value.trim()||'เข้าสู่เรื่องราวของเรา';saveData();setTimeout(updateHomepageCopy,0)}},true);
  }
- function init(){upgradeHomepageThai();addThaiField();bindSaveField();updateHomepageCopy();
+ function bindCoverEvents(){
+   const input=document.getElementById('homeCoverUpload');if(input&&!input.dataset.bound){input.dataset.bound='1';input.addEventListener('change',()=>uploadHomeCover(input));}
+   const frame=document.getElementById('homeCover');if(frame&&!frame.dataset.coverBound){frame.dataset.coverBound='1';frame.addEventListener('click',e=>{e.stopPropagation();openHomeCover()});frame.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openHomeCover()}});}
+   document.getElementById('lightboxClose')?.addEventListener('click',()=>document.getElementById('lightbox')?.classList.remove('home-cover-lightbox'));
+ }
+ function init(){upgradeHomepageThai();addThaiField();bindSaveField();bindCoverEvents();updateHomepageCopy();renderHomeCoverManager();
    const img=document.getElementById('homeCoverImage');if(img)img.onerror=()=>document.getElementById('homeCover')?.classList.remove('has-image');
  }
  const oldApply=window.applyLanguage;
  if(typeof oldApply==='function')window.applyLanguage=function(){oldApply.apply(this,arguments);updateHomepageCopy()};
  const oldRender=window.render;
- if(typeof oldRender==='function')window.render=async function(){const r=await oldRender.apply(this,arguments);updateHomeCover();return r};
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,0));else setTimeout(init,0);
+ if(typeof oldRender==='function')window.render=async function(){const r=await oldRender.apply(this,arguments);updateHomeCover();renderHomeCoverManager();return r};
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,0),{once:true});else setTimeout(init,0);
 })();
 </script>
 <style id="storyTimeMinimalRedesign20260729">
