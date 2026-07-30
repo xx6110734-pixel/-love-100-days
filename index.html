@@ -716,6 +716,12 @@ html.edit-mode:has(.start-overlay:not(.hide))::after{display:none}
   }
 }
 </style>
+
+<style id="v5FinalHardeningStyles">
+.public-share-card{display:none!important}
+html:not(.edit-mode) #panel,html:not(.edit-mode) #openEditor{display:none!important}
+.v5-build-badge{margin-top:8px;font-size:.72rem;color:#9a7d89;text-align:center}
+</style>
 </head>
 <body>
 <div class="scroll-progress" id="scrollProgress"></div><div id="aurora"></div><div id="particles"></div>
@@ -1516,7 +1522,7 @@ img{content-visibility:auto}
 })();
 </script>
 <!-- Build: PERFORMANCE-HOTFIX-20260729 -->
-<!-- Build: FINAL-STABLE-NO-RESIDUAL-CHAPTER-CONFLICT-20260729 --></body> 前面 --&gt;
+<!-- Build: FINAL-STABLE-NO-RESIDUAL-CHAPTER-CONFLICT-20260729 -->
 <style id="videoManagerUpgradeStyle">
 #videoTab .video-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
 #videoTab .video-toolbar .btn{flex:1;min-width:145px}
@@ -2411,7 +2417,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 <!-- Build: PUBLIC-VIDEO-CLICK-FIX-20260730 -->
-<style id="performanceHotfix20260729">
+<style id="performanceHotfix20260729b">
 /* 手机性能优化：屏幕外章节延迟绘制，图片异步解码 */
 .story-section,.chapter,.timeline-section,.gallery-section,.video-section{content-visibility:auto;contain-intrinsic-size:900px}
 img{content-visibility:auto}
@@ -2595,4 +2601,156 @@ window.drawRefinedChapterManager=()=>{bindOnce();renderManager();};
 })();
 </script>
 <!-- Build: CHAPTERS-1-7-INDEPENDENT-REFACTOR-20260729 -->
+
+<style id="liveSyncV1Styles">
+.live-sync-card{border:1px solid #e5d4dc;border-radius:16px;padding:14px;background:#fff;margin:12px 0}
+.live-sync-card h4{margin:0 0 8px}.live-sync-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.live-sync-status{margin:10px 0;padding:10px 12px;border-radius:12px;background:#f5edf1;color:#70515f;font-size:.82rem;line-height:1.55}.live-sync-status.ok{background:#eaf7ee;color:#28653b}.live-sync-status.busy{background:#fff5df;color:#7b5c19}.live-sync-status.error{background:#fff0f0;color:#9a3030}.live-sync-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.live-sync-switch{display:flex!important;align-items:center;gap:8px;font-weight:600!important}.live-sync-switch input{width:18px;height:18px}.viewer-mode .live-sync-card{display:none!important}
+@media(max-width:640px){.live-sync-grid,.live-sync-actions{grid-template-columns:1fr}}
+</style>
+<script id="liveSyncV1Script">
+(function(){
+'use strict';
+const EDIT_MODE=new URLSearchParams(location.search).get('edit')==='1'||new URLSearchParams(location.search).get('mode')==='editor';
+const GH_KEY='love_museum_github_v1',AUTO_KEY='love_museum_auto_sync_v1',MANIFEST_KEY='love_museum_sync_manifest_v3';
+let syncTimer=null,syncing=false,dirty=false,syncReady=false;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function syncConfig(){try{return JSON.parse(localStorage.getItem(GH_KEY)||'{}')}catch{return {}}}
+function saveSyncConfig(v){localStorage.setItem(GH_KEY,JSON.stringify(v))}
+function saveSyncManifest(v){localStorage.setItem(MANIFEST_KEY,JSON.stringify(v))}
+function setSyncStatus(text,type=''){const el=document.getElementById('liveSyncStatus');if(!el)return;el.textContent=text;el.className='live-sync-status '+type}
+function bytesToBase64(bytes){let out='';const step=0x8000;for(let i=0;i<bytes.length;i+=step)out+=String.fromCharCode(...bytes.subarray(i,i+step));return btoa(out)}
+function dataUrlBytes(value){const comma=String(value||'').indexOf(',');if(comma<0)return new TextEncoder().encode(String(value||''));const head=value.slice(0,comma),body=value.slice(comma+1);if(/;base64/i.test(head)){const raw=atob(body),out=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)out[i]=raw.charCodeAt(i);return out}return new TextEncoder().encode(decodeURIComponent(body))}
+function extFromData(value,fallback){const m=String(value||'').match(/^data:([^;,]+)/i),mime=(m?.[1]||'').toLowerCase();return ({'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif','audio/mpeg':'mp3','audio/mp4':'m4a','audio/wav':'wav','audio/ogg':'ogg','audio/aac':'aac'}[mime]||fallback)}
+function safeName(v,fallback){return String(v||fallback).normalize('NFKC').replace(/[^a-zA-Z0-9_-]+/g,'-').replace(/^-+|-+$/g,'').slice(0,70)||fallback}
+function encodePath(path){return path.split('/').map(encodeURIComponent).join('/')}
+async function readError(res){try{const x=await res.clone().json();return x?.message||''}catch{try{return (await res.clone().text()).slice(0,180)}catch{return ''}}}
+async function ghRequest(path,options={}){
+  const c=syncConfig();if(!c.token)throw new Error('请先填写 GitHub Token');
+  const base=`https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/contents/${encodePath(path)}`;
+  const method=String(options.method||'GET').toUpperCase(),url=method==='GET'?`${base}?ref=${encodeURIComponent(c.branch||'main')}`:base;
+  const headers={'Accept':'application/vnd.github+json','Authorization':`Bearer ${c.token}`,'X-GitHub-Api-Version':'2022-11-28',...(options.headers||{})};
+  let lastErr;
+  for(let attempt=1;attempt<=4;attempt++){
+    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),30000);
+    try{
+      const res=await fetch(url,{...options,headers,signal:controller.signal});clearTimeout(timer);
+      if(res.ok||res.status===404)return res;
+      const msg=await readError(res);
+      if((res.status===429||res.status>=500)&&attempt<4){await sleep(700*attempt);continue}
+      throw new Error(`GitHub ${res.status}${msg?': '+msg:''}（${path}）`);
+    }catch(err){clearTimeout(timer);lastErr=err;if(attempt<4&&(err?.name==='AbortError'||/Load failed|Failed to fetch|NetworkError/i.test(String(err?.message||err)))){await sleep(800*attempt);continue}throw err}
+  }
+  throw new Error(`网络请求失败：${path}；${lastErr?.message||'未知错误'}`)
+}
+async function gitBlobSha(bytes){const prefix=new TextEncoder().encode(`blob ${bytes.length}\0`),allBytes=new Uint8Array(prefix.length+bytes.length);allBytes.set(prefix);allBytes.set(bytes,prefix.length);const digest=await crypto.subtle.digest('SHA-1',allBytes);return [...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+async function getRemoteDirectoryMap(dir){const res=await ghRequest(dir);if(res.status===404)return new Map();const list=await res.json();if(!Array.isArray(list))return new Map();return new Map(list.filter(x=>x&&x.type==='file').map(x=>[x.name,{sha:x.sha||'',path:x.path||`${dir}/${x.name}`,name:x.name}]))}
+function findRemoteBySha(files,sha){for(const item of files.values())if(item&&item.sha===sha)return item;return null}
+async function putGithubFile(path,bytes,message,knownSha=''){
+  let sha=knownSha;
+  if(!sha){const get=await ghRequest(path);if(get.ok){const current=await get.json();sha=current.sha||''}}
+  const c=syncConfig(),body={message,content:bytesToBase64(bytes),branch:c.branch||'main'};if(sha)body.sha=sha;
+  const res=await ghRequest(path,{method:'PUT',body:JSON.stringify(body),headers:{'Content-Type':'application/json'}});
+  if(!res.ok)throw new Error('GitHub 文件上传失败：'+path);return res.json()
+}
+async function buildRemoteSnapshot(){
+  const assets=await all(),remote=[],nextManifest={};let uploaded=0,skipped=0,photoIndex=0,musicIndex=0;
+  setSyncStatus('正在读取 GitHub 现有媒体清单…','busy');
+  const [photoFiles,musicFiles]=await Promise.all([getRemoteDirectoryMap('photos'),getRemoteDirectoryMap('music')]);
+  for(let i=0;i<assets.length;i++){
+    const a={...assets[i]};
+    if(a.type==='photo'&&String(a.data||'').startsWith('data:image/')){
+      const n=photoIndex++,ext=extFromData(a.data,'jpg'),base=safeName(a.id,'photo-'+n),legacyName=`${String(n+1).padStart(3,'0')}-${base}.${ext}`,v5Name=`${base}.${ext}`;
+      const bytes=dataUrlBytes(a.data);if(bytes.length>24*1024*1024)throw new Error(`照片超过 24 MB：${a.caption||a.id}`);
+      const localSha=await gitBlobSha(bytes);let existing=photoFiles.get(legacyName)||photoFiles.get(v5Name)||findRemoteBySha(photoFiles,localSha);
+      let path;
+      if(existing&&existing.sha===localSha){path=existing.path;skipped++}
+      else{const name=existing?.name||(photoFiles.has(legacyName)?legacyName:(photoFiles.has(v5Name)?v5Name:legacyName));path=`photos/${name}`;setSyncStatus(`正在上传新增或已修改照片 ${n+1}…`,'busy');await putGithubFile(path,bytes,'Update memorial photo',existing?.sha||'');uploaded++;photoFiles.set(name,{sha:localSha,path,name})}
+      nextManifest[path]=localSha;a.data='./'+path;a.thumb='./'+path;
+    }else if(a.type==='music'&&String(a.data||'').startsWith('data:audio/')){
+      const n=musicIndex++,ext=extFromData(a.data,'mp3'),base=safeName(a.name||a.id,'track'),legacyName=`${String(n+1).padStart(3,'0')}-${base}.${ext}`,v5Name=`${safeName(a.id||a.name,'music-'+n)}.${ext}`;
+      const bytes=dataUrlBytes(a.data);if(bytes.length>24*1024*1024)throw new Error(`音乐超过 24 MB：${a.name||a.id}`);
+      const localSha=await gitBlobSha(bytes);let existing=musicFiles.get(legacyName)||musicFiles.get(v5Name)||findRemoteBySha(musicFiles,localSha);
+      let path;
+      if(existing&&existing.sha===localSha){path=existing.path;skipped++}
+      else{const name=existing?.name||(musicFiles.has(legacyName)?legacyName:(musicFiles.has(v5Name)?v5Name:legacyName));path=`music/${name}`;setSyncStatus(`正在上传新增或已修改音乐 ${n+1}…`,'busy');await putGithubFile(path,bytes,'Update memorial music',existing?.sha||'');uploaded++;musicFiles.set(name,{sha:localSha,path,name})}
+      nextManifest[path]=localSha;a.data='./'+path;
+    }
+    remote.push(a);if(i%8===7)await sleep(20)
+  }
+  return {snapshot:{version:10,updatedAt:new Date().toISOString(),data:clone(data),assets:remote},nextManifest,uploaded,skipped}
+}
+async function publishNow(manual=true){
+  if(syncing){if(manual)setSyncStatus('已有同步任务正在进行，请勿重复点击。','busy');return}
+  const c=syncConfig();if(!c.owner||!c.repo||!c.branch||!c.token){if(manual)setSyncStatus('请先完整填写 GitHub 设置。','error');return}
+  syncing=true;dirty=false;setSyncStatus('正在准备增量同步…','busy');
+  try{
+    const result=await buildRemoteSnapshot(),snapshot=result.snapshot,json=new TextEncoder().encode(JSON.stringify(snapshot));
+    if(json.length>24*1024*1024)throw new Error('公开数据文件超过 24 MB，请减少或优化媒体');
+    setSyncStatus('媒体检查完成，正在更新公开数据…','busy');
+    await putGithubFile('data/site.json',json,'Update memorial site data');
+    await putGithubFile('data/version.json',new TextEncoder().encode(JSON.stringify({version:snapshot.updatedAt,build:'V5.2-SHA-MATCH-20260730'})),'Update memorial version');
+    saveSyncManifest(result.nextManifest);setSyncStatus(`同步完成：上传 ${result.uploaded} 个新增或变更媒体，跳过 ${result.skipped} 个仓库已有媒体。`,'ok');localStorage.setItem('love_museum_last_sync',snapshot.updatedAt)
+  }catch(err){console.error(err);dirty=true;setSyncStatus('同步失败：'+(err?.message||'未知错误'),'error')}
+  finally{syncing=false;if(dirty&&autoEnabled()){clearTimeout(syncTimer);syncTimer=setTimeout(()=>publishNow(false),30000)}}
+}
+function autoEnabled(){return localStorage.getItem(AUTO_KEY)!=='0'}
+function markDirty(){if(!EDIT_MODE||!syncReady)return;dirty=true;setSyncStatus('已保存到本机，等待增量同步…','busy');if(!autoEnabled())return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>publishNow(false),5000)}
+function installEditorUI(){document.querySelector('.public-share-card')?.remove();const dataTab=document.getElementById('dataTab');if(!dataTab||document.getElementById('liveSyncCard'))return;const c=syncConfig();const card=document.createElement('div');card.id='liveSyncCard';card.className='live-sync-card';card.innerHTML=`<h4>GitHub 增量同步</h4><div class="hint">同步前会读取仓库现有照片、音乐，并按文件内容 SHA 比较。即使文件名不同，内容相同也会直接复用，只上传真正新增或修改的媒体。Token 仅保存在当前设备。</div><div class="live-sync-grid"><div><label>GitHub 用户名</label><input id="ghOwner" type="text" value="${esc(c.owner||'xx6110734-pixel')}"></div><div><label>仓库名称</label><input id="ghRepo" type="text" value="${esc(c.repo||'-love-100-days')}"></div><div><label>分支</label><input id="ghBranch" type="text" value="${esc(c.branch||'main')}"></div><div><label>Fine-grained Token</label><input id="ghToken" type="password" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" value="${esc(c.token||'')}"></div></div><label class="live-sync-switch"><input id="autoSyncToggle" type="checkbox" ${autoEnabled()?'checked':''}>停止编辑后自动同步</label><div class="live-sync-status" id="liveSyncStatus">尚未同步。</div><div class="live-sync-actions"><button class="btn" id="saveGithubSettings" type="button">保存 GitHub 设置</button><button class="btn dark" id="syncNowBtn" type="button">立即同步</button></div>`;dataTab.prepend(card);document.getElementById('saveGithubSettings').onclick=()=>{saveSyncConfig({owner:document.getElementById('ghOwner').value.trim(),repo:document.getElementById('ghRepo').value.trim(),branch:document.getElementById('ghBranch').value.trim()||'main',token:document.getElementById('ghToken').value.trim()});setSyncStatus('GitHub 设置已保存在当前设备。','ok')};document.getElementById('autoSyncToggle').onchange=e=>{localStorage.setItem(AUTO_KEY,e.target.checked?'1':'0');setSyncStatus(e.target.checked?'自动同步已开启。':'自动同步已暂停。','ok')};document.getElementById('syncNowBtn').onclick=()=>{document.getElementById('saveGithubSettings').click();publishNow(true)}}
+async function loadPublicSnapshot(){if(EDIT_MODE)return;try{const res=await fetch(`./data/site.json?t=${Date.now()}`,{cache:'no-store'});if(!res.ok)throw new Error('尚未发布公开数据');const snapshot=await res.json();if(!snapshot?.data||!Array.isArray(snapshot.assets))throw new Error('公开数据格式无效');data={...clone(defaults),...snapshot.data};data.zh={...defaults.zh,...(data.zh||{})};data.th={...defaults.th,...(data.th||{})};window.__publicRemoteAssets=snapshot.assets;all=async()=>window.__publicRemoteAssets;currentLang=data.lang==='th'?'th':'zh';fillEditors?.();fillVideoEditors?.();applyLanguage();await render();document.documentElement.classList.add('remote-data-ready')}catch(err){console.warn(err);const status=document.getElementById('publicShareStatus');if(status)status.textContent='公开数据尚未发布。请使用 ?edit=1 完成首次同步。'}}
+function wrapMutations(){if(!EDIT_MODE)return;const oldSave=saveData;saveData=function(){oldSave();markDirty()};const oldPut=put;put=async function(v){const r=await oldPut(v);markDirty();return r};const oldDel=del;del=async function(v){const r=await oldDel(v);markDirty();return r}}
+function init(){if(EDIT_MODE){installEditorUI();wrapMutations();setTimeout(()=>{syncReady=true;const last=localStorage.getItem('love_museum_last_sync');setSyncStatus(last?'本机已就绪。上次同步：'+new Date(last).toLocaleString():'本机已就绪，尚未完成首次同步。',last?'ok':'')},3500);addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}})}else loadPublicSnapshot()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+window.LoveMuseumSync={publishNow,markDirty};
+})();
+</script>
+<!-- Build: LIVE-GITHUB-SYNC-V5.2-SHA-MATCH-20260730 -->
+
+
+<script id="v5FinalRuntime">
+(function(){
+  'use strict';
+  const BUILD='V5.2-SHA-MATCH-20260730';
+  const params=new URLSearchParams(location.search);
+  const edit=params.get('edit')==='1'||params.get('mode')==='editor';
+  function installBuildInfo(){
+    if(!edit)return;
+    const card=document.getElementById('liveSyncCard');
+    if(!card||card.querySelector('.v5-build-badge'))return;
+    const badge=document.createElement('div');
+    badge.className='v5-build-badge';
+    badge.textContent='程序版本：'+BUILD;
+    card.appendChild(badge);
+    const token=document.getElementById('ghToken');
+    if(token){token.setAttribute('autocapitalize','none');token.setAttribute('spellcheck','false');token.setAttribute('inputmode','text');}
+  }
+  let knownVersion='';
+  async function checkPublishedVersion(){
+    if(edit||document.hidden)return;
+    try{
+      const res=await fetch('./data/version.json?t='+Date.now(),{cache:'no-store'});
+      if(!res.ok)return;
+      const json=await res.json(),next=String(json.version||'');
+      if(!next)return;
+      if(!knownVersion){knownVersion=next;return;}
+      if(next!==knownVersion)location.reload();
+    }catch(_){}
+  }
+  function init(){
+    installBuildInfo();
+    if(edit){
+      const observer=new MutationObserver(installBuildInfo);
+      observer.observe(document.body,{childList:true,subtree:true});
+      setTimeout(()=>observer.disconnect(),10000);
+    }else{
+      checkPublishedVersion();
+      setInterval(checkPublishedVersion,60000);
+      document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkPublishedVersion()});
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+  window.LOVE_MUSEUM_BUILD=BUILD;
+})();
+</script>
+<!-- Build: V5.2-SHA-MATCH-20260730 -->
+</body>
 </html>
