@@ -1236,8 +1236,8 @@ async function compressDataUrl(dataUrl,maxSide=1280,quality=.72){
 async function optimizePublicAssets(sourceAssets,status){
   const assets=sourceAssets.map(x=>({...x}));
   const photos=assets.filter(x=>x.type==='photo'&&typeof x.data==='string'&&x.data.startsWith('data:image/'));
-  const passes=[{maxSide:1280,quality:.72},{maxSide:1100,quality:.60},{maxSide:960,quality:.50}];
-  const target=18*1024*1024;
+  const passes=[{maxSide:1100,quality:.62},{maxSide:900,quality:.50},{maxSide:760,quality:.40},{maxSide:640,quality:.32}];
+  const target=11*1024*1024;
   let originalBytes=photos.reduce((n,x)=>n+dataUrlByteSize(x.data)+dataUrlByteSize(x.thumb),0);
   for(let passIndex=0;passIndex<passes.length;passIndex++){
     const cfg=passes[passIndex];
@@ -1276,17 +1276,17 @@ $('exportPublicShare').onclick=async()=>{
   try{
     let result=await buildPublicShareHTML(status,false);
     let blob=new Blob([result.html],{type:'text/html;charset=utf-8'});
-    if(blob.size>24.5*1024*1024){
+    if(blob.size>24*1024*1024){
       const localMusic=(await all()).filter(x=>x.type==='music');
-      if(localMusic.length&&confirm(`压缩照片后文件仍为 ${formatMB(blob.size)}，主要可能来自本地上传音乐。\n\n点击“确定”生成不包含本地上传音乐的轻量版（YouTube 音乐仍保留）；点击“取消”保留全部音乐。`)){
-        status.textContent='正在生成不包含本地音乐的轻量版…';
+      if(localMusic.length){
+        status.textContent='文件仍偏大，正在自动移除公开版中的本地音乐（YouTube 音乐保留）…';
         result=await buildPublicShareHTML(status,true);
         blob=new Blob([result.html],{type:'text/html;charset=utf-8'});
       }
     }
     downloadBlob(blob,'share.html');
     const saved=Math.max(0,result.optimized.originalBytes-result.optimized.optimizedBytes);
-    status.textContent=`share.html 已生成：${formatMB(blob.size)}，照片约减少 ${formatMB(saved)}。可直接在手机 GitHub 网页上传。`;
+    status.textContent=`share.html 已生成：${formatMB(blob.size)}，照片约减少 ${formatMB(saved)}。${blob.size<=25*1024*1024?'可直接在手机 GitHub 网页上传。':'仍超过限制，请查看提示。'}`;
     notify(`公开分享文件已生成：${formatMB(blob.size)}`);
     if(blob.size>25*1024*1024)alert(`公开版仍为 ${formatMB(blob.size)}，超过 GitHub 手机网页约 25 MB 的单文件上传限制。建议减少本地音乐或部分照片后再次导出。`);
   }catch(err){console.error(err);status.textContent='生成失败，请重新尝试。';alert('生成公开分享文件失败：'+(err?.message||'未知错误'))}
