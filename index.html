@@ -820,7 +820,7 @@ html.edit-mode:has(.start-overlay:not(.hide))::after{display:none}
 <div class="hint">生成包含当前文字、照片、视频设置和音乐的只读分享文件。将下载的 <b>share.html</b> 上传并覆盖 GitHub 仓库中的同名文件，公开链接始终不变。</div>
 <button class="btn" id="exportPublicShare">生成公开分享文件</button>
 <label for="publicShareUrl">公开链接</label>
-<input id="publicShareUrl" readonly="" type="text" value="https://xx6110734-pixel.github.io/share.html"/>
+<input id="publicShareUrl" readonly="" type="text" value="https://xx6110734-pixel.github.io/-love-100-days/share.html"/>
 <button class="btn light" id="copyPublicShareUrl">复制公开链接</button>
 <div class="hint" id="publicShareStatus">公开页面只供浏览，不显示编辑器、上传、删除、排序、备份或恢复功能。</div>
 </div>
@@ -1207,8 +1207,58 @@ function openStory(e){e?.preventDefault();const overlay=$('startOverlay');if(!ov
 let slideIndex=0,slideTimer=null;function showSlide(i){slideIndex=(i+slides.length)%slides.length;slides.forEach((s,n)=>s.classList.toggle('active',n===slideIndex));$('slideCounter').textContent=`${slideIndex+1} / ${slides.length}`}async function enterProject(){closeActions();document.body.classList.add('project-mode');$('panel').classList.remove('open');showSlide(0);try{await document.documentElement.requestFullscreen?.()}catch{}}function exitProject(){document.body.classList.remove('project-mode');clearInterval(slideTimer);slideTimer=null;document.exitFullscreen?.().catch(()=>{})}$('projectStart').onclick=enterProject;$('projectFromEditor').onclick=enterProject;$('exitProject').onclick=exitProject;$('prevSlide').onclick=()=>showSlide(slideIndex-1);$('nextSlide').onclick=()=>showSlide(slideIndex+1);$('autoSlide').onclick=()=>{if(slideTimer){clearInterval(slideTimer);slideTimer=null;$('autoSlide').textContent='▶'}else{slideTimer=setInterval(()=>showSlide(slideIndex+1),8500);$('autoSlide').textContent='Ⅱ'}};
 function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
 function safeSnapshotJSON(value){return JSON.stringify(value).replace(/</g,'\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029')}
-async function buildPublicShareHTML(){
-  const snapshot={version:6,data:clone(data),assets:await all()};
+function dataUrlByteSize(value){
+  if(typeof value!=='string')return 0;
+  const comma=value.indexOf(',');
+  if(comma<0)return new Blob([value]).size;
+  const head=value.slice(0,comma),body=value.slice(comma+1);
+  return /;base64/i.test(head)?Math.floor(body.length*3/4):new Blob([decodeURIComponent(body)]).size;
+}
+function formatMB(bytes){return (bytes/1024/1024).toFixed(1)+' MB'}
+async function compressDataUrl(dataUrl,maxSide=1280,quality=.72){
+  if(typeof dataUrl!=='string'||!dataUrl.startsWith('data:image/'))return dataUrl;
+  const blob=await (await fetch(dataUrl)).blob();
+  let source;
+  try{source=await createImageBitmap(blob)}catch{
+    source=await new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=reject;img.src=dataUrl});
+  }
+  const sw=source.width||source.naturalWidth,sh=source.height||source.naturalHeight;
+  if(!sw||!sh){source.close?.();return dataUrl}
+  const scale=Math.min(1,maxSide/Math.max(sw,sh));
+  const w=Math.max(1,Math.round(sw*scale)),h=Math.max(1,Math.round(sh*scale));
+  const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+  const ctx=canvas.getContext('2d',{alpha:false});
+  ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+  ctx.drawImage(source,0,0,w,h);source.close?.();
+  const out=canvas.toDataURL('image/jpeg',quality);
+  return dataUrlByteSize(out)<dataUrlByteSize(dataUrl)?out:dataUrl;
+}
+async function optimizePublicAssets(sourceAssets,status){
+  const assets=sourceAssets.map(x=>({...x}));
+  const photos=assets.filter(x=>x.type==='photo'&&typeof x.data==='string'&&x.data.startsWith('data:image/'));
+  const passes=[{maxSide:1280,quality:.72},{maxSide:1100,quality:.60},{maxSide:960,quality:.50}];
+  const target=18*1024*1024;
+  let originalBytes=photos.reduce((n,x)=>n+dataUrlByteSize(x.data)+dataUrlByteSize(x.thumb),0);
+  for(let passIndex=0;passIndex<passes.length;passIndex++){
+    const cfg=passes[passIndex];
+    for(let i=0;i<photos.length;i++){
+      status.textContent=`正在压缩公开版照片 ${i+1}/${photos.length}（第 ${passIndex+1} 轮）…`;
+      photos[i].data=await compressDataUrl(photos[i].data,cfg.maxSide,cfg.quality);
+      delete photos[i].thumb;
+      if(i%3===2)await new Promise(r=>setTimeout(r,0));
+    }
+    const estimated=new Blob([safeSnapshotJSON({version:6,data:clone(data),assets})]).size;
+    if(estimated<=target)break;
+  }
+  const optimizedBytes=photos.reduce((n,x)=>n+dataUrlByteSize(x.data),0);
+  return {assets,originalBytes,optimizedBytes};
+}
+async function buildPublicShareHTML(status,excludeLocalMusic=false){
+  const rawAssets=await all();
+  const optimized=await optimizePublicAssets(rawAssets,status);
+  let assets=optimized.assets;
+  if(excludeLocalMusic)assets=assets.filter(x=>x.type!=='music');
+  const snapshot={version:6,data:clone(data),assets};
   let html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
   const packed=safeSnapshotJSON(snapshot);
   const backupPattern=/const EMBEDDED_BACKUP=[\s\S]*?;\s*const EMBEDDED_BACKUP_VERSION=/;
@@ -1218,9 +1268,30 @@ async function buildPublicShareHTML(){
   html=html.replace("const editMode = params.get('edit') === '1';","const editMode = false;");
   html=html.replace('</head>',`<style id="publicShareOnlyStyle">#panel,#openEditor,#projectFromEditor,.editor-only{display:none!important}</style></head>`);
   html=html.replace('</body>',`<script id="publicShareLock">document.documentElement.classList.add('public-share');document.addEventListener('DOMContentLoaded',()=>{document.body.classList.add('public-share','viewer-mode');document.querySelectorAll('#panel,#openEditor,[data-editor],.editor-only').forEach(el=>el.remove());});<\/script></body>`);
-  return html;
+  return {html,optimized};
 }
-$('exportPublicShare').onclick=async()=>{const btn=$('exportPublicShare'),status=$('publicShareStatus');const original=btn.textContent;btn.disabled=true;btn.textContent='正在生成…';status.textContent='正在整理当前文字、图片和媒体设置，请稍候。';try{const html=await buildPublicShareHTML();downloadBlob(new Blob([html],{type:'text/html;charset=utf-8'}),'share.html');status.textContent='share.html 已生成。请上传并覆盖 GitHub 仓库中的同名文件。';notify('公开分享文件已生成')}catch(err){console.error(err);status.textContent='生成失败，请重新尝试。';alert('生成公开分享文件失败：'+(err?.message||'未知错误'))}finally{btn.disabled=false;btn.textContent=original}};
+$('exportPublicShare').onclick=async()=>{
+  const btn=$('exportPublicShare'),status=$('publicShareStatus'),original=btn.textContent;
+  btn.disabled=true;btn.textContent='正在优化…';status.textContent='正在生成手机可上传的轻量公开版，请稍候。';
+  try{
+    let result=await buildPublicShareHTML(status,false);
+    let blob=new Blob([result.html],{type:'text/html;charset=utf-8'});
+    if(blob.size>24.5*1024*1024){
+      const localMusic=(await all()).filter(x=>x.type==='music');
+      if(localMusic.length&&confirm(`压缩照片后文件仍为 ${formatMB(blob.size)}，主要可能来自本地上传音乐。\n\n点击“确定”生成不包含本地上传音乐的轻量版（YouTube 音乐仍保留）；点击“取消”保留全部音乐。`)){
+        status.textContent='正在生成不包含本地音乐的轻量版…';
+        result=await buildPublicShareHTML(status,true);
+        blob=new Blob([result.html],{type:'text/html;charset=utf-8'});
+      }
+    }
+    downloadBlob(blob,'share.html');
+    const saved=Math.max(0,result.optimized.originalBytes-result.optimized.optimizedBytes);
+    status.textContent=`share.html 已生成：${formatMB(blob.size)}，照片约减少 ${formatMB(saved)}。可直接在手机 GitHub 网页上传。`;
+    notify(`公开分享文件已生成：${formatMB(blob.size)}`);
+    if(blob.size>25*1024*1024)alert(`公开版仍为 ${formatMB(blob.size)}，超过 GitHub 手机网页约 25 MB 的单文件上传限制。建议减少本地音乐或部分照片后再次导出。`);
+  }catch(err){console.error(err);status.textContent='生成失败，请重新尝试。';alert('生成公开分享文件失败：'+(err?.message||'未知错误'))}
+  finally{btn.disabled=false;btn.textContent=original}
+};
 $('copyPublicShareUrl').onclick=async()=>{const url=$('publicShareUrl').value;try{await navigator.clipboard.writeText(url)}catch{$('publicShareUrl').select();document.execCommand('copy')}notify('公开链接已复制')};
 $('exportBackup').onclick=async()=>downloadBlob(new Blob([JSON.stringify({version:6,data,assets:await all()},null,2)],{type:'application/json'}),'恋爱纪念馆_完整备份.json');$('importBackupBtn').onclick=()=>$('importBackup').click();$('importBackup').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());data=d.data||clone(defaults);saveData();await clearAll();for(const x of d.assets||[])await put(x);location.reload()}catch{alert('备份文件无效')}};$('reset').onclick=async()=>{if(!confirm('确定清空所有文字、照片和音乐吗？'))return;localStorage.removeItem('love_museum_v6');localStorage.removeItem('love_museum_v5');await clearAll();location.reload()};
 const particleCount=matchMedia('(max-width:720px)').matches?8:14;for(let i=0;i<particleCount;i++){const s=document.createElement('span');s.className='particle';s.textContent=i%4?'·':'♡';s.style.left=Math.random()*100+'vw';s.style.animationDuration=14+Math.random()*18+'s';s.style.animationDelay=-Math.random()*22+'s';s.style.fontSize=10+Math.random()*22+'px';$('particles').appendChild(s)}
