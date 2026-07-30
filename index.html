@@ -722,6 +722,10 @@ html.edit-mode:has(.start-overlay:not(.hide))::after{display:none}
 html:not(.edit-mode) #panel,html:not(.edit-mode) #openEditor{display:none!important}
 .v5-build-badge{margin-top:8px;font-size:.72rem;color:#9a7d89;text-align:center}
 </style>
+
+<style id="v6StablePublicLoadingStyles">
+.public-load-state{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:999999;max-width:calc(100vw - 32px);padding:10px 16px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(24,13,24,.88);color:#f8edf2;font:600 .82rem/1.4 system-ui,-apple-system,"PingFang SC",sans-serif;box-shadow:0 14px 40px rgba(0,0,0,.28);backdrop-filter:blur(14px);transition:opacity .28s ease,transform .28s ease}.public-load-state.error{color:#ffd8dc;border-color:rgba(255,140,153,.35)}.public-load-state.done{opacity:0;transform:translate(-50%,-8px);pointer-events:none}html:not(.remote-data-ready):not(.edit-mode) .story-slideshow-track,html:not(.remote-data-ready):not(.edit-mode) .gallery,html:not(.remote-data-ready):not(.edit-mode) .video-gallery{min-height:120px}
+</style>
 </head>
 <body>
 <div class="scroll-progress" id="scrollProgress"></div><div id="aurora"></div><div id="particles"></div>
@@ -1028,16 +1032,17 @@ function applyLanguage(){const c=data[currentLang],u=ui[currentLang];document.do
 if($('storySlideshowSub'))$('storySlideshowSub').innerHTML=currentLang==='zh'?'从相遇那天开始，<br>直到未来。':'ตั้งแต่วันที่เราได้พบกัน<br>จนถึงอนาคต';
 if($('storyPageDate'))$('storyPageDate').textContent=formatStartDate();
 if($('loveTimeTitle'))$('loveTimeTitle').textContent=currentLang==='zh'?'恋爱时间':'เวลาความรัก';
-updateDays();renderChapterPhotos();$('photoCount').textContent=u.count(photoItems.length);const coverFrameEl=$('coverFrame');const empty=coverFrameEl?coverFrameEl.querySelector('.cover-empty'):null;if(empty)empty.textContent=u.coverEmpty;const ge=$('gallery').querySelector('.empty');if(ge)ge.textContent=u.empty;saveData()}
+updateDays();if(window.__publicRemoteAssets&&typeof window.renderRefinedChapterImages==='function')window.renderRefinedChapterImages();else renderChapterPhotos();$('photoCount').textContent=u.count(photoItems.length);const coverFrameEl=$('coverFrame');const empty=coverFrameEl?coverFrameEl.querySelector('.cover-empty'):null;if(empty)empty.textContent=u.coverEmpty;const ge=$('gallery').querySelector('.empty');if(ge)ge.textContent=u.empty;saveData()}
 function applyCoverStyle(){const c=data.coverStyle,f=$('coverFrame');if(!f)return;f.style.setProperty('--cover-width',c.width+'%');f.style.setProperty('--cover-height-mobile',c.height+'px');f.style.setProperty('--cover-height',Math.max(420,c.height)+'px');f.style.setProperty('--cover-radius',c.radius+'px');f.style.setProperty('--cover-scale',c.scale/100);f.style.setProperty('--cover-x',c.x+'%');f.style.setProperty('--cover-y',c.y+'%');const map={coverWidth:['width','%'],coverHeight:['height','px'],coverRadius:['radius','px'],coverScale:['scale','%'],coverX:['x','%'],coverY:['y','%']};Object.entries(map).forEach(([id,[key,unit]])=>{if($(id))$(id).value=c[key];if($(id+'Value'))$(id+'Value').textContent=c[key]+unit})}
 function bindCoverControls(){const keys={coverWidth:'width',coverHeight:'height',coverRadius:'radius',coverScale:'scale',coverX:'x',coverY:'y'};Object.keys(keys).forEach(id=>{const el=$(id);if(!el)return;el.oninput=()=>{data.coverStyle[keys[id]]=+el.value;applyCoverStyle();saveData()}});const reset=$('resetCoverStyle');if(reset)reset.onclick=()=>{data.coverStyle=clone(defaults.coverStyle);applyCoverStyle();saveData();notify('封面尺寸已恢复默认')}}
 function saveTexts(){data.startDate=$('iStartDate').value||defaults.startDate;['mainTitle','cover','date','periodTitle','period','footprintsTitle','footprintsDesc','galleryTitle','galleryDesc','videoTitle','videoDesc','endTitle','endText','finalTitle','finalText','finalSign'].forEach(k=>['zh','th'].forEach(l=>data[l][k]=$(`${l}_${k}`).value.trim()));for(let i=0;i<10;i++){const d=$(`footDate${i}`).value;['zh','th'].forEach(l=>{data[l].footprints[i].date=d;data[l].footprints[i].event=$(`${l}_footEvent${i}`).value.trim();data[l].footprints[i].text=$(`${l}_footText${i}`).value.trim()})}for(let i=0;i<5;i++)['zh','th'].forEach(l=>{data[l].chapters[i].title=$(`${l}_chapterTitle${i}`).value.trim();data[l].chapters[i].text=$(`${l}_chapterText${i}`).value.trim()});saveData();applyLanguage();updateDays();notify('中泰双语文字已保存')}
-function getLocalLoveDays(){const parts=(data.startDate||defaults.startDate).split('-').map(Number),start=new Date(parts[0],parts[1]-1,parts[2]),now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());return Math.max(1,Math.round((today-start)/86400000)+1)}
-function formatStartDate(){const p=(data.startDate||defaults.startDate).split('-');return p.length===3?`${p[0]}.${p[1]}.${p[2]}`:(data.startDate||defaults.startDate)}
+function getValidStartDateParts(){const raw=String(data.startDate||defaults.startDate||'').trim();const m=raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!m)return null;const y=Number(m[1]),mo=Number(m[2]),d=Number(m[3]),date=new Date(y,mo-1,d);if(date.getFullYear()!==y||date.getMonth()!==mo-1||date.getDate()!==d)return null;return [y,mo,d]}
+function getLocalLoveDays(){const raw=String(data.startDate||defaults.startDate||'').trim(),parts=raw.split('-').map(Number);if(parts.length!==3||!parts.every(Number.isFinite)||parts[0]<1900||parts[1]<1||parts[1]>12||parts[2]<1||parts[2]>31)return 1;const start=new Date(parts[0],parts[1]-1,parts[2]);if(Number.isNaN(start.getTime()))return 1;const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());return Math.max(1,Math.floor((today-start)/86400000)+1)}
+function formatStartDate(){const raw=String(data.startDate||defaults.startDate||'').trim(),p=raw.split('-');return p.length===3&&p.every(Boolean)?`${p[0]}.${p[1]}.${p[2]}`:(raw||'—')}
 function updateDays(){
   const days=getLocalLoveDays();
   const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-  const parts=(data.startDate||defaults.startDate).split('-').map(Number),anniversaryDay=parts[2]||10;
+  const parts=getValidStartDateParts()||[today.getFullYear(),today.getMonth()+1,today.getDate()],anniversaryDay=parts[2];
   let nextAnniversary=new Date(today.getFullYear(),today.getMonth(),anniversaryDay);
   if(nextAnniversary<today)nextAnniversary=new Date(today.getFullYear(),today.getMonth()+1,anniversaryDay);
   const anniversaryLeft=Math.round((nextAnniversary-today)/86400000);
@@ -1406,17 +1411,20 @@ $('exportPublicShare').onclick=async()=>{
 $('copyPublicShareUrl').onclick=async()=>{const url=$('publicShareUrl').value;try{await navigator.clipboard.writeText(url)}catch{$('publicShareUrl').select();document.execCommand('copy')}notify('公开链接已复制')};
 $('exportBackup').onclick=async()=>downloadBlob(new Blob([JSON.stringify({version:6,data,assets:await all()},null,2)],{type:'application/json'}),'恋爱纪念馆_完整备份.json');$('importBackupBtn').onclick=()=>$('importBackup').click();$('importBackup').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());data=d.data||clone(defaults);saveData();await clearAll();for(const x of d.assets||[])await put(x);location.reload()}catch{alert('备份文件无效')}};$('reset').onclick=async()=>{if(!confirm('确定清空所有文字、照片和音乐吗？'))return;localStorage.removeItem('love_museum_v6');localStorage.removeItem('love_museum_v5');await clearAll();location.reload()};
 const particleCount=matchMedia('(max-width:720px)').matches?8:14;for(let i=0;i<particleCount;i++){const s=document.createElement('span');s.className='particle';s.textContent=i%4?'·':'♡';s.style.left=Math.random()*100+'vw';s.style.animationDuration=14+Math.random()*18+'s';s.style.animationDelay=-Math.random()*22+'s';s.style.fontSize=10+Math.random()*22+'px';$('particles').appendChild(s)}
-applyLanguage();
-openDB()
-  .then(async()=>{
-    if(SHOULD_RESET_CONTENT){
-      await clearAll();
-      localStorage.setItem(CONTENT_RESET_MARKER,CONTENT_RESET_VERSION);
-    }
-  })
-  .then(importEmbeddedAssetsOnce)
-  .then(render)
-  .catch(()=>alert('浏览器未允许本地储存，请使用 Safari、Chrome 或 Edge。'));
+const LEGACY_STARTUP_EDIT_MODE=new URLSearchParams(location.search).get('edit')==='1'||new URLSearchParams(location.search).get('mode')==='editor';
+if(LEGACY_STARTUP_EDIT_MODE){
+  applyLanguage();
+  openDB()
+    .then(async()=>{
+      if(SHOULD_RESET_CONTENT){
+        await clearAll();
+        localStorage.setItem(CONTENT_RESET_MARKER,CONTENT_RESET_VERSION);
+      }
+    })
+    .then(importEmbeddedAssetsOnce)
+    .then(render)
+    .catch(()=>alert('浏览器未允许本地储存，请使用 Safari、Chrome 或 Edge。'));
+}
 </script>
 <!-- 升级：歌单弹窗、弱化音乐按钮、恋爱时间线、正式结尾页 -->
 <script id="viewerModeScript">
@@ -2025,7 +2033,7 @@ function renderSixVideos(){
  $('videoCount').textContent=currentLang==='zh'?'6 个视频位置':'6 ตำแหน่งวิดีโอ';
  $('videoGallery').innerHTML=source.map((x,i)=>{
    const resolved=x?.src?githubVideoPath(x.src):'';
-   return resolved?`<div class="video-card" data-video-slot="${i}"><video ${videoSourceMarkup(resolved)} preload="metadata" muted playsinline></video><span class="video-play">▶</span><div class="video-overlay"><div class="video-title">${esc(x.title||'')}</div></div></div>`:`<div class="video-card video-slot-empty"><span>${currentLang==='zh'?`视频 ${i+1}`:`วิดีโอ ${i+1}`}</span></div>`;
+   return resolved?`<div class="video-card" data-video-slot="${i}"><video preload="metadata" muted playsinline webkit-playsinline>${videoSourceMarkup(resolved)}</video><span class="video-play">▶</span><div class="video-overlay"><div class="video-title">${esc(x.title||'')}</div></div></div>`:`<div class="video-card video-slot-empty"><span>${currentLang==='zh'?`视频 ${i+1}`:`วิดีโอ ${i+1}`}</span></div>`;
  }).join('');
  document.querySelectorAll('[data-video-slot]').forEach(el=>{const i=+el.dataset.videoSlot;const resolved=githubVideoPath(source[i].src);el.onclick=()=>openVideo(resolved);prepareVideoPoster(el)});
 }
@@ -2078,6 +2086,8 @@ function capVideosToSix(){
  const hint=$('videoTab')?.querySelector('.hint');if(hint)hint.textContent='第九章固定 6 个视频位置，按 2 列 × 3 行展示；视频比例为 9:16，并自动生成封面。';
 }
 async function initUnified(){
+ const isEditor=new URLSearchParams(location.search).get('edit')==='1'||new URLSearchParams(location.search).get('mode')==='editor';
+ if(!isEditor)return;
  if(initUnified.started)return;
  initUnified.started=true;
  ensureUpgradeData();
@@ -2696,7 +2706,54 @@ async function publishNow(manual=true){
 function autoEnabled(){return localStorage.getItem(AUTO_KEY)!=='0'}
 function markDirty(){if(!EDIT_MODE||!syncReady)return;dirty=true;setSyncStatus('已保存到本机，等待增量同步…','busy');if(!autoEnabled())return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>publishNow(false),5000)}
 function installEditorUI(){document.querySelector('.public-share-card')?.remove();const dataTab=document.getElementById('dataTab');if(!dataTab||document.getElementById('liveSyncCard'))return;const c=syncConfig();const card=document.createElement('div');card.id='liveSyncCard';card.className='live-sync-card';card.innerHTML=`<h4>GitHub 增量同步</h4><div class="hint">同步前会读取仓库现有照片、音乐，并按文件内容 SHA 比较。即使文件名不同，内容相同也会直接复用，只上传真正新增或修改的媒体。Token 仅保存在当前设备。</div><div class="live-sync-grid"><div><label>GitHub 用户名</label><input id="ghOwner" type="text" value="${esc(c.owner||'xx6110734-pixel')}"></div><div><label>仓库名称</label><input id="ghRepo" type="text" value="${esc(c.repo||'-love-100-days')}"></div><div><label>分支</label><input id="ghBranch" type="text" value="${esc(c.branch||'main')}"></div><div><label>Fine-grained Token</label><input id="ghToken" type="password" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" value="${esc(c.token||'')}"></div></div><label class="live-sync-switch"><input id="autoSyncToggle" type="checkbox" ${autoEnabled()?'checked':''}>停止编辑后自动同步</label><div class="live-sync-status" id="liveSyncStatus">尚未同步。</div><div class="live-sync-actions"><button class="btn" id="saveGithubSettings" type="button">保存 GitHub 设置</button><button class="btn dark" id="syncNowBtn" type="button">立即同步</button></div>`;dataTab.prepend(card);document.getElementById('saveGithubSettings').onclick=()=>{saveSyncConfig({owner:document.getElementById('ghOwner').value.trim(),repo:document.getElementById('ghRepo').value.trim(),branch:document.getElementById('ghBranch').value.trim()||'main',token:document.getElementById('ghToken').value.trim()});setSyncStatus('GitHub 设置已保存在当前设备。','ok')};document.getElementById('autoSyncToggle').onchange=e=>{localStorage.setItem(AUTO_KEY,e.target.checked?'1':'0');setSyncStatus(e.target.checked?'自动同步已开启。':'自动同步已暂停。','ok')};document.getElementById('syncNowBtn').onclick=()=>{document.getElementById('saveGithubSettings').click();publishNow(true)}}
-async function loadPublicSnapshot(){if(EDIT_MODE)return;try{const res=await fetch(`./data/site.json?t=${Date.now()}`,{cache:'no-store'});if(!res.ok)throw new Error('尚未发布公开数据');const snapshot=await res.json();if(!snapshot?.data||!Array.isArray(snapshot.assets))throw new Error('公开数据格式无效');data={...clone(defaults),...snapshot.data};data.zh={...defaults.zh,...(data.zh||{})};data.th={...defaults.th,...(data.th||{})};window.__publicRemoteAssets=snapshot.assets;all=async()=>window.__publicRemoteAssets;currentLang=data.lang==='th'?'th':'zh';fillEditors?.();fillVideoEditors?.();applyLanguage();await render();document.documentElement.classList.add('remote-data-ready')}catch(err){console.warn(err);const status=document.getElementById('publicShareStatus');if(status)status.textContent='公开数据尚未发布。请使用 ?edit=1 完成首次同步。'}}
+function showPublicLoadState(message,error=false){
+  let box=document.getElementById('publicLoadState');
+  if(!box){box=document.createElement('div');box.id='publicLoadState';box.setAttribute('role','status');document.body.appendChild(box)}
+  box.className=error?'public-load-state error':'public-load-state';box.textContent=message;box.hidden=false;
+}
+function hidePublicLoadState(){const box=document.getElementById('publicLoadState');if(box){box.classList.add('done');setTimeout(()=>box.remove(),320)}}
+async function renderPublicSnapshotAssets(assets){
+  const items=Array.isArray(assets)?assets.filter(Boolean):[];
+  slideshowItems=items.filter(x=>x.type==='photo'&&hasRole(x,'slideshow')).sort((a,b)=>roleOrder(a,'slideshow')-roleOrder(b,'slideshow'));
+  chapterPhotoItems=items.filter(x=>x.type==='photo'&&hasRole(x,'chapter')).sort((a,b)=>roleOrder(a,'chapter')-roleOrder(b,'chapter'));
+  homeCoverItems=items.filter(x=>x.type==='photo'&&hasRole(x,'homeCover')).sort((a,b)=>(a.order??0)-(b.order??0));
+  photoItems=items.filter(x=>x.type==='photo'&&hasRole(x,'gallery')).sort((a,b)=>roleOrder(a,'gallery')-roleOrder(b,'gallery'));
+  trackItems=items.filter(x=>x.type==='music').sort((a,b)=>(a.order??0)-(b.order??0));
+  renderStorySlideshow();
+  if(window.ChaptersIndependent?.renderDisplays)window.ChaptersIndependent.renderDisplays();
+  const gallery=$('gallery');
+  if(gallery)gallery.innerHTML=photoItems.length?photoItems.map((x,i)=>`<figure class="gallery-card" data-photo="${i}"><img src="${esc(x.thumb||x.data)}" alt="回忆照片" loading="lazy" decoding="async"></figure>`).join(''):`<div class="empty"></div>`;
+  bindGallery();
+  renderMusicManager();
+  applyLanguage();
+  if(typeof updateHomeCover==='function')updateHomeCover();
+  if(typeof updateHomepageCopy==='function')updateHomepageCopy();
+  document.documentElement.classList.add('remote-data-ready');
+}
+async function loadPublicSnapshot(){
+  if(EDIT_MODE)return;
+  showPublicLoadState('正在加载我们的故事…');
+  try{
+    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),20000);
+    const res=await fetch(`./data/site.json?v=V6-STABLE-${Date.now()}`,{cache:'no-store',signal:controller.signal});
+    clearTimeout(timer);
+    if(!res.ok)throw new Error(`公开数据读取失败（${res.status}）`);
+    const snapshot=await res.json();
+    if(!snapshot?.data||!Array.isArray(snapshot.assets))throw new Error('公开数据格式无效');
+    data={...clone(defaults),...snapshot.data};
+    data.zh={...defaults.zh,...(data.zh||{})};data.th={...defaults.th,...(data.th||{})};
+    data.coverStyle={...defaults.coverStyle,...(data.coverStyle||{})};
+    currentLang=data.lang==='th'?'th':'zh';
+    window.__publicRemoteAssets=snapshot.assets;
+    all=async()=>window.__publicRemoteAssets;
+    saveData=()=>{};
+    await renderPublicSnapshotAssets(snapshot.assets);
+    hidePublicLoadState();
+  }catch(err){
+    console.error('Public snapshot initialization failed:',err);
+    showPublicLoadState(currentLang==='th'?'โหลดเรื่องราวไม่สำเร็จ กรุณารีเฟรชหน้า':'故事加载失败，请刷新页面重试',true);
+  }
+}
 function wrapMutations(){if(!EDIT_MODE)return;const oldSave=saveData;saveData=function(){oldSave();markDirty()};const oldPut=put;put=async function(v){const r=await oldPut(v);markDirty();return r};const oldDel=del;del=async function(v){const r=await oldDel(v);markDirty();return r}}
 function init(){if(EDIT_MODE){installEditorUI();wrapMutations();setTimeout(()=>{syncReady=true;const last=localStorage.getItem('love_museum_last_sync');setSyncStatus(last?'本机已就绪。上次同步：'+new Date(last).toLocaleString():'本机已就绪，尚未完成首次同步。',last?'ok':'')},3500);addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}})}else loadPublicSnapshot()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
@@ -2709,7 +2766,7 @@ window.LoveMuseumSync={publishNow,markDirty};
 <script id="v5FinalRuntime">
 (function(){
   'use strict';
-  const BUILD='V5.2-SHA-MATCH-20260730';
+  const BUILD='V6-STABLE-PUBLIC-INIT-R4-20260730';
   const params=new URLSearchParams(location.search);
   const edit=params.get('edit')==='1'||params.get('mode')==='editor';
   function installBuildInfo(){
@@ -2751,6 +2808,6 @@ window.LoveMuseumSync={publishNow,markDirty};
   window.LOVE_MUSEUM_BUILD=BUILD;
 })();
 </script>
-<!-- Build: V5.2-SHA-MATCH-20260730 -->
+<!-- Build: V6-STABLE-PUBLIC-INIT-R4-20260730 -->
 </body>
 </html>
