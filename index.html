@@ -1272,15 +1272,37 @@ async function compressDataUrl(dataUrl,maxSide=1280,quality=.72){
   return dataUrlByteSize(out)<dataUrlByteSize(dataUrl)?out:dataUrl;
 }
 function normalizePublicVideoSources(snapshotData){
-  const shareUrl=$('publicShareUrl')?.value||'https://xx6110734-pixel.github.io/-love-100-days/share.html';
   ['zh','th'].forEach(lang=>{
     (snapshotData[lang]?.videos||[]).forEach(video=>{
-      const src=(video?.src||'').trim();
-      if(!src||/^(?:https?:|data:|blob:)/i.test(src))return;
-      try{video.src=new URL(src,shareUrl).href}catch{}
+      let src=(video?.src||'').trim();
+      if(!src||/^(?:https?:|data:)/i.test(src))return;
+      if(/^blob:/i.test(src)){video.src='';return}
+      src=src.replace(/^\.\//,'').replace(/^\//,'');
+      if(!/^videos\//i.test(src))src='videos/'+src;
+      video.src='./'+src.split('/').map(part=>encodeURIComponent(decodeURIComponent(part))).join('/');
     });
   });
   return snapshotData;
+}
+function cleanPublicHtmlSnapshot(){
+  const clone=document.documentElement.cloneNode(true);
+  clone.classList.remove('edit-mode');
+  clone.classList.add('public-share','viewer-mode');
+  clone.querySelectorAll('#panel,[data-editor],.editor-only,#openEditor,#projectFromEditor').forEach(el=>el.remove());
+  clone.querySelectorAll('img,video,audio,source').forEach(el=>{
+    for(const attr of ['src','poster']){
+      const value=el.getAttribute(attr)||'';
+      if(/^(?:data:|blob:)/i.test(value))el.removeAttribute(attr);
+    }
+  });
+  clone.querySelectorAll('[style]').forEach(el=>{
+    const style=el.getAttribute('style')||'';
+    if(/(?:data:|blob:)/i.test(style))el.removeAttribute('style');
+  });
+  ['galleryGrid','chapterPhoto1','chapterPhoto2','chapterPhoto3','chapterPhoto4','chapterPhoto5','chapterPhoto6','chapterPhoto7','videoGallery','playlistItems'].forEach(id=>{
+    const el=clone.querySelector('#'+id);if(el)el.innerHTML='';
+  });
+  return '<!DOCTYPE html>\n'+clone.outerHTML;
 }
 function extensionFromDataUrl(dataUrl,fallback='bin'){
   const m=String(dataUrl||'').match(/^data:([^;,]+)/i),mime=(m?.[1]||'').toLowerCase();
@@ -1349,12 +1371,13 @@ async function buildGithubPublishPackage(status){
     if(i%3===2)await new Promise(r=>setTimeout(r,0));
   }
   const snapshot={version:7,data:normalizePublicVideoSources(clone(data)),assets:publicAssets};
-  let html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+  let html=cleanPublicHtmlSnapshot();
   const packed=safeSnapshotJSON(snapshot);
   const backupPattern=/const EMBEDDED_BACKUP=[\s\S]*?;\s*const EMBEDDED_BACKUP_VERSION=/;
   if(!backupPattern.test(html))throw new Error('无法定位内置数据区域');
   html=html.replace(backupPattern,`const EMBEDDED_BACKUP=${packed};\nconst EMBEDDED_BACKUP_VERSION=`);
   html=html.replace(/const EMBEDDED_BACKUP_VERSION='[^']*';/,`const EMBEDDED_BACKUP_VERSION='github-folder-public-${Date.now()}';`);
+  html=html.replace(/const SHOULD_RESET_CONTENT=localStorage\.getItem\(CONTENT_RESET_MARKER\)!==CONTENT_RESET_VERSION;/,"const SHOULD_RESET_CONTENT=true;");
   html=html.replace(/const\s+editMode\s*=\s*[^;]+;/,"const editMode = false;");
   html=html.replace('</head>',`<style id="publicShareOnlyStyle">html.public-share::after,html.public-share.edit-mode::after,body.public-share::after{display:none!important;content:none!important}#panel,#openEditor,#projectFromEditor,.editor-only{display:none!important}</style></head>`);
   html=html.replace('</body>',`<script id="publicShareLock">document.documentElement.classList.remove('edit-mode');document.documentElement.classList.add('public-share','viewer-mode');document.addEventListener('DOMContentLoaded',()=>{document.documentElement.classList.remove('edit-mode');document.body.classList.remove('edit-mode');document.body.classList.add('public-share','viewer-mode');document.querySelectorAll('#panel,[data-editor],.editor-only').forEach(el=>el.style.setProperty('display','none','important'));const editorButton=document.getElementById('openEditor');if(editorButton)editorButton.style.setProperty('display','none','important');});<\/script></body>`);
@@ -1994,8 +2017,11 @@ function renderIndependentChapters(){
 function renderSixVideos(){
  const source=(data[currentLang].videos||[]).slice(0,6);while(source.length<6)source.push({src:'',title:''});
  $('videoCount').textContent=currentLang==='zh'?'6 个视频位置':'6 ตำแหน่งวิดีโอ';
- $('videoGallery').innerHTML=source.map((x,i)=>x?.src?`<div class="video-card" data-video-slot="${i}"><video src="${esc(x.src)}" preload="metadata" muted playsinline></video><span class="video-play">▶</span><div class="video-overlay"><div class="video-title">${esc(x.title||'')}</div></div></div>`:`<div class="video-card video-slot-empty"><span>${currentLang==='zh'?`视频 ${i+1}`:`วิดีโอ ${i+1}`}</span></div>`).join('');
- document.querySelectorAll('[data-video-slot]').forEach(el=>{const i=+el.dataset.videoSlot;el.onclick=()=>openVideo(source[i].src);prepareVideoPoster(el)});
+ $('videoGallery').innerHTML=source.map((x,i)=>{
+   const resolved=x?.src?githubVideoPath(x.src):'';
+   return resolved?`<div class="video-card" data-video-slot="${i}"><video ${videoSourceMarkup(resolved)} preload="metadata" muted playsinline></video><span class="video-play">▶</span><div class="video-overlay"><div class="video-title">${esc(x.title||'')}</div></div></div>`:`<div class="video-card video-slot-empty"><span>${currentLang==='zh'?`视频 ${i+1}`:`วิดีโอ ${i+1}`}</span></div>`;
+ }).join('');
+ document.querySelectorAll('[data-video-slot]').forEach(el=>{const i=+el.dataset.videoSlot;const resolved=githubVideoPath(source[i].src);el.onclick=()=>openVideo(resolved);prepareVideoPoster(el)});
 }
 const originalApplyLanguage=applyLanguage;
 applyLanguage=function(){
